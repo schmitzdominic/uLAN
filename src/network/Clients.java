@@ -22,6 +22,10 @@ public class Clients {
         this.clientMap = clientMap;
     }
 
+    public Client getClient(String id){
+        return this.clientMap.get(id);
+    }
+
     public void addClient(Client client) {
         if (!this.clientList.getItems().contains(client.getHostname())){
             this.clientList.getItems().add(client.getHostname());
