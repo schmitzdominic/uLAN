@@ -1,15 +1,11 @@
 package start;
 
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import network.Client;
+import network.Clients;
 
 public class MainController {
 
@@ -17,26 +13,23 @@ public class MainController {
     AnchorPane mainWindow;
 
     @FXML
-    TableView<String> clientTable;
+    ListView<String> clientList;
 
-    @FXML
-    TableColumn<String, String> clientList;
+    private Clients clients;
 
     @FXML
     private void initialize() {
-        this.clientTable = new TableView<>(FXCollections.observableArrayList(
-           new ArrayList<String>(Arrays.asList(new String[]{
-                   "A","B","C"
-           }))
-        ));
-        this.clientList = new TableColumn<>("string");
-        this.clientList.setCellValueFactory((p) -> {
-            return new ReadOnlyStringWrapper(p.getValue());
-        });
-        this.clientTable.getColumns().add(this.clientList);
+        this.createClientList();
     }
 
-    public void pressReload(ActionEvent event) {
-        System.out.println("Hello World");
+    private void createClientList(){
+        this.clients = new Clients(this.clientList);
+        this.clientList.setOpacity(0.5);
     }
+
+    public void buttonAction(ActionEvent event) {
+        this.clients.addClient(new Client("ABC", "10.20.30.40", "COOLER_PC"));
+        System.out.println(this.clients.getClientMap().size() + " " + this.clientList.getItems().size());
+    }
+
 }
