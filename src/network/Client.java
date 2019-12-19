@@ -15,20 +15,20 @@ public class Client {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getHostname() {
+        return hostname;
     }
 
     public String getIp() {
         return ip;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getHostname() {
-        return hostname;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public void setHostname(String hostname) {

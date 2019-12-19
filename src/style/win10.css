@@ -52,6 +52,13 @@
     -fx-border-insets: 0 10 1 0;
 }
 
+.client_title {
+    -fx-font-size: 20pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+}
+
 .main_client_list_title {
     -fx-font-size: 20pt;
     -fx-font-family: "Segoe UI Light";

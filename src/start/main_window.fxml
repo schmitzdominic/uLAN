@@ -13,7 +13,8 @@
          </children></AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="main_client_info_background" stylesheets="@../style/win10.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="buttonAction" mnemonicParsing="false" onAction="#buttonAction" text="Button" />
+            <Button fx:id="buttonAction" mnemonicParsing="false" onAction="#buttonAction" text="ADD" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+            <Label fx:id="clientTitle" styleClass="client_title" stylesheets="@../style/win10.css" text="CLIENT" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
          </children></AnchorPane>
       <Line endX="125.0" fill="WHITE" opacity="0.53" startX="-100.0" stroke="WHITE" strokeWidth="2.0" AnchorPane.bottomAnchor="388.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="60.0" />
       <Label styleClass="main_client_list_title" stylesheets="@../style/win10.css" text="Clients" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="10.0" />
