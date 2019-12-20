@@ -22,9 +22,9 @@ public class Clients {
         return this.clientMap.get(id);
     }
 
-    public Client getClientByHostname(String hostname){
+    public Client getClientByListName(String listName){
         for(Client c : this.clientMap.values()){
-            if(c.getHostname().equals(hostname)){
+            if(c.getListName().equals(listName)){
                 return c;
             }
         }
@@ -46,6 +46,28 @@ public class Clients {
                 this.clientMap.remove(client.getId());
             }
             index++;
+        }
+    }
+
+    public boolean existName(String hostname){
+        for(Client client : this.clientMap.values()){
+            if(client.getListName().equals(hostname) | client.getHostname().equals(hostname)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void changeClient(String oldName, Client client){
+        if(this.clientMap.get(client.getId()) != null){
+            this.clientMap.put(client.getId(), client);
+            int index = 0;
+            for(String name : this.clientList.getItems()){
+                if(name.equals(oldName)){
+                    this.clientList.getItems().set(index, client.getListName());
+                }
+                index++;
+            }
         }
     }
 }

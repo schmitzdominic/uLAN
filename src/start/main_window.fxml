@@ -1,23 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<AnchorPane fx:id="mainWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" styleClass="main_list_background" stylesheets="@../style/win10.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="start.MainController">
+<AnchorPane fx:id="mainWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="650.0" styleClass="main_list_background" stylesheets="@../style/win10.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="start.MainController">
    <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="main_client_info_background" stylesheets="@../style/win10.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="410.0">
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="main_client_info_background" stylesheets="@../style/win10.css" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="410.0">
          <children>
-            <Label styleClass="main_hostname_label" stylesheets="@../style/win10.css" text="Host:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="0.0" />
-            <Label layoutX="20.0" layoutY="10.0" styleClass="main_hostname_text" stylesheets="@../style/win10.css" text="HOSTNAME" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+            <Label styleClass="main_hostname_label" stylesheets="@../style/win10.css" text="Host:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="0.0" />
+            <Label layoutX="20.0" layoutY="10.0" styleClass="main_hostname_text" stylesheets="@../style/win10.css" text="HOSTNAME" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="main_client_info_background" stylesheets="@../style/win10.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="buttonAction" mnemonicParsing="false" onAction="#buttonAction" text="ADD" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+            <Button fx:id="buttonChangeName" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" onAction="#buttonChangeName" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" visible="false" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0">
+               <graphic>
+                  <ImageView fx:id="imageButtonChangeName" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
+            </Button>
+            <Button fx:id="buttonSaveName" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" onAction="#buttonSaveName" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" visible="false" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0">
+               <graphic>
+                  <ImageView fx:id="imageButtonSaveName" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+               </graphic>
+            </Button>
             <Label fx:id="clientTitle" styleClass="client_title" stylesheets="@../style/win10.css" text="CLIENT" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="textFieldChangeName" layoutX="31.0" layoutY="29.0" onAction="#buttonSaveName" prefWidth="300.0" styleClass="client_rename" stylesheets="@../style/win10.css" visible="false" AnchorPane.leftAnchor="-7.0" AnchorPane.topAnchor="1.0" />
          </children></AnchorPane>
       <Line endX="125.0" fill="WHITE" opacity="0.53" startX="-100.0" stroke="WHITE" strokeWidth="2.0" AnchorPane.bottomAnchor="388.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="60.0" />
-      <Label styleClass="main_client_list_title" stylesheets="@../style/win10.css" text="Clients" AnchorPane.bottomAnchor="390.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="10.0" />
-      <ListView fx:id="clientList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="70.0" />
+      <Label styleClass="main_client_list_title" stylesheets="@../style/win10.css" text="Clients" AnchorPane.bottomAnchor="440.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="10.0" />
+      <ListView fx:id="clientList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="110.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="70.0" />
+      <Button fx:id="buttonRefresh" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="25.0">
+         <graphic>
+            <ImageView fx:id="imageButtonRefresh" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </Button>
+      <Button fx:id="buttonRelease" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="470.0">
+         <graphic>
+            <ImageView fx:id="imageButtonRelease" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </Button>
+      <Button fx:id="buttonInfo" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="77.0" AnchorPane.topAnchor="470.0">
+         <graphic>
+            <ImageView fx:id="imageButtonInfo" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </Button>
+      <Button fx:id="buttonSettings" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="129.0" AnchorPane.topAnchor="470.0">
+         <graphic>
+            <ImageView fx:id="imageButtonSettings" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </Button>
+      <Button fx:id="buttonHistory" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="181.0" AnchorPane.topAnchor="470.0">
+         <graphic>
+            <ImageView fx:id="imageButtonHistory" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>
