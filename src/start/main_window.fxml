@@ -14,7 +14,6 @@
          </children></AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="main_client_info_background" stylesheets="@../style/win10.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="buttonAction" mnemonicParsing="false" onAction="#buttonAction" text="ADD" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
             <Button fx:id="buttonChangeName" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" onAction="#buttonChangeName" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" visible="false" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0">
                <graphic>
                   <ImageView fx:id="imageButtonChangeName" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
@@ -31,7 +30,7 @@
       <Line endX="125.0" fill="WHITE" opacity="0.53" startX="-100.0" stroke="WHITE" strokeWidth="2.0" AnchorPane.bottomAnchor="388.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="60.0" />
       <Label styleClass="main_client_list_title" stylesheets="@../style/win10.css" text="Clients" AnchorPane.bottomAnchor="440.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="10.0" />
       <ListView fx:id="clientList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="110.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="70.0" />
-      <Button fx:id="buttonRefresh" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="25.0">
+      <Button fx:id="buttonRefresh" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" onAction="#buttonRefresh" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="25.0">
          <graphic>
             <ImageView fx:id="imageButtonRefresh" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
          </graphic>

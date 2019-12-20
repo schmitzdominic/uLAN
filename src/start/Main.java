@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import registry.Registry;
 import tray.Tray;
 
 public class Main extends Application {
@@ -15,6 +16,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        Registry reg = new Registry();
+        reg.getProperties();
 
         Platform.setImplicitExit(false);
         Parent root = FXMLLoader.load(getClass().getResource("main_window.fxml"));

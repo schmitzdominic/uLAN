@@ -1,18 +1,28 @@
 package network;
 
+import registry.Registry;
+
 public class Client {
     private String id;
     private String ip;
     private String hostname;
     private String listName;
+    private Registry reg;
 
     public Client(String id, String ip, String hostname){
-        // TODO: Search in Registry, if found -> get information from registry, if not -> get parameter
-        // TODO: If not found -> set registry parameter
+
+        this.reg = new Registry();
         this.id = id;
-        this.ip = ip;
-        this.hostname = hostname;
-        this.listName = hostname;
+
+        if(reg.checkIfClientExists(this)){
+            reg.updateClientSettings(this);
+        } else {
+            this.id = id;
+            this.ip = ip;
+            this.listName = hostname;
+            this.hostname = hostname;
+            reg.addClient(this);
+        }
     }
 
     public String getId() {
@@ -33,21 +43,21 @@ public class Client {
 
     public void setId(String id) {
         this.id = id;
-        // TODO: Set in Registry
+        this.reg.addClient(this);
     }
 
     public void setIp(String ip) {
         this.ip = ip;
-        // TODO: Set in Registry
+        this.reg.addClient(this);
     }
 
     public void setHostname(String hostname) {
         this.hostname = hostname;
-        // TODO: Set in Registry
+        this.reg.addClient(this);
     }
 
     public void setListName(String listName) {
         this.listName = listName;
-        // TODO: Set in Registry
+        this.reg.addClient(this);
     }
 }

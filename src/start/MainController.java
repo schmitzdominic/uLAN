@@ -36,6 +36,9 @@ public class MainController {
     Button buttonSaveName;
 
     @FXML
+    Button buttonRefresh;
+
+    @FXML
     ImageView imageButtonRefresh;
 
     @FXML
@@ -121,7 +124,7 @@ public class MainController {
     }
 
     private void saveClientListName(){
-        this.client.setListName(this.textFieldChangeName.getText());
+        this.client.setListName(this.textFieldChangeName.getText().toLowerCase());
         this.clients.changeClient(this.clientTitle.getText(), this.client);
         this.refreshClientInfo();
         this.resetChangeName();
@@ -151,7 +154,7 @@ public class MainController {
         return this.clients.existName(name);
     }
 
-    public void buttonAction(ActionEvent event) {
+    public void buttonRefresh(ActionEvent event) {
         for(int i = 0; i < 20; i++){
             this.clients.addClient(new Client(String.format("%s", i), String.format("10.20.30.%s", i), String.format("COOLER_PC_%s", i)));
         }
@@ -173,7 +176,7 @@ public class MainController {
     }
 
     public void buttonSaveName(ActionEvent event) {
-        String newName = this.textFieldChangeName.getText();
+        String newName = this.textFieldChangeName.getText().toLowerCase();
         if(!this.checkIfCientNameExist(newName)){
             this.saveClientListName();
         } else if (this.client.getHostname().equals(newName)){

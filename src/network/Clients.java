@@ -32,8 +32,8 @@ public class Clients {
     }
 
     public void addClient(Client client) {
-        if (!this.clientList.getItems().contains(client.getHostname()) & this.clientMap.get(client.getId()) == null){
-            this.clientList.getItems().add(client.getHostname());
+        if (!this.clientList.getItems().contains(client.getListName()) & this.clientMap.get(client.getId()) == null){
+            this.clientList.getItems().add(client.getListName());
             this.clientMap.put(client.getId(), client);
         }
     }
@@ -41,7 +41,7 @@ public class Clients {
     public void removeClient(Client client) {
         int index = 0;
         for(String c : this.clientList.getItems()) {
-            if (c.equals(client.getHostname())) {
+            if (c.equals(client.getListName())) {
                 this.clientList.getItems().remove(index);
                 this.clientMap.remove(client.getId());
             }
