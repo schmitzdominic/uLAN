@@ -24,7 +24,7 @@ public class Tray {
         }
 
         // Tray Icon
-        Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/icons/baseline_account_tree_white_18dp.png"));
+        Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(main.getProperties().get("defaulticon")));
 
         final PopupMenu popup = new PopupMenu();
         final SystemTray tray = SystemTray.getSystemTray();

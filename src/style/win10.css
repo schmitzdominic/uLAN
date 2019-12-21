@@ -34,6 +34,20 @@
     -fx-background-radius: 0em;
 }
 
+.list-view .scroll-bar:horizontal {
+    -fx-background-color:transparent;
+}
+
+.list-view .scroll-bar:horizontal .track{
+    -fx-background-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.list-view .scroll-bar:horizontal .thumb{
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0em;
+}
+
 .list-view:focused{
     -fx-background-color: transparent;
 }
@@ -76,12 +90,33 @@
 .client_title {
     -fx-font-size: 20pt;
     -fx-font-family: "Segoe UI Light";
+    -fx-font-weight: bold;
     -fx-text-fill: white;
     -fx-alignment: center-left;
 }
 
 .client_rename {
     -fx-font-size: 20pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+    -fx-background-color: transparent;
+}
+
+.client_info_box {
+    -fx-background-color: #292929;
+}
+
+.client_label {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+    -fx-background-color: transparent;
+}
+
+.client_information {
+    -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Light";
     -fx-text-fill: white;
     -fx-alignment: center-left;

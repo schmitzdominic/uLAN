@@ -1,7 +1,13 @@
 package registry;
 
+import info.Info;
 import network.Client;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -13,6 +19,8 @@ public class Registry {
 
     // Default settings
     final private String DEFAULTTRANSFERPATH = System.getProperty("user.home") + "\\downloads";
+    final private String DEFAULTICON = "/icons/baseline_account_tree_white_18dp.png";
+    final private String ID = "";
     final private int DEFAULTMESSAGE = 1;
     final private int PORT = 33123;
     final private int FILEPORT = 33111;
@@ -39,8 +47,14 @@ public class Registry {
         if(!this.checkIfPropertiesExist("defaultfiletransferpath")){
             this.setSetting("properties", "defaultfiletransferpath", this.DEFAULTTRANSFERPATH);
         }
+        if(!this.checkIfPropertiesExist("defaulticon")){
+            this.setSetting("properties", "defaulticon", this.DEFAULTICON);
+        }
         if(!this.checkIfPropertiesExist("defaultmessage")){
             this.setSetting("properties", "defaultmessage", "" + this.DEFAULTMESSAGE);
+        }
+        if(!this.checkIfPropertiesExist("id")){
+            this.setSetting("properties", "id", this.getId());
         }
         if(!this.checkIfPropertiesExist("port")){
             this.setSetting("properties", "port", "" + this.PORT);
@@ -71,6 +85,62 @@ public class Registry {
         } catch (BackingStoreException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private String getId() {
+
+        String tString = "";
+        String host = "";
+        String ip = "";
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        tString = sdf.format(date);
+
+        host = Info.getHostname();
+        ip = Info.getIp();
+
+        if(host == null) {
+            host = "NA";
+        }
+
+        if(ip == null) {
+            ip = "NA";
+        }
+
+        return this.encryptString(String.format("%s;%s;%s", tString, host, ip));
+    }
+
+    public String encryptString(String input)
+    {
+        try {
+            // getInstance() method is called with algorithm SHA-512
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+
+            // digest() method is called
+            // to calculate message digest of the input string
+            // returned as array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+
+            // Add preceding 0s to make it 32 bit
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+
+            // return the HashText
+            return hashtext;
+        }
+
+        // For specifying wrong message digest algorithms
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 
