@@ -10,7 +10,7 @@
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="main_client_info_background" stylesheets="@../style/win10.css" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="410.0">
          <children>
             <Label styleClass="main_hostname_label" stylesheets="@../style/win10.css" text="Host:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="170.0" AnchorPane.topAnchor="0.0" />
-            <Label layoutX="20.0" layoutY="10.0" styleClass="main_hostname_text" stylesheets="@../style/win10.css" text="HOSTNAME" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+            <Label fx:id="labelOwnHostname" layoutX="20.0" layoutY="10.0" styleClass="main_hostname_text" stylesheets="@../style/win10.css" text="HOSTNAME" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="main_client_info_background" stylesheets="@../style/win10.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -24,7 +24,7 @@
                   <ImageView fx:id="imageButtonSaveName" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
             </Button>
-            <Label fx:id="clientTitle" styleClass="client_title" stylesheets="@../style/win10.css" text="CLIENT" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0" />
+            <Label fx:id="clientTitle" prefWidth="300.0" styleClass="client_title" stylesheets="@../style/win10.css" text="CLIENT" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0" />
             <TextField fx:id="textFieldChangeName" layoutX="31.0" layoutY="29.0" onAction="#buttonSaveName" prefWidth="300.0" styleClass="client_rename" stylesheets="@../style/win10.css" visible="false" AnchorPane.leftAnchor="-7.0" AnchorPane.topAnchor="11.0" />
             <AnchorPane fx:id="clientInformation" prefHeight="88.0" prefWidth="380.0" styleClass="client_info_box" stylesheets="@../style/win10.css" visible="false" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="100.0">
                <children>

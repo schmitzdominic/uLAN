@@ -1,5 +1,6 @@
 package start;
 
+import info.Info;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,6 +34,9 @@ public class MainController {
 
     @FXML
     Label clientTitle;
+
+    @FXML
+    Label labelOwnHostname;
 
     @FXML
     Label labelHostnameText;
@@ -91,6 +95,7 @@ public class MainController {
         this.createClientList();
         this.createReleasesList();
         this.setButtonIcons();
+        this.setOwnInformation();
     }
 
     private void createServer(){
@@ -105,6 +110,7 @@ public class MainController {
         this.clientList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String value) {
+                buttonDownload.setVisible(false);
                 selectClient(clients.getClientByListName(value));
             }
         });
@@ -122,7 +128,7 @@ public class MainController {
         });
     }
 
-    private void setButtonIcons(){
+    private void setButtonIcons() {
         this.imageButtonRefresh.setImage(new Image("/icons/baseline_autorenew_white_18dp.png"));
         this.imageButtonChangeName.setImage(new Image("/icons/baseline_edit_white_18dp.png"));
         this.imageButtonSaveName.setImage(new Image("/icons/baseline_save_white_18dp.png"));
@@ -142,6 +148,12 @@ public class MainController {
         this.resizeImage(this.imageButtonHistory);
     }
 
+    private void setOwnInformation() {
+        Tooltip tooltip = new Tooltip(Info.getIp());
+        this.labelOwnHostname.setText(Info.getHostname());
+        this.labelOwnHostname.setTooltip(tooltip);
+    }
+
     private ImageView resizeImage(ImageView image){
         return this.resizeImage(image, 22, 22);
     }
@@ -156,14 +168,11 @@ public class MainController {
         if(!this.clientTitle.isVisible()){
             this.makeClientInfoVisible();
         }
-        this.resetChangeName();
         this.client = client;
-        this.clientTitle.setText(client.getListName()); // Client Title
-        this.labelHostnameText.setText(client.getHostname());
-        this.labelIPText.setText(client.getIp());
+        this.resetChangeName();
+        this.refreshClientInfo();
         if (client.getReleases().size() != 0) {
             this.clientReleases.setVisible(true);
-            this.buttonDownload.setVisible(false);
             this.addReleases(client);
         } else {
             this.clientReleases.setVisible(false);
@@ -186,7 +195,8 @@ public class MainController {
 
     public void refreshClientInfo(){
         this.clientTitle.setText(client.getListName());
-        // TODO: Add other client Infos!
+        this.labelHostnameText.setText(client.getHostname());
+        this.labelIPText.setText(client.getIp());
     }
 
     public void resetChangeName(){
@@ -217,6 +227,7 @@ public class MainController {
     }
 
     public void buttonRefresh(ActionEvent event) {
+        // TODO: Implement refresh
         for(int i = 0; i < 20; i++){
             Client client = new Client(String.format("%s", i), String.format("10.20.30.%s", i), String.format("COOLER_PC_%s", i));
             if(i%5==0){

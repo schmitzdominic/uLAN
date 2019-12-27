@@ -18,6 +18,7 @@
     -fx-font-weight: bold;
     -fx-text-fill: white;
     -fx-font-size: 12pt;
+    -fx-pref-width: 100;
 }
 
 .list-view .scroll-bar:vertical {

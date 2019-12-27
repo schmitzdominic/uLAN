@@ -2,7 +2,11 @@ package network;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Tooltip;
+import javafx.util.Callback;
 
 public class Releases {
 
@@ -20,6 +24,7 @@ public class Releases {
             this.releaseList.getItems().add(this.getListItem(client.getReleases().get(key), key));
             this.releaseMap.put(key, client.getReleases().get(key));
         }
+        this.setTooltip();
     }
 
     public void removeAllReleases(Client client) {
@@ -44,11 +49,37 @@ public class Releases {
         return folder + " | " + path;
     }
 
+    private void setTooltip() {
+        this.releaseList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                final Label leadLbl = new Label();
+                final Tooltip tooltip = new Tooltip();
+                final ListCell<String> listCell = new ListCell<String>() {
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            leadLbl.setText(item);
+                            setText(item);
+                            tooltip.setText(item);
+                            setTooltip(tooltip);
+                        }
+                    }
+                };
+                return listCell;
+            }
+        });
+    }
+
     public String getPathFromListItem(String item) {
-        if(item.contains(" | ")) {
-            return item.split(" | ")[2];
-        } else {
-            return null;
+        if (item != null) {
+            if(item.contains(" | ")) {
+                return item.split(" | ")[2];
+            } else {
+                return null;
+            }
         }
+        return null;
     }
 }
