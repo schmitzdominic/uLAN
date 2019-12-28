@@ -48,7 +48,7 @@
             </AnchorPane>
          </children></AnchorPane>
       <Line endX="125.0" fill="WHITE" opacity="0.53" startX="-100.0" stroke="WHITE" strokeWidth="2.0" AnchorPane.bottomAnchor="388.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="60.0" />
-      <Label styleClass="main_client_list_title" stylesheets="@../style/win10.css" text="Clients" AnchorPane.bottomAnchor="440.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="10.0" styleClass="main_client_list_title" stylesheets="@../style/win10.css" text="Clients" AnchorPane.bottomAnchor="440.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="20.0" />
       <ListView fx:id="clientList" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="110.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="70.0" />
       <Button fx:id="buttonRefresh" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false" onAction="#buttonRefresh" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="25.0">
          <graphic>
@@ -75,5 +75,12 @@
             <ImageView fx:id="imageButtonHistory" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
          </graphic>
       </Button>
+      <ProgressBar fx:id="clientProgress" layoutX="10.0" layoutY="61.0" prefHeight="5.0" prefWidth="228.0" progress="0.0" stylesheets="@../style/win10.css" visible="false" AnchorPane.leftAnchor="10.0" />
+      <Label fx:id="labelPercentage" layoutX="138.0" layoutY="35.0" styleClass="client_label" stylesheets="@../style/win10.css" text="100 %" textAlignment="RIGHT" visible="false" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="35.0" />
+      <ImageView fx:id="loadingGIF" fitHeight="50.0" fitWidth="50.0" layoutX="176.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" visible="false" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="10.0">
+         <image>
+            <Image url="@../resources/icons/loader.gif" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

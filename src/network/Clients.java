@@ -1,8 +1,12 @@
 package network;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ListView;
+
+import java.util.Comparator;
 
 public class Clients {
 
@@ -16,6 +20,7 @@ public class Clients {
     public Clients(ListView<String> clientList){
         this.clientMap = FXCollections.observableHashMap();
         this.clientList = clientList;
+        this.clientList.getItems().sort(Comparator.naturalOrder());
     }
 
     public Client getClientById(String id){
@@ -32,21 +37,31 @@ public class Clients {
     }
 
     public void addClient(Client client) {
-        if (!this.clientList.getItems().contains(client.getListName()) & this.clientMap.get(client.getId()) == null){
-            this.clientList.getItems().add(client.getListName());
-            this.clientMap.put(client.getId(), client);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (!clientList.getItems().contains(client.getListName()) & clientMap.get(client.getId()) == null){
+                    clientList.getItems().add(client.getListName());
+                    clientMap.put(client.getId(), client);
+                }
+            }
+        });
     }
 
     public void removeClient(Client client) {
-        int index = 0;
-        for(String c : this.clientList.getItems()) {
-            if (c.equals(client.getListName())) {
-                this.clientList.getItems().remove(index);
-                this.clientMap.remove(client.getId());
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                int index = 0;
+                for(String c : clientList.getItems()) {
+                    if (c.equals(client.getListName())) {
+                        clientList.getItems().remove(index);
+                        clientMap.remove(client.getId());
+                    }
+                    index++;
+                }
             }
-            index++;
-        }
+        });
     }
 
     public boolean existName(String hostname){

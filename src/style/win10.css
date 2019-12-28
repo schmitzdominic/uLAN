@@ -141,3 +141,14 @@
     -fx-background-radius: 0;
 }
 
+.progress-bar > .bar {
+    -fx-background-insets: 1 1 2 1;
+    -fx-padding: 0.30em;
+    -fx-background-radius: 0, 0, 0, 0;
+    -fx-background-color: white;
+}
+
+.progress-bar .track {
+    -fx-background-color: transparent;
+}
+

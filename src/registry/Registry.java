@@ -243,6 +243,17 @@ public class Registry {
         }
     }
 
+    public void removeClient(Client client){
+        String name = client.getId();
+        this.settings = Preferences.userRoot().node(path+"/clients/"+name);
+        try {
+            this.settings.removeNode();
+        } catch (BackingStoreException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void updateClientSettings(Client client){
         String jobName=String.format("%s/%s", this.clients, client.getId()).toLowerCase();
         client.setHostname(this.getSetting(jobName, "hostname"));

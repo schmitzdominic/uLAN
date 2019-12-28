@@ -5,6 +5,8 @@ import start.MainController;
 public class Server extends Thread {
 
     private MainController mainController;
+    private Finder finder;
+    private int count;
 
     public Server(MainController mainController){
         this.mainController = mainController;

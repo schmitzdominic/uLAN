@@ -1,5 +1,6 @@
 package start;
 
+import Interfaces.ClientFoundListener;
 import info.Info;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -10,12 +11,11 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import network.Client;
-import network.Clients;
-import network.Releases;
-import network.Server;
+import network.*;
 
-public class MainController {
+import java.util.Random;
+
+public class MainController implements ClientFoundListener {
 
     @FXML
     AnchorPane mainWindow;
@@ -43,6 +43,9 @@ public class MainController {
 
     @FXML
     Label labelIPText;
+
+    @FXML
+    Label labelPercentage;
 
     @FXML
     TextField textFieldChangeName;
@@ -83,10 +86,17 @@ public class MainController {
     @FXML
     ImageView imageButtonHistory;
 
+    @FXML
+    ProgressBar clientProgress;
+
+    @FXML
+    ImageView loadingGIF;
+
     private Server server;
     private Clients clients;
     private Client client;
     private Releases releases;
+    private Finder finder = new Finder();
     private String actualRelease;
 
     @FXML
@@ -96,6 +106,7 @@ public class MainController {
         this.createReleasesList();
         this.setButtonIcons();
         this.setOwnInformation();
+        this.searchClients();
     }
 
     private void createServer(){
@@ -152,6 +163,54 @@ public class MainController {
         Tooltip tooltip = new Tooltip(Info.getIp());
         this.labelOwnHostname.setText(Info.getHostname());
         this.labelOwnHostname.setTooltip(tooltip);
+    }
+
+    public void searchClients() {
+        this.searchClients(5);
+    }
+
+    public void searchClients(int count) {
+        if (!finder.active) {
+            this.finder.setCount(count);
+            this.finder.registerClientFoundListener(this);
+            this.finder.searchClients();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    clientProgress.setVisible(true);
+                    loadingGIF.setVisible(true);
+                    labelPercentage.setVisible(true);
+                    buttonRefresh.setVisible(false);
+                    while (finder.active) {
+                        try {
+                            Thread.sleep(50);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    double p = (double)finder.counter.get()/count;
+                                    labelPercentage.setText((int)(p*100) + " %");
+                                    clientProgress.setProgress(p);
+                                }
+                            });
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    clientProgress.setVisible(false);
+                    loadingGIF.setVisible(false);
+                    labelPercentage.setVisible(false);
+                    buttonRefresh.setVisible(true);
+                    clientProgress.setProgress(0);
+                }
+            }).start();
+        }
+    }
+
+    @Override
+    public void onClientFound(Client client) {
+        this.addClient(client);
     }
 
     private ImageView resizeImage(ImageView image){
@@ -228,6 +287,8 @@ public class MainController {
 
     public void buttonRefresh(ActionEvent event) {
         // TODO: Implement refresh
+        this.searchClients(10);
+        /*
         for(int i = 0; i < 20; i++){
             Client client = new Client(String.format("%s", i), String.format("10.20.30.%s", i), String.format("COOLER_PC_%s", i));
             if(i%5==0){
@@ -243,6 +304,7 @@ public class MainController {
             }
             this.clients.addClient(client);
         }
+        */
     }
 
     public void buttonChangeName(ActionEvent event) {
