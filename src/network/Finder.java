@@ -33,7 +33,7 @@ public class Finder {
                 @Override
                 public void run() {
                     // TODO: Search for Client
-                    // If Client found, call clientListener.onCLientFound and add the client
+                    // If Client found, call clientListener.onClientFound and add the client
 
                     /*
                      * FROM HERE
