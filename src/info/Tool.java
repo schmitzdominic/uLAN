@@ -31,7 +31,6 @@ public class Tool {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.println(message + "\n");
             out.flush();
-            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,7 +41,6 @@ public class Tool {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.println(message + "\n");
             out.flush();
-            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
