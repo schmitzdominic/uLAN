@@ -18,6 +18,7 @@ public class Finder {
     private int port;
     public AtomicInteger counter;
     public boolean active = false;
+    private String ipAddress;
 
     public Finder() {
         this.counter = new AtomicInteger();
@@ -32,6 +33,7 @@ public class Finder {
     }
 
     public void searchClients() {
+        this.ipAddress = Info.getIp();
         this.active = true;
         this.counter.set(0);
         String ipAddress = this.getNetworkIP(Info.getIp());
@@ -46,24 +48,27 @@ public class Finder {
                 @Override
                 public void run() {
                     try {
-                        InetAddress ip = InetAddress.getByName(ipAddress + client);
-                        Socket client = isOnline(ip, port);
+                        String address = ipAddress + client;
+                        InetAddress ip = InetAddress.getByName(address);
+                        if (!(address).equals(ipAddress)) {
+                            Socket client = isOnline(ip, port);
 
-                        if (client != null) {
-                            Tool.sendMessage(client, Info.getInitializePackage());
-                            try {
-                                BufferedReader reader = new BufferedReader(
-                                        new InputStreamReader(client.getInputStream()));
-                                while(true) {
-                                    System.out.println(reader.readLine());
+                            if (client != null) {
+                                Tool.sendMessage(client, Info.getInitializePackage());
+                                try {
+                                    BufferedReader reader = new BufferedReader(
+                                            new InputStreamReader(client.getInputStream()));
+                                    while(true) {
+                                        System.out.println(reader.readLine());
+                                    }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
-                        }
 
-                        if (count == counter.addAndGet(1)) {
-                            active = false;
+                            if (count == counter.addAndGet(1)) {
+                                active = false;
+                            }
                         }
                     } catch (UnknownHostException e) {
                         e.printStackTrace();
