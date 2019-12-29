@@ -3,7 +3,9 @@ package network;
 import info.Info;
 import info.Tool;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -49,6 +51,15 @@ public class Finder {
 
                         if (client != null) {
                             Tool.sendMessage(client, Info.getInitializePackage());
+                            try {
+                                BufferedReader reader = new BufferedReader(
+                                        new InputStreamReader(client.getInputStream()));
+                                while(true) {
+                                    System.out.println(reader.readLine());
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
 
                         if (count == counter.addAndGet(1)) {
