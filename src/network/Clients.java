@@ -71,6 +71,14 @@ public class Clients {
         });
     }
 
+    public void removeClientById(String id) {
+        for(Client client : clientMap.values()) {
+            if (client.getId().equals(id)) {
+                this.removeClient(client);
+            }
+        }
+    }
+
     public void removeClient(Client client) {
         Platform.runLater(new Runnable() {
             @Override

@@ -6,5 +6,5 @@ import java.net.Socket;
 
 public interface ClientFoundListener {
     void onClientFound(Client client);
-    void onClientRemove(Client client);
+    void onClientRemove(String id);
 }

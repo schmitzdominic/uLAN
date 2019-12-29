@@ -82,6 +82,10 @@ public class Server extends Thread {
         }
     }
 
+    private void disconnectClient(Map<String, String> info, Socket socket) {
+
+    }
+
     public void registerClientFoundListener(ClientFoundListener clientListener) {
         this.clientListener = clientListener;
     }

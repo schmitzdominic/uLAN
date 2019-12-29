@@ -212,10 +212,8 @@ public class MainController implements ClientFoundListener {
     }
 
     @Override
-    public void onClientRemove(Client client) {
-        if (this.clients.clientExists(client)) {
-            this.removeClient(client);
-        }
+    public void onClientRemove(String id) {
+        this.removeClient(id);
     }
 
     private ImageView resizeImage(ImageView image){
@@ -276,8 +274,12 @@ public class MainController implements ClientFoundListener {
         this.clients.addClient(client);
     }
 
-    public void removeClient(Client client){
+    public void removeClient(Client client) {
         this.clients.removeClient(client);
+    }
+
+    public void removeClient(String id) {
+        this.clients.removeClientById(id);
     }
 
     public void addReleases(Client client) {

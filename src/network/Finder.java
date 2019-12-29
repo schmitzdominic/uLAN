@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -64,8 +65,12 @@ public class Finder {
                                     BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                                     String line;
                                     // Wait for the REPEAT Package
-                                    while((line = reader.readLine()) != null) {
-                                        repeat(line, client);
+                                    try {
+                                        while((line = reader.readLine()) != null) {
+                                            repeat(line, client);
+                                        }
+                                    } catch (SocketException e) {
+                                        System.out.println(String.format("Client %s reset", client.getInetAddress().getHostAddress()));
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -114,17 +119,27 @@ public class Finder {
 
         if (this.clientListener != null) {
 
-            Map<String, String> info = Tool.convertMessage(message);
+            Client client = this.buildClient(message);
 
-            String id = info.get("ID");
-            String ip = info.get("IP");
-            String hostname = info.get("HOSTNAME");
-
-            if (id != null & ip != null & hostname != null) {
-                Client client = new Client(id, ip, hostname);
+            if (client != null) {
                 client.setSocket(socket);
                 clientListener.onClientFound(client);
             }
+        }
+    }
+
+    private Client buildClient(String message) {
+
+        Map<String, String> info = Tool.convertMessage(message);
+
+        String id = info.get("ID");
+        String ip = info.get("IP");
+        String hostname = info.get("HOSTNAME");
+
+        if (id != null & ip != null & hostname != null) {
+            return new Client(id, ip, hostname);
+        } else {
+            return null;
         }
     }
 
