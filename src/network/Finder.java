@@ -59,7 +59,9 @@ public class Finder {
                                     BufferedReader reader = new BufferedReader(
                                             new InputStreamReader(client.getInputStream()));
                                     while(true) {
-                                        System.out.println(reader.readLine());
+                                        if (reader.readLine() != null) {
+                                            System.out.println(reader.readLine());
+                                        }
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
