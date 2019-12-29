@@ -56,7 +56,7 @@ public class Server extends Thread {
                                 initialize(info, socket);
                             }
                         } else if (mode.equals("DISCONNECT")) {
-                            disconnectClient(info, socket);
+                            disconnectClient(info);
                         }
                     }
                 } catch (IOException e) {
@@ -82,8 +82,8 @@ public class Server extends Thread {
         }
     }
 
-    private void disconnectClient(Map<String, String> info, Socket socket) {
-        System.out.println(info);
+    private void disconnectClient(Map<String, String> info) {
+        clientListener.onClientRemove(info.get("ID"));
     }
 
     public void registerClientFoundListener(ClientFoundListener clientListener) {

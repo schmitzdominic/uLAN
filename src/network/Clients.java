@@ -133,7 +133,6 @@ public class Clients {
                 @Override
                 public void run() {
                     try {
-                        System.out.println("DISCONNECT " + client.getListName());
                         Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), port);
                         if (socket != null) {
                             Tool.sendMessage(socket, Info.getDisconnectPackage());
