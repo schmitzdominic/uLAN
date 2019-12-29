@@ -8,7 +8,6 @@ import start.MainController;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -32,9 +31,7 @@ public class Server extends Thread {
             ServerSocket listener = new ServerSocket(this.port);
 
             while (true) {
-                System.out.println("WAITING...");
                 Socket socket = listener.accept();
-                System.out.println("CLIENT! " + socket.getInetAddress().getHostAddress());
                 if (!socket.getInetAddress().getHostAddress().equals(this.ip)) {
                     this.checkMessage(socket);
                 }
@@ -51,17 +48,13 @@ public class Server extends Thread {
             public void run() {
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String map = in.readLine();
-                    map = map.replaceAll("[{} ]","");
-                    Map<String, String> info = Tool.convertWithStream(map);
+                    Map<String, String> info = Tool.convertMessage(in.readLine());
                     String mode = info.get("MODE");
                     if (mode != null) {
                         if (mode.equals("INITIALIZE")) {
                             if (!info.get("ID").equals(id)) {
                                 initialize(info, socket);
                             }
-                        } else if (mode.equals("REPEAT")) {
-                            repeat(info);
                         } else if (mode.equals("DISCONNECT")) {
 
                         }
@@ -82,22 +75,8 @@ public class Server extends Thread {
 
             if (id != null & ip != null & hostname != null) {
                 Client client = new Client(id, ip, hostname);
-                HashMap<String, String> test = Info.getRepeatPackage();
-                Tool.sendMessage(socket, test);
-                clientListener.onClientFound(client);
-            }
-        }
-    }
-
-    private void repeat(Map<String, String> info) {
-        if (this.clientListener != null) {
-
-            String id = info.get("ID");
-            String ip = info.get("IP");
-            String hostname = info.get("HOSTNAME");
-
-            if (id != null & ip != null & hostname != null) {
-                Client client = new Client(id, ip, hostname);
+                client.setSocket(socket);
+                Tool.sendMessage(socket, Info.getRepeatPackage());
                 clientListener.onClientFound(client);
             }
         }

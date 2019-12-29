@@ -1,15 +1,16 @@
 package network;
 
+import Interfaces.ClientFoundListener;
 import info.Info;
 import info.Tool;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Finder {
@@ -19,6 +20,7 @@ public class Finder {
     public AtomicInteger counter;
     public boolean active = false;
     private String ipAddress;
+    private ClientFoundListener clientListener;
 
     public Finder() {
         this.counter = new AtomicInteger();
@@ -48,19 +50,22 @@ public class Finder {
                 @Override
                 public void run() {
                     try {
-                        String address = ipAddress + client;
-                        InetAddress ip = InetAddress.getByName(address);
-                        if (!(address).equals(ipAddress)) {
+                        // Build a InetAddress and check if the client is available
+                        InetAddress ip = InetAddress.getByName(ipAddress + client);
+                        if (!(ipAddress).equals(ipAddress + client)) {
+
                             Socket client = isOnline(ip, port);
 
                             if (client != null) {
-                                Tool.sendMessage(client, Info.getInitializePackage());
+                                // If the Client is available
                                 try {
-                                    BufferedReader reader = new BufferedReader(
-                                            new InputStreamReader(client.getInputStream()));
+                                    // Send a initialize Package
+                                    Tool.sendMessage(client, Info.getInitializePackage());
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
                                     String line;
+                                    // Wait for the REPEAT Package
                                     while((line = reader.readLine()) != null) {
-                                        System.out.println(reader.readLine());
+                                        repeat(line, client);
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -103,5 +108,27 @@ public class Finder {
         } else {
             return null;
         }
+    }
+
+    private void repeat(String message, Socket socket) {
+
+        if (this.clientListener != null) {
+
+            Map<String, String> info = Tool.convertMessage(message);
+
+            String id = info.get("ID");
+            String ip = info.get("IP");
+            String hostname = info.get("HOSTNAME");
+
+            if (id != null & ip != null & hostname != null) {
+                Client client = new Client(id, ip, hostname);
+                client.setSocket(socket);
+                clientListener.onClientFound(client);
+            }
+        }
+    }
+
+    public void registerClientFoundListener(ClientFoundListener clientListener) {
+        this.clientListener = clientListener;
     }
 }

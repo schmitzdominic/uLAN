@@ -45,4 +45,9 @@ public class Tool {
             e.printStackTrace();
         }
     }
+
+    public static Map<String, String> convertMessage(String message) {
+        message = message.replaceAll("[{} ]","");
+        return Tool.convertWithStream(message);
+    }
 }

@@ -3,6 +3,7 @@ package network;
 import registry.Registry;
 
 import java.net.InetAddress;
+import java.net.Socket;
 import java.util.HashMap;
 
 public class Client {
@@ -12,6 +13,7 @@ public class Client {
     private String listName;
     private Registry reg;
     private InetAddress ipAddress;
+    private Socket socket;
 
     private HashMap<String, String> releases;
 
@@ -61,6 +63,10 @@ public class Client {
         return this.releases;
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
+
     public void setId(String id) {
         this.id = id;
         this.reg.addClient(this);
@@ -83,6 +89,10 @@ public class Client {
 
     public void setIpAddress(InetAddress ipAddress) {
         this.ipAddress = ipAddress;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 
     public void addRelease(String folder, String path) {

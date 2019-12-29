@@ -180,6 +180,7 @@ public class MainController implements ClientFoundListener {
 
     public void searchClients(int count) {
         if (!finder.active) {
+            this.finder.registerClientFoundListener(this);
             this.finder.setCount(count);
             this.finder.setPort(this.port);
             this.finder.searchClients();
