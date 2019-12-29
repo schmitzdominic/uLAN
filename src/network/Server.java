@@ -45,12 +45,12 @@ public class Server extends Thread {
         }
     }
 
-    private void checkMessage(Socket client) {
+    private void checkMessage(Socket socket) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     String map = in.readLine();
                     map = map.replaceAll("[{} ]","");
                     Map<String, String> info = Tool.convertWithStream(map);
@@ -58,7 +58,7 @@ public class Server extends Thread {
                     if (mode != null) {
                         if (mode.equals("INITIALIZE")) {
                             if (!info.get("ID").equals(id)) {
-                                initialize(info, client);
+                                initialize(info, socket);
                             }
                         } else if (mode.equals("REPEAT")) {
                             repeat(info);

@@ -58,7 +58,8 @@ public class Finder {
                                 try {
                                     BufferedReader reader = new BufferedReader(
                                             new InputStreamReader(client.getInputStream()));
-                                    while(reader.readLine() != null) {
+                                    String line;
+                                    while((line = reader.readLine()) != null) {
                                         System.out.println(reader.readLine());
                                     }
                                 } catch (IOException e) {
