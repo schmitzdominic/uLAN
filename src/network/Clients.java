@@ -39,6 +39,14 @@ public class Clients {
         return null;
     }
 
+    public boolean clientExists(Client client) {
+        if (clientMap.get(client.getId()) == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public void addClient(Client client) {
         Platform.runLater(new Runnable() {
             @Override

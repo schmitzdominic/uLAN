@@ -8,7 +8,6 @@ import start.MainController;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -30,7 +29,6 @@ public class Server extends Thread {
             ServerSocket listener = new ServerSocket(this.port);
 
             while (true) {
-                System.out.println("WAITING FOR INCOME!");
                 this.checkMessage(listener.accept());
             }
         } catch (IOException e) {
@@ -52,7 +50,7 @@ public class Server extends Thread {
                     if (mode != null) {
                         if (mode.equals("INITIALIZE")) {
                             if (!info.get("ID").equals(id)) {
-                                initialize(info);
+                                initialize(info, client);
                             }
                         }
                     }
@@ -63,7 +61,7 @@ public class Server extends Thread {
         }).start();
     }
 
-    private void initialize(Map<String, String> info) {
+    private void initialize(Map<String, String> info, Socket socket) {
         if (this.clientListener != null) {
 
             String id = info.get("ID");
@@ -72,7 +70,7 @@ public class Server extends Thread {
 
             if (id != null & ip != null & hostname != null) {
                 Client client = new Client(id, ip, hostname);
-                clientListener.onClientFound(client);
+                clientListener.onClientFound(client, socket);
             }
         }
     }

@@ -2,6 +2,7 @@ package start;
 
 import Interfaces.ClientFoundListener;
 import info.Info;
+import info.Tool;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,6 +15,7 @@ import javafx.scene.layout.*;
 import network.*;
 import registry.Registry;
 
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -45,9 +47,6 @@ public class MainController implements ClientFoundListener {
 
     @FXML
     Label labelIPText;
-
-    @FXML
-    Label labelPercentage;
 
     @FXML
     TextField textFieldChangeName;
@@ -87,9 +86,6 @@ public class MainController implements ClientFoundListener {
 
     @FXML
     ImageView imageButtonHistory;
-
-    @FXML
-    ProgressBar clientProgress;
 
     @FXML
     ImageView loadingGIF;
@@ -184,39 +180,35 @@ public class MainController implements ClientFoundListener {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // clientProgress.setVisible(true);
                     loadingGIF.setVisible(true);
-                    // labelPercentage.setVisible(true);
                     buttonRefresh.setVisible(false);
                     while (finder.active) {
                         try {
                             Thread.sleep(50);
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //double p = (double)finder.counter.get()/count;
-                                    // labelPercentage.setText((int)(p*100) + " %");
-                                    // clientProgress.setProgress(p);
-                                }
-                            });
-
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    // clientProgress.setVisible(false);
                     loadingGIF.setVisible(false);
-                    // labelPercentage.setVisible(false);
                     buttonRefresh.setVisible(true);
-                    // clientProgress.setProgress(0);
                 }
             }).start();
         }
     }
 
     @Override
-    public void onClientFound(Client client) {
-        this.addClient(client);
+    public void onClientFound(Client client, Socket socket) {
+        if (!this.clients.clientExists(client)) {
+            this.addClient(client);
+            Tool.sendMessage(socket, Info.getInitializePackage());
+        }
+    }
+
+    @Override
+    public void onClientRemove(Client client, Socket socket) {
+        if (this.clients.clientExists(client)) {
+            this.removeClient(client);
+        }
     }
 
     private ImageView resizeImage(ImageView image){
@@ -233,10 +225,12 @@ public class MainController implements ClientFoundListener {
         if(!this.clientTitle.isVisible()){
             this.makeClientInfoVisible();
         }
-        this.client = client;
+        if (client != null) {
+            this.client = client;
+        }
         this.resetChangeName();
         this.refreshClientInfo();
-        if (client.getReleases().size() != 0) {
+        if (this.client.getReleases().size() != 0) {
             this.clientReleases.setVisible(true);
             this.addReleases(client);
         } else {

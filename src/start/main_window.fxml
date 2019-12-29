@@ -75,8 +75,6 @@
             <ImageView fx:id="imageButtonHistory" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
          </graphic>
       </Button>
-      <ProgressBar fx:id="clientProgress" layoutX="10.0" layoutY="61.0" prefHeight="5.0" prefWidth="228.0" progress="0.0" stylesheets="@../style/win10.css" visible="false" AnchorPane.leftAnchor="10.0" />
-      <Label fx:id="labelPercentage" layoutX="138.0" layoutY="35.0" styleClass="client_label" stylesheets="@../style/win10.css" text="100 %" textAlignment="RIGHT" visible="false" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="35.0" />
       <ImageView fx:id="loadingGIF" fitHeight="50.0" fitWidth="50.0" layoutX="176.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" visible="false" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="10.0">
          <image>
             <Image url="@../resources/icons/loader.gif" />

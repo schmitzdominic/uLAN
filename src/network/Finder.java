@@ -1,6 +1,7 @@
 package network;
 
 import info.Info;
+import info.Tool;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,14 +48,7 @@ public class Finder {
                         Socket client = isOnline(ip, port);
 
                         if (client != null) {
-                            try {
-                                System.out.println(ip.getHostAddress() + " ONLINE");
-                                PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-                                out.println(Info.getInitializePackage());
-                                out.flush();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            Tool.sendMessage(client, Info.getInitializePackage());
                         }
 
                         if (count == counter.addAndGet(1)) {
