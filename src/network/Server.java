@@ -8,6 +8,7 @@ import start.MainController;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -31,7 +32,9 @@ public class Server extends Thread {
             ServerSocket listener = new ServerSocket(this.port);
 
             while (true) {
+                System.out.println("WAITING...");
                 Socket socket = listener.accept();
+                System.out.println("CLIENT! " + socket.getInetAddress().getHostAddress());
                 if (!socket.getInetAddress().getHostAddress().equals(this.ip)) {
                     this.checkMessage(socket);
                 }
@@ -58,7 +61,7 @@ public class Server extends Thread {
                                 initialize(info, client);
                             }
                         } else if (mode.equals("REPEAT")) {
-
+                            repeat(info);
                         } else if (mode.equals("DISCONNECT")) {
 
                         }
@@ -79,13 +82,14 @@ public class Server extends Thread {
 
             if (id != null & ip != null & hostname != null) {
                 Client client = new Client(id, ip, hostname);
-                Tool.sendMessage(socket, Info.getRepeatPackage());
+                HashMap<String, String> test = Info.getRepeatPackage();
+                Tool.sendMessage(socket, test);
                 clientListener.onClientFound(client);
             }
         }
     }
 
-    private void repeat(Map<String, String> info, Socket socket) {
+    private void repeat(Map<String, String> info) {
         if (this.clientListener != null) {
 
             String id = info.get("ID");
