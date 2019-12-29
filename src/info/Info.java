@@ -41,7 +41,7 @@ public class Info {
         HashMap<String, String> settings = getSettings();
         HashMap<String, String> map = new HashMap<>();
         map.put("MODE","INITIALIZE");
-        map.put("ID",settings.get("ID"));
+        map.put("ID",settings.get("id"));
         map.put("IP",getIp());
         map.put("HOSTNAME",getHostname());
         // TODO: HERE RELEASES!
