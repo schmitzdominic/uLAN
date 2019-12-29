@@ -32,7 +32,6 @@ public class Server extends Thread {
 
             while (true) {
                 Socket socket = listener.accept();
-                System.out.println(socket.getInetAddress().getHostAddress());
                 if (!socket.getInetAddress().getHostAddress().equals(this.ip)) {
                     this.checkMessage(socket);
                 }
@@ -51,6 +50,7 @@ public class Server extends Thread {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     Map<String, String> info = Tool.convertMessage(in.readLine());
                     String mode = info.get("MODE");
+                    System.out.println(mode);
                     if (mode != null) {
                         if (mode.equals("INITIALIZE")) {
                             if (!info.get("ID").equals(id)) {
