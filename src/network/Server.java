@@ -54,7 +54,7 @@ public class Server extends Thread {
                 try {
                     BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
                     String map = in.readLine();
-                    map = map.replaceAll("[{}]","");
+                    map = map.replaceAll("[{} ]","");
                     Map<String, String> info = Tool.convertWithStream(map);
                     String mode = info.get("MODE");
                     if (mode != null) {
@@ -72,8 +72,17 @@ public class Server extends Thread {
     }
 
     private void initialize(Map<String, String> info) {
-        System.out.println("INITIALIZE!");
+        if (this.clientListener != null) {
 
+            String id = info.get("ID");
+            String ip = info.get("IP");
+            String hostname = info.get("HOSTNAME");
+
+            if (id != null & ip != null & hostname != null) {
+                Client client = new Client(id, ip, hostname);
+                clientListener.onClientFound(client);
+            }
+        }
     }
 
     public void registerClientFoundListener(ClientFoundListener clientListener) {

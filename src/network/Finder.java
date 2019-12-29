@@ -7,14 +7,12 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Finder {
 
     private int count;
     private int port;
-    private String id;
     public AtomicInteger counter;
     public boolean active = false;
 
@@ -33,7 +31,6 @@ public class Finder {
     public void searchClients() {
         this.active = true;
         this.counter.set(0);
-        this.id = Info.getSettings().get("id");
         String ipAddress = this.getNetworkIP(Info.getIp());
         if (ipAddress == null) {
             counter.set(count);
@@ -53,10 +50,7 @@ public class Finder {
                             try {
                                 System.out.println(ip.getHostAddress() + " ONLINE");
                                 PrintWriter out = new PrintWriter(client.getOutputStream(), true);
-                                HashMap<String, String> x = new HashMap<>();
-                                x.put("MODE","INITIALIZE");
-                                x.put("ID",id);
-                                out.println(x);
+                                out.println(Info.getInitializePackage());
                                 out.flush();
                             } catch (IOException e) {
                                 e.printStackTrace();

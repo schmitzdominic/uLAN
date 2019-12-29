@@ -36,4 +36,15 @@ public class Info {
         }
         return null;
     }
+
+    public static HashMap<String, String> getInitializePackage() {
+        HashMap<String, String> settings = getSettings();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("MODE","INITIALIZE");
+        map.put("ID",settings.get("ID"));
+        map.put("IP",getIp());
+        map.put("HOSTNAME",getHostname());
+        // TODO: HERE RELEASES!
+        return map;
+    }
 }
