@@ -50,14 +50,13 @@ public class Server extends Thread {
                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     Map<String, String> info = Tool.convertMessage(in.readLine());
                     String mode = info.get("MODE");
-                    System.out.println(mode);
                     if (mode != null) {
                         if (mode.equals("INITIALIZE")) {
                             if (!info.get("ID").equals(id)) {
                                 initialize(info, socket);
                             }
                         } else if (mode.equals("DISCONNECT")) {
-
+                            disconnectClient(info, socket);
                         }
                     }
                 } catch (IOException e) {
@@ -84,7 +83,7 @@ public class Server extends Thread {
     }
 
     private void disconnectClient(Map<String, String> info, Socket socket) {
-
+        System.out.println(info);
     }
 
     public void registerClientFoundListener(ClientFoundListener clientListener) {
