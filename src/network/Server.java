@@ -8,6 +8,7 @@ import start.MainController;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -29,18 +30,9 @@ public class Server extends Thread {
             ServerSocket listener = new ServerSocket(this.port);
 
             while (true) {
+                System.out.println("WAITING FOR INCOME!");
                 this.checkMessage(listener.accept());
             }
-
-
-//            if (clientListener != null) {
-//                if (count == counter.get()) {
-//                    active = false;
-//                }
-//                // TODO: if client found -> add
-//                // Client client = new Client(String.format("%s", TESTID), String.format("10.20.30.%s", TESTID), String.format("COOLER_PC_%s", TESTID));
-//                // clientListener.onClientFound(client);
-//            }
         } catch (IOException e) {
             System.out.println("Es l\u00e4uft bereits eine Instanz des Programms. Programm wird geschlossen!");
             System.exit(0);
