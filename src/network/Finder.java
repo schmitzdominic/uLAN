@@ -70,7 +70,9 @@ public class Finder {
                                             repeat(line, client);
                                         }
                                     } catch (SocketException e) {
-                                        System.out.println(String.format("Client %s reset", client.getInetAddress().getHostAddress()));
+                                        String removeClient = client.getInetAddress().getHostAddress();
+                                        System.out.println(String.format("Client %s reset", removeClient));
+                                        clientListener.onClientRemoveIp(removeClient);
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -87,11 +89,12 @@ public class Finder {
                 }
             });
 
+            // Interrupts the search after 12 seconds
             Thread interrupter = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(12000);
                         if (count == counter.addAndGet(1)) {
                             active = false;
                         }

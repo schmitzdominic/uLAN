@@ -4,6 +4,7 @@ import info.Info;
 import info.Tool;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ListView;
@@ -79,6 +80,14 @@ public class Clients {
         }
     }
 
+    public void removeClientByIp(String ip) {
+        for(Client client : clientMap.values()) {
+            if (client.getIp().equals(ip)) {
+                this.removeClient(client);
+            }
+        }
+    }
+
     public void removeClient(Client client) {
         Platform.runLater(new Runnable() {
             @Override
@@ -86,11 +95,12 @@ public class Clients {
                 int index = 0;
                 for(String c : clientList.getItems()) {
                     if (c.equals(client.getListName())) {
-                        clientList.getItems().remove(index);
                         clientMap.remove(client.getId());
+                        break;
                     }
                     index++;
                 }
+                clientList.getItems().remove(index);
             }
         });
     }
@@ -123,6 +133,7 @@ public class Clients {
                 @Override
                 public void run() {
                     try {
+                        System.out.println("DISCONNECT " + client.getListName());
                         Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), port);
                         if (socket != null) {
                             Tool.sendMessage(socket, Info.getDisconnectPackage());

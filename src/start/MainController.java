@@ -216,6 +216,11 @@ public class MainController implements ClientFoundListener {
         this.removeClient(id);
     }
 
+    @Override
+    public void onClientRemoveIp(String ip) {
+        this.removeClientByIp(ip);
+    }
+
     private ImageView resizeImage(ImageView image){
         return this.resizeImage(image, 22, 22);
     }
@@ -280,6 +285,10 @@ public class MainController implements ClientFoundListener {
 
     public void removeClient(String id) {
         this.clients.removeClientById(id);
+    }
+
+    public void removeClientByIp(String ip) {
+        this.clients.removeClientByIp(ip);
     }
 
     public void addReleases(Client client) {

@@ -32,6 +32,7 @@ public class Server extends Thread {
 
             while (true) {
                 Socket socket = listener.accept();
+                System.out.println(socket.getInetAddress().getHostAddress());
                 if (!socket.getInetAddress().getHostAddress().equals(this.ip)) {
                     this.checkMessage(socket);
                 }
