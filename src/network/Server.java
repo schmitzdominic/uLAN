@@ -17,11 +17,13 @@ public class Server extends Thread {
     private MainController mainController;
     private int port;
     private String id;
+    private String ip;
 
     public Server(MainController mainController, int port){
         this.mainController = mainController;
         this.port = port;
         this.id = Info.getSettings().get("id");
+        this.ip = Info.getIp();
     }
 
     public void run(){
@@ -29,7 +31,10 @@ public class Server extends Thread {
             ServerSocket listener = new ServerSocket(this.port);
 
             while (true) {
-                this.checkMessage(listener.accept());
+                Socket socket = listener.accept();
+                if (!socket.getInetAddress().getHostAddress().equals(this.ip)) {
+                    this.checkMessage(socket);
+                }
             }
         } catch (IOException e) {
             System.out.println("Es l\u00e4uft bereits eine Instanz des Programms. Programm wird geschlossen!");
@@ -76,7 +81,6 @@ public class Server extends Thread {
                 Client client = new Client(id, ip, hostname);
                 Tool.sendMessage(socket, Info.getRepeatPackage());
                 clientListener.onClientFound(client);
-
             }
         }
     }
