@@ -47,7 +47,7 @@ public class Finder {
         }
         for(int i = 2; i < count+2; i++) {
             final int client = i;
-            new Thread(new Runnable() {
+            Thread search = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -85,7 +85,25 @@ public class Finder {
                         e.printStackTrace();
                     }
                 }
-            }).start();
+            });
+
+            Thread interrupter = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(10000);
+                        if (count == counter.addAndGet(1)) {
+                            active = false;
+                        }
+                        search.interrupt();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            search.start();
+            interrupter.start();
         }
     }
 
