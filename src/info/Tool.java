@@ -29,7 +29,7 @@ public class Tool {
     public static void sendMessage(Socket socket, String message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(message + "\n");
+            out.println(message);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class Tool {
     public static void sendMessage(Socket socket, HashMap<String, String> message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(message + "\n");
+            out.println(message);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
