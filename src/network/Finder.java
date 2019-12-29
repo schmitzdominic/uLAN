@@ -1,14 +1,20 @@
 package network;
 
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
+import info.Info;
 
-import Interfaces.ClientFoundListener;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Finder {
 
-    private ClientFoundListener clientListener;
     private int count;
+    private int port;
+    private String id;
     public AtomicInteger counter;
     public boolean active = false;
 
@@ -16,52 +22,82 @@ public class Finder {
         this.counter = new AtomicInteger();
     }
 
-    public void registerClientFoundListener(ClientFoundListener clientListener) {
-        this.clientListener = clientListener;
-    }
-
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public void searchClients() {
         this.active = true;
         this.counter.set(0);
-        for(int i = 0; i < count; i++) {
-            final int TESTID = i;
+        this.id = Info.getSettings().get("id");
+        String ipAddress = this.getNetworkIP(Info.getIp());
+        if (ipAddress == null) {
+            counter.set(count);
+            active = false;
+            return;
+        }
+        for(int i = 2; i < count+2; i++) {
+            final int client = i;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // TODO: Search for Client
-                    // If Client found, call clientListener.onClientFound and add the client
-
-                    /*
-                     * FROM HERE
-                     */
-                    Random randomGenerator = new Random();
-                    int randomInt = randomGenerator.nextInt(20) + 1;
-                    int wait = randomInt * 1000;
-
                     try {
-                        Thread.sleep(wait);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    /*
-                     * TILL HERE! All is experimental!
-                     */
+                        InetAddress ip = InetAddress.getByName(ipAddress + client);
+                        Socket client = isOnline(ip, port);
 
-                    counter.addAndGet(1);
-                    if (clientListener != null) {
-                        if (count == counter.get()) {
+                        if (client != null) {
+                            try {
+                                System.out.println(ip.getHostAddress() + " ONLINE");
+                                PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+                                HashMap<String, String> x = new HashMap<>();
+                                x.put("MODE","INITIALIZE");
+                                x.put("ID",id);
+                                out.println(x);
+                                out.flush();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (count == counter.addAndGet(1)) {
                             active = false;
                         }
-                        // TODO: if client found -> add
-                        Client client = new Client(String.format("%s", TESTID), String.format("10.20.30.%s", TESTID), String.format("COOLER_PC_%s", TESTID));
-                        clientListener.onClientFound(client);
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
                     }
                 }
             }).start();
+        }
+    }
+
+    /**
+     * Check if the Client is online or even not!
+     * @param ip InetAdress
+     * @param port int
+     * @return true - Online / false - Offline
+     */
+    private Socket isOnline(InetAddress ip, int port){
+        try{
+            return new Socket(ip, port);
+        } catch (IOException x){
+            return null;
+        }
+
+    }
+
+    private String getNetworkIP(String ip) {
+        if (ip == null) {
+            return null;
+        }
+        String[] ipArray = ip.split("\\.");
+        if (ipArray.length == 4) {
+            return String.format("%s.%s.%s.", ipArray[0], ipArray[1], ipArray[2]);
+        } else {
+            return null;
         }
     }
 }

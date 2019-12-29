@@ -1,5 +1,6 @@
 package network;
 
+import info.Info;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -12,6 +13,7 @@ public class Clients {
 
     private ObservableMap<String, Client> clientMap;
     private ListView<String> clientList;
+    private String id;
 
     /**
      * Constructor
@@ -20,7 +22,8 @@ public class Clients {
     public Clients(ListView<String> clientList){
         this.clientMap = FXCollections.observableHashMap();
         this.clientList = clientList;
-        this.clientList.getItems().sort(Comparator.naturalOrder());
+        this.id = Info.getSettings().get("id");
+        // this.clientList.getItems().sort(Comparator.naturalOrder()); TODO SORT!
     }
 
     public Client getClientById(String id){
@@ -40,9 +43,11 @@ public class Clients {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (!clientList.getItems().contains(client.getListName()) & clientMap.get(client.getId()) == null){
-                    clientList.getItems().add(client.getListName());
-                    clientMap.put(client.getId(), client);
+                if (!client.getId().equals(id)) {
+                    if (!clientList.getItems().contains(client.getListName()) & clientMap.get(client.getId()) == null){
+                        clientList.getItems().add(client.getListName());
+                        clientMap.put(client.getId(), client);
+                    }
                 }
             }
         });

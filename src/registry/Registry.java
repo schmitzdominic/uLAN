@@ -18,15 +18,15 @@ public class Registry {
     final String path = "/ulan/preferences"; // settings.Settings path
 
     // Default settings
-    final private String DEFAULTTRANSFERPATH = System.getProperty("user.home") + "\\downloads";
+    final private String DEFAULTTRANSFERPATH = System.getProperty("user.home") + "\\downloads"; // NOT USED
     final private String DEFAULTICON = "/icons/baseline_account_tree_white_18dp.png";
     final private String ID = "";
-    final private int DEFAULTMESSAGE = 1;
+    final private int DEFAULTMESSAGE = 1; // NOT USED
     final private int PORT = 33123;
-    final private int FILEPORT = 33111;
-    final private int SEARCHCLIENTSTIME = 3;
-    final private int AUTOSTART = 1;
-    final private int NOTIFICATIONS = 1;
+    final private int FILEPORT = 33111; // NOT USED
+    final private int CLIENTSCOUNT = 253;
+    final private int AUTOSTART = 1; // NOT USED
+    final private int NOTIFICATIONS = 1; // NOT USED
 
     // Strings
     final private String clients = "clients";
@@ -62,8 +62,8 @@ public class Registry {
         if(!this.checkIfPropertiesExist("fileport")){
             this.setSetting("properties", "fileport", "" + this.FILEPORT);
         }
-        if(!this.checkIfPropertiesExist("searchclientstime")){
-            this.setSetting("properties", "searchclientstime", "" + this.SEARCHCLIENTSTIME);
+        if(!this.checkIfPropertiesExist("clientscount")){
+            this.setSetting("properties", "clientscount", "" + this.CLIENTSCOUNT);
         }
         if(!this.checkIfPropertiesExist("autostart")){
             this.setSetting("properties", "autostart", "" + this.AUTOSTART);

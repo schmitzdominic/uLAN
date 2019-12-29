@@ -12,7 +12,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import network.*;
+import registry.Registry;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public class MainController implements ClientFoundListener {
@@ -98,6 +100,7 @@ public class MainController implements ClientFoundListener {
     private Releases releases;
     private Finder finder = new Finder();
     private String actualRelease;
+    private int port;
 
     @FXML
     private void initialize() {
@@ -109,8 +112,11 @@ public class MainController implements ClientFoundListener {
         this.searchClients();
     }
 
-    private void createServer(){
-        this.server = new Server(this);
+    private void createServer() {
+        HashMap<String, String> settings = Info.getSettings();
+        this.port = Integer.parseInt(settings.get("port"));
+        this.server = new Server(this, this.port);
+        this.server.registerClientFoundListener(this);
         this.server.start();
     }
 
@@ -166,21 +172,21 @@ public class MainController implements ClientFoundListener {
     }
 
     public void searchClients() {
-        this.searchClients(5);
+        this.searchClients(Integer.parseInt(Info.getSettings().get("clientscount")));
     }
 
     public void searchClients(int count) {
         if (!finder.active) {
             this.finder.setCount(count);
-            this.finder.registerClientFoundListener(this);
+            this.finder.setPort(this.port);
             this.finder.searchClients();
 
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    clientProgress.setVisible(true);
+                    // clientProgress.setVisible(true);
                     loadingGIF.setVisible(true);
-                    labelPercentage.setVisible(true);
+                    // labelPercentage.setVisible(true);
                     buttonRefresh.setVisible(false);
                     while (finder.active) {
                         try {
@@ -188,9 +194,9 @@ public class MainController implements ClientFoundListener {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    double p = (double)finder.counter.get()/count;
-                                    labelPercentage.setText((int)(p*100) + " %");
-                                    clientProgress.setProgress(p);
+                                    //double p = (double)finder.counter.get()/count;
+                                    // labelPercentage.setText((int)(p*100) + " %");
+                                    // clientProgress.setProgress(p);
                                 }
                             });
 
@@ -198,11 +204,11 @@ public class MainController implements ClientFoundListener {
                             e.printStackTrace();
                         }
                     }
-                    clientProgress.setVisible(false);
+                    // clientProgress.setVisible(false);
                     loadingGIF.setVisible(false);
-                    labelPercentage.setVisible(false);
+                    // labelPercentage.setVisible(false);
                     buttonRefresh.setVisible(true);
-                    clientProgress.setProgress(0);
+                    // clientProgress.setProgress(0);
                 }
             }).start();
         }
@@ -287,7 +293,7 @@ public class MainController implements ClientFoundListener {
 
     public void buttonRefresh(ActionEvent event) {
         // TODO: Implement refresh
-        this.searchClients(10);
+        this.searchClients();
         /*
         for(int i = 0; i < 20; i++){
             Client client = new Client(String.format("%s", i), String.format("10.20.30.%s", i), String.format("COOLER_PC_%s", i));
