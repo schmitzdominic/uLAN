@@ -1,19 +1,28 @@
 package network;
 
 import info.Info;
+import info.Tool;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ListView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Comparator;
+import java.util.Map;
 
 public class Clients {
 
     private ObservableMap<String, Client> clientMap;
     private ListView<String> clientList;
     private String id;
+    private int port;
 
     /**
      * Constructor
@@ -23,6 +32,7 @@ public class Clients {
         this.clientMap = FXCollections.observableHashMap();
         this.clientList = clientList;
         this.id = Info.getSettings().get("id");
+        this.port = Integer.parseInt(Info.getSettings().get("port"));
         // this.clientList.getItems().sort(Comparator.naturalOrder()); TODO SORT!
     }
 
@@ -96,6 +106,24 @@ public class Clients {
                 }
                 index++;
             }
+        }
+    }
+
+    public void disconnect() {
+        for(Client client : this.clientMap.values()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), port);
+                        if (socket != null) {
+                            Tool.sendMessage(socket, Info.getDisconnectPackage());
+                        }
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         }
     }
 }

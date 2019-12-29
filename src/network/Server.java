@@ -52,6 +52,10 @@ public class Server extends Thread {
                             if (!info.get("ID").equals(id)) {
                                 initialize(info, client);
                             }
+                        } else if (mode.equals("REPEAT")) {
+
+                        } else if (mode.equals("DISCONNECT")) {
+
                         }
                     }
                 } catch (IOException e) {
@@ -70,7 +74,23 @@ public class Server extends Thread {
 
             if (id != null & ip != null & hostname != null) {
                 Client client = new Client(id, ip, hostname);
-                clientListener.onClientFound(client, socket);
+                Tool.sendMessage(socket, Info.getRepeatPackage());
+                clientListener.onClientFound(client);
+
+            }
+        }
+    }
+
+    private void repeat(Map<String, String> info, Socket socket) {
+        if (this.clientListener != null) {
+
+            String id = info.get("ID");
+            String ip = info.get("IP");
+            String hostname = info.get("HOSTNAME");
+
+            if (id != null & ip != null & hostname != null) {
+                Client client = new Client(id, ip, hostname);
+                clientListener.onClientFound(client);
             }
         }
     }

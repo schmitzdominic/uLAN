@@ -74,7 +74,6 @@ public class Finder {
         } catch (IOException x){
             return null;
         }
-
     }
 
     private String getNetworkIP(String ip) {

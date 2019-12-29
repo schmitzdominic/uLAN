@@ -2,6 +2,7 @@ package info;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +16,14 @@ public class Tool {
                 .map(entry -> entry.split("="))
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
         return map;
+    }
+
+    public static Socket isOnline(InetAddress ip, int port){
+        try{
+            return new Socket(ip, port);
+        } catch (IOException x){
+            return null;
+        }
     }
 
     public static void sendMessage(Socket socket, String message) {

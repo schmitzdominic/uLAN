@@ -47,4 +47,23 @@ public class Info {
         // TODO: HERE RELEASES!
         return map;
     }
+
+    public static HashMap<String, String> getRepeatPackage() {
+        HashMap<String, String> settings = getSettings();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("MODE","REPEAT");
+        map.put("ID",settings.get("id"));
+        map.put("IP",getIp());
+        map.put("HOSTNAME",getHostname());
+        // TODO: HERE RELEASES!
+        return map;
+    }
+
+    public static HashMap<String, String> getDisconnectPackage() {
+        HashMap<String, String> settings = getSettings();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("MODE","DISCONNECT");
+        map.put("ID",settings.get("id"));
+        return map;
+    }
 }

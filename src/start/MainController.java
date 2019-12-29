@@ -13,11 +13,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import network.*;
-import registry.Registry;
 
 import java.net.Socket;
+import java.security.Permission;
 import java.util.HashMap;
-import java.util.Random;
 
 public class MainController implements ClientFoundListener {
 
@@ -106,6 +105,14 @@ public class MainController implements ClientFoundListener {
         this.setButtonIcons();
         this.setOwnInformation();
         this.searchClients();
+
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            public void run()
+            {
+                clients.disconnect();
+            }
+        });
     }
 
     private void createServer() {
@@ -197,15 +204,14 @@ public class MainController implements ClientFoundListener {
     }
 
     @Override
-    public void onClientFound(Client client, Socket socket) {
+    public void onClientFound(Client client) {
         if (!this.clients.clientExists(client)) {
             this.addClient(client);
-            Tool.sendMessage(socket, Info.getInitializePackage());
         }
     }
 
     @Override
-    public void onClientRemove(Client client, Socket socket) {
+    public void onClientRemove(Client client) {
         if (this.clients.clientExists(client)) {
             this.removeClient(client);
         }
