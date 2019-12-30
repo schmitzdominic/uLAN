@@ -39,23 +39,47 @@ public class Info {
 
     public static HashMap<String, String> getInitializePackage() {
         HashMap<String, String> settings = getSettings();
+        Registry registry = new Registry();
         HashMap<String, String> map = new HashMap<>();
         map.put("MODE","INITIALIZE");
         map.put("ID",settings.get("id"));
         map.put("IP",getIp());
         map.put("HOSTNAME",getHostname());
-        // TODO: HERE RELEASES!
+
+        String releases = registry.getReleasesAsString();
+        if (releases != null) {
+            map.put("RELEASES", releases);
+        }
         return map;
     }
 
     public static HashMap<String, String> getRepeatPackage() {
         HashMap<String, String> settings = getSettings();
+        Registry registry = new Registry();
         HashMap<String, String> map = new HashMap<>();
         map.put("MODE","REPEAT");
         map.put("ID",settings.get("id"));
         map.put("IP",getIp());
         map.put("HOSTNAME",getHostname());
-        // TODO: HERE RELEASES!
+
+        String releases = registry.getReleasesAsString();
+        if (releases != null) {
+            map.put("RELEASES", releases);
+        }
+        return map;
+    }
+
+    public static HashMap<String, String> getReleasePackage() {
+        HashMap<String, String> settings = getSettings();
+        Registry registry = new Registry();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("MODE","RELEASECHANGE");
+        map.put("ID",settings.get("id"));
+
+        String releases = registry.getReleasesAsString();
+        if (releases != null) {
+            map.put("RELEASES", releases);
+        }
         return map;
     }
 

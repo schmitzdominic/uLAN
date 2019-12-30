@@ -55,7 +55,7 @@ public class Releases {
             public ListCell<String> call(ListView<String> param) {
                 final Label leadLbl = new Label();
                 final Tooltip tooltip = new Tooltip();
-                final ListCell<String> listCell = new ListCell<String>() {
+                return new ListCell<String>() {
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -67,7 +67,6 @@ public class Releases {
                         }
                     }
                 };
-                return listCell;
             }
         });
     }

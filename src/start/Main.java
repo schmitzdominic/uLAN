@@ -17,10 +17,10 @@ public class Main extends Application {
     private Stage primaryStage;
     private Registry registry;
     private HashMap<String, String> properties;
+    public static Stage main;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-
         this.registry = new Registry();
         this.properties = registry.getProperties();
 
@@ -29,9 +29,10 @@ public class Main extends Application {
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("uLAN");
-        this.primaryStage.getIcons().add(new Image(this.properties.get("defaulticon")));;
+        this.primaryStage.getIcons().add(new Image(this.properties.get("defaulticon")));
         this.primaryStage.setScene(new Scene(root, 650, 500));
         this.primaryStage.setResizable(false);
+        Main.main = this.primaryStage;
 
         new Tray(this);
     }

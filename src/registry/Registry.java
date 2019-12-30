@@ -7,8 +7,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -30,6 +29,7 @@ public class Registry {
 
     // Strings
     final private String clients = "clients";
+    final private String releases = "releases";
 
     /**
      * Default Contructor
@@ -240,6 +240,72 @@ public class Registry {
 
         if(client.getIp() != null){
             this.setSetting(jobName, "ip", client.getIp());
+        }
+    }
+
+    public boolean addRelease(String path) {
+        path = path.toLowerCase();
+        String jobName=String.format("%s", this.releases).toLowerCase();
+        String releases = getSetting(jobName, "releases");
+        if (releases == null) {
+            setSetting(jobName, "releases", path);
+            return true;
+        } else {
+            if (releases.contains(path)) {
+                return false;
+            } else {
+                releases += String.format(";%s", path);
+                setSetting(jobName, "releases", releases);
+                return true;
+            }
+        }
+    }
+
+    public boolean removeRelease(String path) {
+        path = path.toLowerCase();
+        String jobName=String.format("%s", this.releases).toLowerCase();
+        String releases = getSetting(jobName, "releases");
+        if (releases != null) {
+            if (releases.contains(path)) {
+                String[] relArray = releases.split(";");
+                List<String> list = new ArrayList<String>(Arrays.asList(relArray));
+                list.remove(path);
+                relArray = list.toArray(new String[0]);
+                setSetting(jobName, "releases", String.join(";", relArray));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addReleaseToClient() {
+    }
+
+    public String[] getReleases() {
+        String jobName=String.format("%s", this.releases).toLowerCase();
+        String releases = getSetting(jobName, "releases");
+        if (releases == null) {
+            return null;
+        } else {
+            if (releases.startsWith(";")) {
+                this.removeRelease("");
+                releases = getSetting(jobName, "releases");
+            }
+            return releases.split(";");
+        }
+    }
+
+    public String getReleasesAsString() {
+        String jobName=String.format("%s", this.releases).toLowerCase();
+        String releases = getSetting(jobName, "releases");
+        if (releases == null) {
+            return null;
+        } else {
+            if (releases.startsWith(";")) {
+                this.removeRelease("");
+                releases = getSetting(jobName, "releases");
+            }
+            return releases;
         }
     }
 

@@ -1,7 +1,4 @@
 import network.Client;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +7,7 @@ import registry.Registry;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ClientTest {
 

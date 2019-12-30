@@ -1,6 +1,7 @@
 .main_list_background {
     -fx-background-image: url("../resources/images/list.png");
     -fx-background-size: cover, auto;
+    -fx-content-display:right;
 }
 
 .list-cell:filled:hover {
@@ -86,6 +87,10 @@
 
 .main_client_list_background {
     -fx-background-color: transparent;
+}
+
+.window_background {
+    -fx-background-color: #131313;
 }
 
 .client_title {

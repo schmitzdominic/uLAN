@@ -4,19 +4,12 @@ import info.Info;
 import info.Tool;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.collections.transformation.SortedList;
 import javafx.scene.control.ListView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Comparator;
-import java.util.Map;
 
 public class Clients {
 

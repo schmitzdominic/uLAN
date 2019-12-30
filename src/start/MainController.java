@@ -6,19 +6,20 @@ import info.Tool;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
 import network.*;
 
-import java.net.Socket;
-import java.security.Permission;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
-public class MainController implements ClientFoundListener {
+public class MainController implements ClientFoundListener, Initializable {
 
     @FXML
     AnchorPane mainWindow;
@@ -97,8 +98,8 @@ public class MainController implements ClientFoundListener {
     private String actualRelease;
     private int port;
 
-    @FXML
-    private void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         this.createServer();
         this.createClientList();
         this.createReleasesList();
@@ -158,14 +159,14 @@ public class MainController implements ClientFoundListener {
         this.imageButtonSettings.setImage(new Image("/icons/baseline_settings_applications_white_18dp.png"));
         this.imageButtonHistory.setImage(new Image("/icons/baseline_history_white_18dp.png"));
 
-        this.resizeImage(this.imageButtonRefresh);
-        this.resizeImage(this.imageButtonChangeName, 30, 30);
-        this.resizeImage(this.imageButtonSaveName, 30, 30);
-        this.resizeImage(this.imageButtonDownload);
-        this.resizeImage(this.imageButtonRelease);
-        this.resizeImage(this.imageButtonInfo);
-        this.resizeImage(this.imageButtonSettings);
-        this.resizeImage(this.imageButtonHistory);
+        Tool.resizeImage(this.imageButtonRefresh);
+        Tool.resizeImage(this.imageButtonChangeName, 30, 30);
+        Tool.resizeImage(this.imageButtonSaveName, 30, 30);
+        Tool.resizeImage(this.imageButtonDownload);
+        Tool.resizeImage(this.imageButtonRelease);
+        Tool.resizeImage(this.imageButtonInfo);
+        Tool.resizeImage(this.imageButtonSettings);
+        Tool.resizeImage(this.imageButtonHistory);
     }
 
     private void setOwnInformation() {
@@ -219,16 +220,6 @@ public class MainController implements ClientFoundListener {
     @Override
     public void onClientRemoveIp(String ip) {
         this.removeClientByIp(ip);
-    }
-
-    private ImageView resizeImage(ImageView image){
-        return this.resizeImage(image, 22, 22);
-    }
-
-    private ImageView resizeImage(ImageView image, int width, int height){
-        image.setFitHeight(height);
-        image.setFitWidth(width);
-        return image;
     }
 
     private void selectClient(Client client){
@@ -356,5 +347,9 @@ public class MainController implements ClientFoundListener {
             System.out.println(String.format("From Client %s DOWNLOADING: %s", this.client.getHostname(), this.actualRelease));
             // TODO: Start Download here!
         }
+    }
+
+    public void buttonReleases(ActionEvent event) {
+        Tool.openReleases(this, Main.main);
     }
 }
