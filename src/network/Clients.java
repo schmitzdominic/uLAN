@@ -115,7 +115,9 @@ public class Clients implements ClientsCallback {
                         controller.makeClientInfoInvisible();
                     }
                 }
-                clientList.getItems().remove(index);
+                if (clientList.getItems().size() > 0) {
+                    clientList.getItems().remove(index);
+                }
             }
         });
     }

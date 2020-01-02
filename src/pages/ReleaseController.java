@@ -75,8 +75,10 @@ public class ReleaseController implements Initializable {
 
     private void setReleases() {
         this.listReleases.getItems().clear();
-        this.listReleases.getItems().addAll(registry.getReleases());
-        this.setTooltip();
+        if (isReleasesNotEmpty(registry.getReleases())) {
+            this.listReleases.getItems().addAll(registry.getReleases());
+            this.setTooltip();
+        }
     }
 
     private void setTooltip() {
@@ -101,6 +103,16 @@ public class ReleaseController implements Initializable {
         });
     }
 
+    private boolean isReleasesNotEmpty(String[] releases) {
+        if (releases.length == 0) {
+            return false;
+        } else if (releases.length == 1 & releases[0].isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public void buttonAdd(ActionEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(Tool.releaseStage);
@@ -119,13 +131,16 @@ public class ReleaseController implements Initializable {
         boolean removed = registry.removeRelease(this.release);
         if (removed) {
             this.setReleases();
-            String[] relArray = registry.getReleases();
-            if (relArray.length == 1 & relArray[0].isEmpty()) {
+            if (!isReleasesNotEmpty(registry.getReleases())) {
                 this.buttonRemove.setVisible(false);
                 this.listReleases.getItems().clear();
             } else {
                 this.listReleases.getSelectionModel().select(0);
             }
         }
+    }
+
+    public void buttonOk(ActionEvent event) {
+        Tool.releaseStage.close();
     }
 }
