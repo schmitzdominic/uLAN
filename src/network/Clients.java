@@ -100,6 +100,13 @@ public class Clients implements ClientsCallback {
                     }
                     index++;
                 }
+                if (clientList.getSelectionModel().isSelected(index)) {
+                    if (clientList.getItems().size() > 1) {
+                        clientList.getSelectionModel().select(0);
+                    } else {
+                        clientList.getSelectionModel().clearSelection();
+                    }
+                }
                 clientList.getItems().remove(index);
             }
         });
@@ -153,6 +160,6 @@ public class Clients implements ClientsCallback {
     @Override
     public void removeClient(String id) {
         this.removeClientByIp(id);
-        this.clientList.refresh();
+        System.out.println(this.clientList.getItems().size());
     }
 }

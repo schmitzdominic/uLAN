@@ -139,7 +139,9 @@ public class Client {
                         } catch (SocketException e) {
                             System.out.println(String.format("TCP LISTENER %s STOPED!", getListName()));
                             listener = false;
-                            clientsCallback.removeClient(getId());
+                            if (clientsCallback != null) {
+                                clientsCallback.removeClient(getId());
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
