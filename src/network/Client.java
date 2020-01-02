@@ -140,7 +140,7 @@ public class Client {
                                 if (mode != null) {
                                     if (mode.equals("RELEASECHANGE")) {
                                         String releases = info.get("RELEASES");
-                                        if (releases.isEmpty()) {
+                                        if (releases == null) {
                                             setReleases(new HashMap<>());
                                         } else {
                                             setReleases(Tool.convertReleasesString(info.get("RELEASES")));
