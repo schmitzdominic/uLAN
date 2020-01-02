@@ -163,6 +163,9 @@ public class Clients implements ClientsCallback {
     @Override
     public void notifyClientHasChanged() {
         this.clientList.refresh();
+        int selected = this.clientList.getSelectionModel().getSelectedIndex();
+        this.clientList.getSelectionModel().clearSelection();
+        this.clientList.getSelectionModel().select(selected);
     }
 
     @Override

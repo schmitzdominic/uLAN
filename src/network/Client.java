@@ -143,6 +143,7 @@ public class Client {
                                     if (mode.equals("RELEASECHANGE")) {
                                         System.out.println("CHANGE: " + info);
                                         setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+                                        clientsCallback.notifyClientHasChanged();
                                     }
                                 }
                             }
