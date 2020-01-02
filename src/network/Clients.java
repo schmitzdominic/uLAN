@@ -159,7 +159,7 @@ public class Clients implements ClientsCallback {
 
     @Override
     public void removeClient(String id) {
-        this.removeClientByIp(id);
+        this.removeClientById(id);
         System.out.println(this.clientList.getItems().size());
     }
 }
