@@ -1,5 +1,6 @@
 package network;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.Label;
@@ -19,14 +20,19 @@ public class Releases {
     }
 
     public void addReleases(Client client) {
-        this.removeAllReleases(client);
-        if (client != null) {
-            for(String key : client.getReleases().keySet()) {
-                this.releaseList.getItems().add(this.getListItem(client.getReleases().get(key), key));
-                this.releaseMap.put(key, client.getReleases().get(key));
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                removeAllReleases(client);
+                if (client != null) {
+                    for(String key : client.getReleases().keySet()) {
+                        releaseList.getItems().add(getListItem(client.getReleases().get(key), key));
+                        releaseMap.put(key, client.getReleases().get(key));
+                    }
+                }
+                setTooltip();
             }
-        }
-        this.setTooltip();
+        });
     }
 
     public void removeAllReleases(Client client) {
