@@ -78,7 +78,7 @@ public class Tool {
         HashMap<String, String> map = new HashMap<>();
         String[] reArray = releases.split(";");
         for(int i = 0; i < reArray.length; i++) {
-            String[] folderNames = reArray[i].split("//");
+            String[] folderNames = reArray[i].split("\\\\");
             String folder = folderNames[folderNames.length-1];
             map.put(reArray[i], folder);
         }
