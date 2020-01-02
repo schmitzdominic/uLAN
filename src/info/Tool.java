@@ -104,7 +104,7 @@ public class Tool {
             Tool.releaseStage = rStage;
             Parent fxStage = FXMLLoader.load(parentController.getClass().getResource("../pages/release_window.fxml"));
             rStage.setTitle("Freigaben");
-            rStage.setScene(new Scene(fxStage, 500, 500));
+            rStage.setScene(new Scene(fxStage, 500, 300));
             rStage.getIcons().add(new Image(settings.get("defaulticon")));
             rStage.setResizable(false);
             rStage.initModality(Modality.WINDOW_MODAL);

@@ -278,9 +278,6 @@ public class Registry {
         return false;
     }
 
-    public void addReleaseToClient() {
-    }
-
     public String[] getReleases() {
         String jobName=String.format("%s", this.releases).toLowerCase();
         String releases = getSetting(jobName, "releases");

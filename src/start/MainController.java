@@ -352,7 +352,6 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                System.out.println("JETZT");
                 boolean changed = false;
                 String[] releases = registry.getReleases();
                 if (releases != null) {

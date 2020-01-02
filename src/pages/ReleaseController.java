@@ -47,15 +47,6 @@ public class ReleaseController implements Initializable {
     }
 
     private void initListeners() {
-        if (Tool.releaseStage != null) {
-            Tool.releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-
-                }
-            });
-        }
-
         this.listReleases.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String value) {
