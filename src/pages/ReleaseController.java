@@ -141,6 +141,9 @@ public class ReleaseController implements Initializable {
     }
 
     public void buttonOk(ActionEvent event) {
+        Tool.releaseStage.getOnCloseRequest().handle(new WindowEvent(
+                Tool.releaseStage, WindowEvent.WINDOW_CLOSE_REQUEST
+        ));
         Tool.releaseStage.close();
     }
 }
