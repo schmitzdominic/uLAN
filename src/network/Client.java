@@ -135,14 +135,16 @@ public class Client {
                         try {
                             listener = true;
                             while((line = reader.readLine()) != null) {
-                                System.out.println("REPEATE FROM " + getListName() + ": " + line);
-                                // TODO: DECIDE HERE WHAT TO DO!
                                 Map<String, String> info = Tool.convertMessage(line);
                                 String mode = info.get("MODE");
                                 if (mode != null) {
                                     if (mode.equals("RELEASECHANGE")) {
-                                        System.out.println("CHANGE: " + info);
-                                        setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+                                        String releases = info.get("RELEASES");
+                                        if (releases.isEmpty()) {
+                                            setReleases(new HashMap<>());
+                                        } else {
+                                            setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+                                        }
                                         clientsCallback.notifyClientHasChanged();
                                     }
                                 }

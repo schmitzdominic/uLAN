@@ -358,9 +358,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
                     changed = !Arrays.equals(releases, initReleases);
                 }
                 if (changed) {
-                    System.out.println("Something has changed..");
                     Tool.sendReleasesChange(clients.getClientMap());
-                    // TODO: Send all that something has changed!
                 }
             }
         });
