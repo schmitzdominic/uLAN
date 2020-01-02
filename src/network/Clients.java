@@ -60,6 +60,9 @@ public class Clients {
                         clientList.getItems().add(client.getListName());
                         clientMap.put(client.getId(), client);
                     }
+                } else {
+                    clientMap.get(client.getId()).refresh(client);
+                    clientList.refresh();
                 }
             }
         });

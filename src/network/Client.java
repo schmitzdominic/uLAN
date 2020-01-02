@@ -15,15 +15,18 @@ public class Client {
     private String ip;
     private String hostname;
     private String listName;
+    private boolean listener;
     private Registry reg;
     private InetAddress ipAddress;
     private Socket socket;
+    private Thread tcpListener;
 
     private HashMap<String, String> releases;
 
     public Client(String id, InetAddress ip, String hostname) {
         this(id, ip.getHostAddress(), hostname);
         this.ipAddress = ip;
+        this.listener = false;
     }
 
     public Client(String id, String ip, String hostname) {
@@ -31,6 +34,7 @@ public class Client {
         this.reg = new Registry();
         this.releases = new HashMap<>();
         this.id = id;
+        this.listener = false;
 
         if(reg.checkIfClientExists(this)){
             reg.updateClientSettings(this);
@@ -71,6 +75,10 @@ public class Client {
         return socket;
     }
 
+    public void setListener(boolean listener) {
+        this.listener = listener;
+    }
+
     public void setId(String id) {
         this.id = id;
         this.reg.addClient(this);
@@ -99,16 +107,20 @@ public class Client {
         this.socket = socket;
     }
 
-    public void addRelease(String folder, String path) {
-        this.releases.put(path, folder);
-    }
-
     public void setReleases(HashMap<String, String> releases) {
         this.releases = releases;
     }
 
+    public boolean isListener() {
+        return listener;
+    }
+
+    public void addRelease(String folder, String path) {
+        this.releases.put(path, folder);
+    }
+
     public void addTCPListener() {
-        new Thread(new Runnable() {
+        this.tcpListener = new Thread(new Runnable() {
             @Override
             public void run() {
                 if (socket != null) {
@@ -117,22 +129,55 @@ public class Client {
                         String line;
                         // Wait for Package
                         try {
+                            listener = true;
                             while((line = reader.readLine()) != null) {
                                 System.out.println("REPEATE FROM " + getListName() + ": " + line);
                                 // TODO: DESIDE HERE WHAT TO DO!
                             }
                         } catch (SocketException e) {
                             System.out.println(String.format("TCP LISTENER %s STOPED!", getListName()));
+                            listener = false;
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        }).start();
+        });
+        this.tcpListener.start();
     }
 
     public void removeRelease(String path) {
         this.releases.remove(path);
+    }
+
+    public void refresh(Client client) {
+        if (client.getListName() != null) {
+            this.setListName(client.getListName());
+        }
+        if (client.getId() != null) {
+            this.setId(client.getId());
+        }
+        if (client.getHostname() != null) {
+            this.setHostname(client.getHostname());
+        }
+        if (client.getIp() != null) {
+            this.setIp(client.getIp());
+        }
+        if (client.getReleases() != null) {
+            this.setReleases(client.getReleases());
+        }
+        if (client.getIpAddress() != null) {
+            this.setIpAddress(client.getIpAddress());
+        }
+        if (client.getSocket() != null) {
+            this.setSocket(client.getSocket());
+
+            if (client.isListener()) {
+                this.addTCPListener();
+            }
+        }
+
+        client = null;
     }
 }
