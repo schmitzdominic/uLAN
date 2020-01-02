@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -77,7 +78,13 @@ public class Server extends Thread {
 
             if (id != null & ip != null & hostname != null) {
                 Client client = new Client(id, ip, hostname);
+
+                if (info.get("RELEASES") != null) {
+                    client.setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+                }
+
                 client.setSocket(socket);
+                client.addTCPListener();
                 Tool.sendMessage(socket, Info.getRepeatPackage());
                 clientListener.onClientFound(client);
             }

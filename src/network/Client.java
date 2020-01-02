@@ -2,8 +2,12 @@ package network;
 
 import registry.Registry;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 
 public class Client {
@@ -97,6 +101,35 @@ public class Client {
 
     public void addRelease(String folder, String path) {
         this.releases.put(path, folder);
+    }
+
+    public void setReleases(HashMap<String, String> releases) {
+        this.releases = releases;
+    }
+
+    public void addTCPListener() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (socket != null) {
+                    try {
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        String line;
+                        // Wait for Package
+                        try {
+                            while((line = reader.readLine()) != null) {
+                                System.out.println("REPEATE FROM " + getListName() + ": " + line);
+                                // TODO: DESIDE HERE WHAT TO DO!
+                            }
+                        } catch (SocketException e) {
+                            System.out.println(String.format("TCP LISTENER %s STOPED!", getListName()));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     public void removeRelease(String path) {

@@ -295,25 +295,7 @@ public class MainController implements ClientFoundListener, Initializable {
     }
 
     public void buttonRefresh(ActionEvent event) {
-        // TODO: Implement refresh
         this.searchClients();
-        /*
-        for(int i = 0; i < 20; i++){
-            Client client = new Client(String.format("%s", i), String.format("10.20.30.%s", i), String.format("COOLER_PC_%s", i));
-            if(i%5==0){
-                client.addRelease("TESTFOLDERABCSWE","PATHasdvönljosadvüojnwervarüojnaesvünojseravjnoövsar1");
-                client.addRelease("TESTFOLDE","PATHasdvönljosadvüojnwervarüojnaesvvjnoövsar1");
-                client.addRelease("TESTFOLDERABCSWE","PATHasdvönljosüojnwervarüojnaesvünojseravjnoövsar1");
-                client.addRelease("TESTFOLDE","PATHasdvönljosadvüojnwervarüojnaesvvjnar1");
-                client.addRelease("TESTFOLDERABCSWE","PATHasdvönljosadvüojnwervarüojnaesvünojseravvsar1");
-                client.addRelease("TESTFOLDE","PATHasdvönljosadvüojvarüojnaesvvjnoövsar1");
-                client.addRelease("TESTFOLDE","PATHasdvönljosadvüojnwervasvsvdvserüojnaesvvjnar1");
-                client.addRelease("TESTFOLDERABCSWE","PATHasdvönljosadvüojnwervarüojnaesvüuio.,hjmgfhnojseravvsar1");
-                client.addRelease("TESTFOLDE","PATHasdvönljosadvüosevesgfdsrbvjvarüojnaesvvjnoövsar1");
-            }
-            this.clients.addClient(client);
-        }
-        */
     }
 
     public void buttonChangeName(ActionEvent event) {

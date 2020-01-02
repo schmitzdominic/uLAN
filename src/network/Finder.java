@@ -144,6 +144,7 @@ public class Finder {
 
             if (client != null) {
                 client.setSocket(socket);
+                client.addTCPListener();
                 clientListener.onClientFound(client);
             }
         }

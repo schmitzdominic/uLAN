@@ -74,6 +74,17 @@ public class Tool {
         return Tool.convertWithStream(message);
     }
 
+    public static HashMap<String, String> convertReleasesString(String releases) {
+        HashMap<String, String> map = new HashMap<>();
+        String[] reArray = releases.split(";");
+        for(int i = 0; i < reArray.length; i++) {
+            String[] folderNames = reArray[i].split("//");
+            String folder = folderNames[folderNames.length-1];
+            map.put(reArray[i], folder);
+        }
+        return map;
+    }
+
     public static void openReleases(Initializable parentController, Stage parentStage) {
         try {
             HashMap<String, String> settings = getSettings();

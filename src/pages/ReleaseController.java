@@ -10,10 +10,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import registry.Registry;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -111,24 +113,9 @@ public class ReleaseController implements Initializable {
     }
 
     public void buttonAdd(ActionEvent event) {
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/LUCKAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH//LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAXAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAATH/TO/LUCKAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PAPATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCATH/TO/LUCKAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PA/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX//TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCPATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/L/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TAX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TO/LUCKAX/AX/PATH/TO/LUCKAX");
-        registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LUCKAX/PATH/TOTO/LUCKAX");
-        boolean added = registry.addRelease("C:/PATH/TO/LUCKAX/PATH/TO/LTO/LUCKAX");
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(Tool.releaseStage);
+        boolean added = registry.addRelease(selectedDirectory.getAbsolutePath());
         if (added) {
             this.setReleases();
         }
