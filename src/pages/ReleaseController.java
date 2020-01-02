@@ -17,7 +17,6 @@ import registry.Registry;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class ReleaseController implements Initializable {
@@ -39,14 +38,12 @@ public class ReleaseController implements Initializable {
 
     Registry registry = new Registry();
     String release;
-    String[] initReleases;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initListeners();
         this.setButtonIcons();
         this.setReleases();
-        this.initReleases = registry.getReleases();
     }
 
     private void initListeners() {
@@ -54,15 +51,7 @@ public class ReleaseController implements Initializable {
             Tool.releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
-                    boolean changed = false;
-                    String[] releases = registry.getReleases();
-                    if (releases != null) {
-                        changed = !Arrays.equals(releases, initReleases);
-                    }
-                    if (changed) {
-                        System.out.println("Something has changed..");
-                        // TODO: Send all that something has changed!
-                    }
+
                 }
             });
         }

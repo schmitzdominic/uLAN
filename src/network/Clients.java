@@ -9,7 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ListView;
 
-import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -33,6 +32,10 @@ public class Clients implements ClientsCallback {
         this.id = Info.getSettings().get("id");
         this.port = Integer.parseInt(Info.getSettings().get("port"));
         // this.clientList.getItems().sort(Comparator.naturalOrder()); TODO SORT!
+    }
+
+    public ObservableMap<String, Client> getClientMap() {
+        return this.clientMap;
     }
 
     public Client getClientById(String id){

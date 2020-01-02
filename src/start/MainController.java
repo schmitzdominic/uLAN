@@ -8,15 +8,20 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import network.*;
+import registry.Registry;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -341,6 +346,24 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     }
 
     public void buttonReleases(ActionEvent event) {
-        Tool.openReleases(this, Main.main);
+        Registry registry = new Registry();
+        String[] initReleases = registry.getReleases();
+        Stage releaseStage = Tool.openReleases(this, Main.main);
+        releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                boolean changed = false;
+                String[] releases = registry.getReleases();
+                if (releases != null) {
+                    changed = !Arrays.equals(releases, initReleases);
+                }
+                if (changed) {
+                    System.out.println("Something has changed..");
+                    Tool.sendReleasesChange(clients.getClientMap());
+                    // TODO: Send all that something has changed!
+                }
+            }
+        });
+        releaseStage.showAndWait();
     }
 }

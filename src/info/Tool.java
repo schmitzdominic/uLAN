@@ -1,5 +1,6 @@
 package info;
 
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -8,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import network.Client;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -85,11 +87,20 @@ public class Tool {
         return map;
     }
 
-    public static void openReleases(Initializable parentController, Stage parentStage) {
+    public static void sendReleasesChange(ObservableMap<String, Client> clientList) {
+        for (Client client : clientList.values()) {
+            if (client.getSocket() != null) {
+                sendMessage(client.getSocket(), Info.getReleasesChangedPackage());
+            }
+        }
+    }
+
+    public static Stage openReleases(Initializable parentController, Stage parentStage) {
+        Stage rStage = new Stage();
         try {
+
             HashMap<String, String> settings = getSettings();
 
-            Stage rStage = new Stage();
             Tool.releaseStage = rStage;
             Parent fxStage = FXMLLoader.load(parentController.getClass().getResource("../pages/release_window.fxml"));
             rStage.setTitle("Freigaben");
@@ -98,9 +109,10 @@ public class Tool {
             rStage.setResizable(false);
             rStage.initModality(Modality.WINDOW_MODAL);
             rStage.initOwner(parentStage);
-            rStage.showAndWait();
+            return rStage;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return rStage;
     }
 }

@@ -48,7 +48,9 @@ public class Info {
 
         String releases = registry.getReleasesAsString();
         if (releases != null) {
-            map.put("RELEASES", releases);
+            if (!releases.isEmpty()) {
+                map.put("RELEASES", releases);
+            }
         }
         return map;
     }
@@ -64,12 +66,14 @@ public class Info {
 
         String releases = registry.getReleasesAsString();
         if (releases != null) {
-            map.put("RELEASES", releases);
+            if (!releases.isEmpty()) {
+                map.put("RELEASES", releases);
+            }
         }
         return map;
     }
 
-    public static HashMap<String, String> getReleasePackage() {
+    public static HashMap<String, String> getReleasesChangedPackage() {
         HashMap<String, String> settings = getSettings();
         Registry registry = new Registry();
         HashMap<String, String> map = new HashMap<>();
@@ -78,7 +82,9 @@ public class Info {
 
         String releases = registry.getReleasesAsString();
         if (releases != null) {
-            map.put("RELEASES", releases);
+            if (!releases.isEmpty()) {
+                map.put("RELEASES", releases);
+            }
         }
         return map;
     }

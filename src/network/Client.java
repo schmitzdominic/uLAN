@@ -1,6 +1,7 @@
 package network;
 
 import Interfaces.ClientsCallback;
+import info.Tool;
 import registry.Registry;
 
 import java.io.BufferedReader;
@@ -10,6 +11,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Client {
     private String id;
@@ -135,6 +137,14 @@ public class Client {
                             while((line = reader.readLine()) != null) {
                                 System.out.println("REPEATE FROM " + getListName() + ": " + line);
                                 // TODO: DECIDE HERE WHAT TO DO!
+                                Map<String, String> info = Tool.convertMessage(line);
+                                String mode = info.get("MODE");
+                                if (mode != null) {
+                                    if (mode.equals("RELEASECHANGE")) {
+                                        System.out.println("CHANGE: " + info);
+                                        setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+                                    }
+                                }
                             }
                         } catch (SocketException e) {
                             System.out.println(String.format("TCP LISTENER %s STOPED!", getListName()));
