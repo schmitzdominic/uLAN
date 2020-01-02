@@ -228,6 +228,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         this.clientTitle.setVisible(false);
         this.buttonChangeName.setVisible(false);
         this.clientInformation.setVisible(false);
+        this.releaseList.setVisible(false);
     }
 
     private void selectClient(Client client){
