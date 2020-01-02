@@ -20,9 +20,11 @@ public class Releases {
 
     public void addReleases(Client client) {
         this.removeAllReleases(client);
-        for(String key : client.getReleases().keySet()) {
-            this.releaseList.getItems().add(this.getListItem(client.getReleases().get(key), key));
-            this.releaseMap.put(key, client.getReleases().get(key));
+        if (client.getReleases() != null) {
+            for(String key : client.getReleases().keySet()) {
+                this.releaseList.getItems().add(this.getListItem(client.getReleases().get(key), key));
+                this.releaseMap.put(key, client.getReleases().get(key));
+            }
         }
         this.setTooltip();
     }
