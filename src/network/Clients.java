@@ -1,5 +1,6 @@
 package network;
 
+import Interfaces.ClientList;
 import Interfaces.ClientsCallback;
 import info.Info;
 import info.Tool;
@@ -8,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ListView;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -16,6 +18,7 @@ public class Clients implements ClientsCallback {
 
     private ObservableMap<String, Client> clientMap;
     private ListView<String> clientList;
+    private ClientList controller;
     private String id;
     private int port;
 
@@ -23,9 +26,10 @@ public class Clients implements ClientsCallback {
      * Constructor
      * @param clientList ListView<String> to view clients
      */
-    public Clients(ListView<String> clientList){
+    public Clients(ListView<String> clientList, ClientList controller){
         this.clientMap = FXCollections.observableHashMap();
         this.clientList = clientList;
+        this.controller = controller;
         this.id = Info.getSettings().get("id");
         this.port = Integer.parseInt(Info.getSettings().get("port"));
         // this.clientList.getItems().sort(Comparator.naturalOrder()); TODO SORT!
@@ -105,6 +109,7 @@ public class Clients implements ClientsCallback {
                         clientList.getSelectionModel().select(0);
                     } else {
                         clientList.getSelectionModel().clearSelection();
+                        controller.makeClientInfoInvisible();
                     }
                 }
                 clientList.getItems().remove(index);
@@ -160,6 +165,5 @@ public class Clients implements ClientsCallback {
     @Override
     public void removeClient(String id) {
         this.removeClientById(id);
-        System.out.println(this.clientList.getItems().size());
     }
 }

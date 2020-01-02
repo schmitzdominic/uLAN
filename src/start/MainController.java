@@ -1,6 +1,7 @@
 package start;
 
 import Interfaces.ClientFoundListener;
+import Interfaces.ClientList;
 import info.Info;
 import info.Tool;
 import javafx.application.Platform;
@@ -19,7 +20,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-public class MainController implements ClientFoundListener, Initializable {
+public class MainController implements ClientFoundListener, Initializable, ClientList {
 
     @FXML
     AnchorPane mainWindow;
@@ -125,7 +126,7 @@ public class MainController implements ClientFoundListener, Initializable {
     }
 
     private void createClientList() {
-        this.clients = new Clients(this.clientList);
+        this.clients = new Clients(this.clientList, this);
         this.clientList.setOpacity(0.5);
 
         this.clientList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -220,6 +221,13 @@ public class MainController implements ClientFoundListener, Initializable {
     @Override
     public void onClientRemoveIp(String ip) {
         this.removeClientByIp(ip);
+    }
+
+    @Override
+    public void makeClientInfoInvisible() {
+        this.clientTitle.setVisible(false);
+        this.buttonChangeName.setVisible(false);
+        this.clientInformation.setVisible(false);
     }
 
     private void selectClient(Client client){
