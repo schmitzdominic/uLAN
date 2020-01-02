@@ -134,7 +134,7 @@ public class Client {
                             listener = true;
                             while((line = reader.readLine()) != null) {
                                 System.out.println("REPEATE FROM " + getListName() + ": " + line);
-                                // TODO: DESIDE HERE WHAT TO DO!
+                                // TODO: DECIDE HERE WHAT TO DO!
                             }
                         } catch (SocketException e) {
                             System.out.println(String.format("TCP LISTENER %s STOPED!", getListName()));
