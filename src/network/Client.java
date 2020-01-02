@@ -1,5 +1,6 @@
 package network;
 
+import Interfaces.ClientsCallback;
 import registry.Registry;
 
 import java.io.BufferedReader;
@@ -20,6 +21,7 @@ public class Client {
     private InetAddress ipAddress;
     private Socket socket;
     private Thread tcpListener;
+    private ClientsCallback clientsCallback;
 
     private HashMap<String, String> releases;
 
@@ -137,6 +139,7 @@ public class Client {
                         } catch (SocketException e) {
                             System.out.println(String.format("TCP LISTENER %s STOPED!", getListName()));
                             listener = false;
+                            clientsCallback.removeClient(getId());
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -179,5 +182,9 @@ public class Client {
         }
 
         client = null;
+    }
+
+    public void registerClientsCallback(ClientsCallback clientsCallback) {
+        this.clientsCallback = clientsCallback;
     }
 }

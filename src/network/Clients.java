@@ -1,5 +1,6 @@
 package network;
 
+import Interfaces.ClientsCallback;
 import info.Info;
 import info.Tool;
 import javafx.application.Platform;
@@ -11,7 +12,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Clients {
+public class Clients implements ClientsCallback {
 
     private ObservableMap<String, Client> clientMap;
     private ListView<String> clientList;
@@ -52,6 +53,9 @@ public class Clients {
     }
 
     public void addClient(Client client) {
+        if (client != null) {
+            client.registerClientsCallback(this);
+        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -139,5 +143,15 @@ public class Clients {
                 }
             }).start();
         }
+    }
+
+    @Override
+    public void notifyClientHasChanged() {
+        this.clientList.refresh();
+    }
+
+    @Override
+    public void removeClient(String id) {
+        this.removeClientByIp(id);
     }
 }
