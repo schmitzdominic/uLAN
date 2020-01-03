@@ -151,12 +151,15 @@ public class Client {
                                         }
                                         clientsCallback.notifyClientHasChanged();
                                     } else if (mode.equals("PROVIDE")) {
-                                        File path = new File(info.get("PATH"));
                                         if (reg.releaseExists(info.get("PATH"))) {
-                                            if (path.isDirectory()) {
-                                                Tool.provideFileToClient(socket, path);
-                                            } else {
-                                                // TODO: ERROR, NO PATH FOUND!
+                                            String release = reg.getReleaseNormal(info.get("PATH"));
+                                            if (release != null) {
+                                                File path = new File(release);
+                                                if (path.isDirectory()) {
+                                                    Tool.provideFileToClient(socket, path);
+                                                } else {
+                                                    // TODO: ERROR, NO PATH FOUND!
+                                                }
                                             }
                                         } else {
                                             // TODO: ERROR, NO RELEASE FOUND!
@@ -183,6 +186,14 @@ public class Client {
 
     public void removeRelease(String path) {
         this.releases.remove(path);
+    }
+
+    public void closeSocket() {
+        try {
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void refresh(Client client) {

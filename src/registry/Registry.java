@@ -292,6 +292,15 @@ public class Registry {
         }
     }
 
+    public String getReleaseNormal(String releaseWithoutSpaces) {
+        for(String p : this.getReleases()) {
+            if (p.replace(" ", "").equals(releaseWithoutSpaces)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
     public boolean releaseExists(String path) {
         for(String p : this.getReleases()) {
             if (p.replace(" ", "").equals(path.replace(" ", ""))) {

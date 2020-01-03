@@ -102,6 +102,10 @@ public class Clients implements ClientsCallback {
                 int index = 0;
                 for(String c : clientList.getItems()) {
                     if (c.equals(client.getListName())) {
+                        Client cTemp = clientMap.get(client.getId());
+                        if (cTemp.getSocket() != null) {
+                            clientMap.get(client.getId()).closeSocket();
+                        }
                         clientMap.remove(client.getId());
                         break;
                     }
