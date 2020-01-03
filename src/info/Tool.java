@@ -63,10 +63,10 @@ public class Tool {
 
     public static void sendMessage(Socket socket, HashMap<String, String> message) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
             System.out.println("SEND MESSAGE: " + message);
             out.print(message + "\n");
-            //out.flush();
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
