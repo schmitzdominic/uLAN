@@ -54,7 +54,7 @@ public class Tool {
     public static void sendMessage(Socket socket, String message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(message);
+            out.print(message);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class Tool {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             System.out.println("SENDIM ESSAGE: " + message);
-            out.println(message);
+            out.print(message);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
