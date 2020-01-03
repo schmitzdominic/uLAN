@@ -107,10 +107,12 @@ public class ReleaseController implements Initializable {
     public void buttonAdd(ActionEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(Tool.releaseStage);
-        String path = selectedDirectory.getAbsolutePath();
-        boolean added = registry.addRelease(path);
-        if (added) {
-            this.setReleases();
+        if (selectedDirectory != null) {
+            String path = selectedDirectory.getAbsolutePath();
+            boolean added = registry.addRelease(path);
+            if (added) {
+                this.setReleases();
+            }
         }
     }
 
