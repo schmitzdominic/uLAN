@@ -53,7 +53,7 @@ public class Finder {
                     try {
                         // Build a InetAddress and check if the client is available
                         InetAddress ip = InetAddress.getByName(ipAddress + client);
-                        if (!(ipAddress).equals(ipAddress + client)) {
+                        if (!(ip.getHostAddress()).equals(ipAddress + client)) {
 
                             Socket client = isOnline(ip, port);
 
