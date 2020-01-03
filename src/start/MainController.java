@@ -340,8 +340,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
     public void buttonDownload(ActionEvent event) {
         if (this.actualRelease != null) {
-            System.out.println(String.format("From Client %s DOWNLOADING: %s", this.client.getHostname(), this.actualRelease));
-            // TODO: Start Download here!
+            Tool.sendMessage(this.client.getSocket(), Info.getDownloadFolderPackage(this.actualRelease));
         }
     }
 

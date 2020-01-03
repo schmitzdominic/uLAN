@@ -292,6 +292,15 @@ public class Registry {
         }
     }
 
+    public boolean releaseExists(String path) {
+        for(String p : this.getReleases()) {
+            if (p.equals(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getReleasesAsString() {
         String jobName=String.format("%s", this.releases).toLowerCase();
         String releases = getSetting(jobName, "releases");
