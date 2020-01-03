@@ -20,7 +20,7 @@ public class Finder {
     private int port;
     public AtomicInteger counter;
     public boolean active = false;
-    private String ipAddress;
+    private String ownIp;
     private ClientFoundListener clientListener;
 
     public Finder() {
@@ -36,7 +36,7 @@ public class Finder {
     }
 
     public void searchClients() {
-        this.ipAddress = Info.getIp();
+        this.ownIp = Info.getIp();
         this.active = true;
         this.counter.set(0);
         String ipAddress = this.getNetworkIP(Info.getIp());
@@ -51,10 +51,11 @@ public class Finder {
                 @Override
                 public void run() {
                     try {
-                        // Build a InetAddress and check if the client is available
+                        // Build a InetAddress and check if the ip is not ours
                         InetAddress ip = InetAddress.getByName(ipAddress + client);
-                        if (!(ip.getHostAddress()).equals(ipAddress + client)) {
+                        if (!(ownIp).equals(ip.getHostAddress())) {
 
+                            // Check if the client is online
                             Socket client = isOnline(ip, port);
 
                             if (client != null) {
