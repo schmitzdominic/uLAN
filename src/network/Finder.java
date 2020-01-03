@@ -159,7 +159,13 @@ public class Finder {
         String hostname = info.get("HOSTNAME");
 
         if (id != null & ip != null & hostname != null) {
-            return new Client(id, ip, hostname);
+            Client client = new Client(id, ip, hostname);
+
+            if (info.get("RELEASES") != null) {
+                client.setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+            }
+
+            return client;
         } else {
             return null;
         }
