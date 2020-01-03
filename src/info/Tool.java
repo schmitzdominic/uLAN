@@ -94,27 +94,6 @@ public class Tool {
         }
     }
 
-    public static Stage openReleases(Initializable parentController, Stage parentStage) {
-        Stage rStage = new Stage();
-        try {
-
-            HashMap<String, String> settings = getSettings();
-
-            Tool.releaseStage = rStage;
-            Parent fxStage = FXMLLoader.load(parentController.getClass().getResource("../pages/release_window.fxml"));
-            rStage.setTitle("Freigaben");
-            rStage.setScene(new Scene(fxStage, 500, 300));
-            rStage.getIcons().add(new Image(settings.get("defaulticon")));
-            rStage.setResizable(false);
-            rStage.initModality(Modality.WINDOW_MODAL);
-            rStage.initOwner(parentStage);
-            return rStage;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return rStage;
-    }
-
     public static void provideFileToClient(Socket socket, File path) {
         new Thread(new Runnable() {
             @Override
@@ -140,5 +119,26 @@ public class Tool {
 
     public static void downloadFile(Socket socket, File path) {
 
+    }
+
+    public static Stage openReleases(Initializable parentController, Stage parentStage) {
+        Stage rStage = new Stage();
+        try {
+
+            HashMap<String, String> settings = getSettings();
+
+            Tool.releaseStage = rStage;
+            Parent fxStage = FXMLLoader.load(parentController.getClass().getResource("/release_window.fxml"));
+            rStage.setTitle("Freigaben");
+            rStage.setScene(new Scene(fxStage, 500, 300));
+            rStage.getIcons().add(new Image(settings.get("defaulticon")));
+            rStage.setResizable(false);
+            rStage.initModality(Modality.WINDOW_MODAL);
+            rStage.initOwner(parentStage);
+            return rStage;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return rStage;
     }
 }
