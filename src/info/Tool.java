@@ -66,7 +66,7 @@ public class Tool {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             System.out.println("SEND MESSAGE: " + message);
             out.print(message + "\n");
-            out.flush();
+            //out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
