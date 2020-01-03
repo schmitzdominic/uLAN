@@ -294,7 +294,7 @@ public class Registry {
 
     public boolean releaseExists(String path) {
         for(String p : this.getReleases()) {
-            if (p.equals(path)) {
+            if (p.replace(" ", "").equals(path.replace(" ", ""))) {
                 return true;
             }
         }
