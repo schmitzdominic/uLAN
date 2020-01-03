@@ -37,7 +37,6 @@ public class Tool {
     }
 
     public static Map<String, String> convertWithStream(String mapAsString) {
-        mapAsString = mapAsString.replace("\n", "");
         Map<String, String> map = Arrays.stream(mapAsString.split(","))
                 .map(entry -> entry.split("="))
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
@@ -65,7 +64,8 @@ public class Tool {
     public static void sendMessage(Socket socket, HashMap<String, String> message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(message + "\n");
+            System.out.println("SENDIM ESSAGE: " + message);
+            out.println(message);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
