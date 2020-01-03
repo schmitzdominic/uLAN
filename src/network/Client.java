@@ -80,7 +80,11 @@ public class Client {
     }
 
     public Socket getSocket() {
-        return socket;
+        return this.socket;
+    }
+
+    public Thread getTcpListener() {
+        return this.tcpListener;
     }
 
     public void setListener(boolean listener) {

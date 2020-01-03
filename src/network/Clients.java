@@ -105,6 +105,7 @@ public class Clients implements ClientsCallback {
                         Client cTemp = clientMap.get(client.getId());
                         if (cTemp.getSocket() != null) {
                             clientMap.get(client.getId()).closeSocket();
+                            clientMap.get(client.getId()).getTcpListener().interrupt();
                         }
                         clientMap.remove(client.getId());
                         break;
