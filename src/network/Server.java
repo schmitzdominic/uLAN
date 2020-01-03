@@ -63,7 +63,7 @@ public class Server extends Thread {
                         }
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println(String.format("FULL HANDSHAKE WITH %s IS NOT POSSIBLE!", socket.getInetAddress().getHostAddress()));
                 }
             }
         }).start();

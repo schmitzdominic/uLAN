@@ -11,8 +11,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import network.Client;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
@@ -53,8 +52,8 @@ public class Tool {
 
     public static void sendMessage(Socket socket, String message) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.print(message);
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            out.print(message + "\n");
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,7 +63,6 @@ public class Tool {
     public static void sendMessage(Socket socket, HashMap<String, String> message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream());
-            System.out.println("SEND MESSAGE: " + message);
             out.print(message + "\n");
             out.flush();
         } catch (IOException e) {
@@ -115,5 +113,32 @@ public class Tool {
             e.printStackTrace();
         }
         return rStage;
+    }
+
+    public static void provideFileToClient(Socket socket, File path) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File[] files = path.listFiles();
+
+                    BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
+                    DataOutputStream dos = new DataOutputStream(bos);
+
+                    assert files != null;
+                    dos.writeInt(files.length);
+
+                    for(File file : files) {
+                        System.out.println("PROVIDING " + file.getName());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    public static void downloadFile(Socket socket, File path) {
+
     }
 }

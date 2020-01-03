@@ -139,7 +139,6 @@ public class Client {
                         try {
                             listener = true;
                             while((line = reader.readLine()) != null) {
-                                System.out.print("MESSAGE: ");
                                 Map<String, String> info = Tool.convertMessage(line);
                                 String mode = info.get("MODE");
                                 if (mode != null) {
@@ -151,17 +150,17 @@ public class Client {
                                             setReleases(Tool.convertReleasesString(info.get("RELEASES")));
                                         }
                                         clientsCallback.notifyClientHasChanged();
-                                    } else if (mode.equals("DOWNLOAD")) {
+                                    } else if (mode.equals("PROVIDE")) {
                                         File path = new File(info.get("PATH"));
                                         if (reg.releaseExists(info.get("PATH"))) {
                                             if (path.isDirectory()) {
-                                                System.out.println("YEAHH, SOMEONE WANT THE FILE: " + info.get("PATH"));
+                                                Tool.provideFileToClient(socket, path);
                                             } else {
                                                 // TODO: ERROR, NO PATH FOUND!
                                             }
                                         } else {
                                             // TODO: ERROR, NO RELEASE FOUND!
-                                            // Maybe we should make a extra window with security issues
+                                            // Maybe we should make an extra window with security issues
                                         }
                                     }
                                 }

@@ -108,13 +108,9 @@ public class ReleaseController implements Initializable {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File selectedDirectory = directoryChooser.showDialog(Tool.releaseStage);
         String path = selectedDirectory.getAbsolutePath();
-        if (path.contains(" ")) {
-            // TODO: WARNING MESSAGE, NO SPACES INSIDE THE PATH!
-        } else {
-            boolean added = registry.addRelease(path);
-            if (added) {
-                this.setReleases();
-            }
+        boolean added = registry.addRelease(path);
+        if (added) {
+            this.setReleases();
         }
     }
 

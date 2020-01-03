@@ -89,10 +89,10 @@ public class Info {
         return map;
     }
 
-    public static HashMap<String ,String> getDownloadFolderPackage(String path) {
+    public static HashMap<String ,String> getProvideFolderPackage(String path) {
         HashMap<String, String> settings = getSettings();
         HashMap<String, String> map = new HashMap<>();
-        map.put("MODE","DOWNLOAD");
+        map.put("MODE","PROVIDE");
         map.put("ID",settings.get("id"));
         map.put("PATH", path);
         return map;
