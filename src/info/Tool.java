@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import network.Client;
 import pages.FileTransferController;
+import registry.Registry;
 import start.Main;
 import start.MainController;
 
@@ -119,22 +120,28 @@ public class Tool {
             public void run() {
                 try {
 
-                    int port = 50000;
-                    long folderSize = calculateFolderSize(path);
-                    // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
-                    Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(port, folderSize));
+                    ServerSocket listener = Tool.getFreeServerSocket();
 
-                    ServerSocket listener = new ServerSocket(port);
-                    Socket socket = listener.accept();
+                    if (listener != null) {
+                        long folderSize = calculateFolderSize(path);
 
-                    if (path.exists()) {
-                        ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
-                        sendFileOutput(zipOpStream, path);
-                        zipOpStream.flush();
-                        socket.close();
-                        listener.close();
-                    } else {
-                        System.out.println("Folder to read does not exist ["+path.getAbsolutePath()+"]");
+                        // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
+                        System.out.println("USE PORT: " + listener.getLocalPort());
+                        Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(listener.getLocalPort(), folderSize));
+
+                        Socket socket = listener.accept();
+
+                        if (path.exists()) {
+                            ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
+                            sendFileOutput(zipOpStream, path);
+                            zipOpStream.flush();
+                            socket.close();
+                            listener.close();
+
+                        } else {
+                            // TODO: Exception handling! REMOVE SOP!
+                            System.out.println("Folder to read does not exist ["+path.getAbsolutePath()+"]");
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -308,5 +315,19 @@ public class Tool {
                 }
             }
         });
+    }
+
+    public static ServerSocket getFreeServerSocket() {
+        Registry registry = new Registry();
+        int startPort = Integer.parseInt(registry.getProperties().get("fileport"));
+        int endPort = startPort + 1000;
+
+        for (int i=startPort; i < endPort; i++) {
+            try {
+                return new ServerSocket(i);
+            } catch (IOException ignored) {}
+        }
+
+        return null;
     }
 }

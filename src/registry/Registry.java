@@ -1,7 +1,6 @@
 package registry;
 
 import info.Info;
-import info.Tool;
 import network.Client;
 
 import java.io.File;
@@ -24,7 +23,7 @@ public class Registry {
     final private String ID = "";
     final private int DEFAULTMESSAGE = 1; // NOT USED
     final private int PORT = 33123;
-    final private int FILEPORT = 33111; // NOT USED
+    final private int FILEPORT = 50000;
     final private int CLIENTSCOUNT = 253;
     final private int AUTOSTART = 1; // NOT USED
     final private int NOTIFICATIONS = 1; // NOT USED
