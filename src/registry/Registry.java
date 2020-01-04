@@ -1,8 +1,10 @@
 package registry;
 
 import info.Info;
+import info.Tool;
 import network.Client;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +19,7 @@ public class Registry {
     final String path = "/ulan/preferences"; // settings.Settings path
 
     // Default settings
-    final private String DEFAULTTRANSFERPATH = System.getProperty("user.home") + "\\downloads"; // NOT USED
+    final private String DEFAULTTRANSFERPATH = System.getProperty("user.home") + "\\downloads";
     final private String DEFAULTICON = "/icons/baseline_account_tree_white_18dp.png";
     final private String ID = "";
     final private int DEFAULTMESSAGE = 1; // NOT USED
@@ -45,6 +47,12 @@ public class Registry {
     public HashMap<String,String> getProperties(){
 
         if(!this.checkIfPropertiesExist("defaultfiletransferpath")){
+            File path = new File(this.DEFAULTTRANSFERPATH);
+            if (path.isDirectory()) {
+                this.setSetting("properties", "defaultfiletransferpath", this.DEFAULTTRANSFERPATH);
+            } else {
+                this.setSetting("properties", "defaultfiletransferpath", System.getProperty("user.home"));
+            }
             this.setSetting("properties", "defaultfiletransferpath", this.DEFAULTTRANSFERPATH);
         }
         if(!this.checkIfPropertiesExist("defaulticon")){

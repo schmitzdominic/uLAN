@@ -101,6 +101,7 @@ public class Tool {
                 try {
                     File[] files = path.listFiles();
 
+                    // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
                     Tool.sendMessage(socket, Info.getDownloadFolderPackage());
 
                     BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
