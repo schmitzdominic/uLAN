@@ -203,9 +203,38 @@ public class Tool {
                     ZipInputStream zips = new ZipInputStream(bis);
                     ZipEntry zipEntry = null;
 
-                    while(null != (zipEntry = zips.getNextEntry())) {
+
+                    while(null != (zipEntry = zips.getNextEntry())){
                         String fileName = zipEntry.getName();
-                        System.out.println(fileName);
+                        File outFile = new File(path.getAbsolutePath() + "/" + fileName);
+                        System.out.println("----["+outFile.getName()+"], filesize["+zipEntry.getCompressedSize()+"]");
+
+
+                        if(zipEntry.isDirectory()){
+                            File zipEntryFolder = new File(zipEntry.getName());
+                            if(!zipEntryFolder.exists()){
+                                outFile.mkdirs();
+                            }
+
+                            continue;
+                        }else{
+                            File parentFolder = outFile.getParentFile();
+                            if(!parentFolder.exists()){
+                                parentFolder.mkdirs();
+                            }
+                        }
+
+                        System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
+
+
+
+                        FileOutputStream fos = new FileOutputStream(outFile);
+                        int fileLength = (int)zipEntry.getSize();
+
+                        byte[] fileByte = new byte[fileLength];
+                        zips.read(fileByte);
+                        fos.write(fileByte);
+                        fos.close();
                     }
 
                 } catch (IOException e) {
