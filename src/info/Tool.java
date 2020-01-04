@@ -1,5 +1,6 @@
 package info;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableMap;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import network.Client;
+import pages.FileTransferController;
 import start.Main;
 import start.MainController;
 
@@ -19,10 +21,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
@@ -224,7 +223,7 @@ public class Tool {
             public void run() {
                 try {
                     System.out.println("DOWNLOAD FILE TO " + path.getName());
-                    openFileTransferWindow(MainController.init);
+                    openFileTransferWindow(MainController.init, path, ip, port, size);
                     InetAddress ipAddress = InetAddress.getByName(ip);
                     Socket dSocket = new Socket(ipAddress, port);
                     BufferedInputStream bis = new BufferedInputStream(dSocket.getInputStream());
@@ -280,27 +279,34 @@ public class Tool {
         }).start();
     }
 
-    public static void openFileTransferWindow(Initializable sStage) {
-        try {
-            HashMap<String, String> settings = getSettings();
+    public static void openFileTransferWindow(Initializable sStage, File path, String ip, int port, long size) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    HashMap<String, String> settings = getSettings();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/file_transfer_window.fxml"));
-            Parent root1 = fxmlLoader.load();
+                    FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/file_transfer_window.fxml"));
+                    Parent root1 = fxmlLoader.load();
+                    FileTransferController controller = fxmlLoader.<FileTransferController>getController();
+                    controller.initData(path, ip, port, size);
 
-            Stage fStage = new Stage();
-            fStage.setTitle("Datenübertragung");
-            fStage.getIcons().add(new Image(settings.get("defaulticon")));
-            fStage.setResizable(false);
-            fStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(WindowEvent event) {
-                    // TODO: HERE WHEN CLOSED!
+                    Stage fStage = new Stage();
+                    fStage.setTitle("Datenübertragung");
+                    fStage.getIcons().add(new Image(settings.get("defaulticon")));
+                    fStage.setResizable(false);
+                    fStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        @Override
+                        public void handle(WindowEvent event) {
+                            // TODO: HERE WHEN CLOSED!
+                        }
+                    });
+                    fStage.setScene(new Scene(root1, 500, 300));
+                    fStage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-            fStage.setScene(new Scene(root1, 500, 300));
-            fStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            }
+        });
     }
 }
