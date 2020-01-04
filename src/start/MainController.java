@@ -362,8 +362,8 @@ public class MainController implements ClientFoundListener, Initializable, Clien
             HashMap<String, String> settings = getSettings();
             String[] initReleases = registry.getReleases();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/release_window.fxml"));
-            Parent root1 = fxmlLoader.load();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pages/release_window.fxml"));
+            Parent root = fxmlLoader.load();
             releaseStage = new Stage();
             releaseStage.initModality(Modality.WINDOW_MODAL);
             releaseStage.setTitle("Freigaben");
@@ -383,7 +383,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
                     }
                 }
             });
-            releaseStage.setScene(new Scene(root1, 500, 300));
+            releaseStage.setScene(new Scene(root, 500, 300));
             releaseStage.showAndWait();
 
         } catch (IOException e) {

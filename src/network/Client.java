@@ -183,7 +183,8 @@ public class Client {
                                             if (dPath != null) {
                                                 File path = new File(dPath);
                                                 if (path.isDirectory()) {
-                                                    Tool.openFileTransferWindow(MainController.init, path, getIp(), port, size);
+                                                    Tool.openFileTransferWindow(MainController.init,
+                                                            path, getIp(), port, info.get("FOLDERNAME"), size);
                                                 } else {
                                                     // TODO: ERROR, NO PATH FOUND!
                                                 }

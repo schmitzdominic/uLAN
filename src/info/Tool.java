@@ -9,13 +9,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import network.Client;
 import pages.FileTransferController;
 import registry.Registry;
-import start.Main;
 import start.MainController;
 
 import java.io.*;
@@ -127,7 +125,7 @@ public class Tool {
 
                         // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
                         System.out.println("USE PORT: " + listener.getLocalPort());
-                        Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(listener.getLocalPort(), folderSize));
+                        Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(listener.getLocalPort(), path.getName(), folderSize));
 
                         Socket socket = listener.accept();
 
@@ -224,79 +222,17 @@ public class Tool {
         return length;
     }
 
-    public static void downloadFile(File path, String ip, int port, long size) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    System.out.println("DOWNLOAD FILE TO " + path.getName());
-                    openFileTransferWindow(MainController.init, path, ip, port, size);
-                    InetAddress ipAddress = InetAddress.getByName(ip);
-                    Socket dSocket = new Socket(ipAddress, port);
-                    BufferedInputStream bis = new BufferedInputStream(dSocket.getInputStream());
-                    ZipInputStream zips = new ZipInputStream(bis);
-                    ZipEntry zipEntry = null;
-                    long aSize = 0;
-
-
-                    while(null != (zipEntry = zips.getNextEntry())){
-                        String fileName = zipEntry.getName();
-                        File outFile = new File(path.getAbsolutePath() + "/" + fileName);
-                        if (!outFile.exists()) {
-                            System.out.println("----["+outFile.getName()+"], filesize["+zipEntry.getCompressedSize()+"]");
-
-
-                            if(zipEntry.isDirectory()){
-                                File zipEntryFolder = new File(zipEntry.getName());
-                                if(!zipEntryFolder.exists()){
-                                    outFile.mkdirs();
-                                }
-
-                                continue;
-                            }else{
-                                File parentFolder = outFile.getParentFile();
-                                if(!parentFolder.exists()){
-                                    parentFolder.mkdirs();
-                                }
-                            }
-
-                            // System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
-                            aSize += zipEntry.getSize();
-                            System.out.println(String.format("PROGRESS: %s/%s", aSize, size));
-
-                            // System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
-                            // System.out.println("FILE EXISTS: " + outFile.exists());
-                            FileOutputStream fos = new FileOutputStream(outFile);
-                            int fileLength = (int)zipEntry.getSize();
-
-                            byte[] fileByte = new byte[fileLength];
-                            zips.read(fileByte);
-                            fos.write(fileByte);
-                            fos.close();
-                        }
-                    }
-
-                    System.out.println("FINISH");
-                    dSocket.close();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    public static void openFileTransferWindow(Initializable sStage, File path, String ip, int port, long size) {
+    public static void openFileTransferWindow(Initializable sStage, File path, String ip, int port, String folderName, long size) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 try {
                     HashMap<String, String> settings = getSettings();
 
-                    FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/file_transfer_window.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/pages/file_transfer_window.fxml"));
                     Parent root1 = fxmlLoader.load();
                     FileTransferController controller = fxmlLoader.<FileTransferController>getController();
-                    controller.initData(path, ip, port, size);
+                    controller.initData(path, ip, port, folderName, size);
 
                     Stage fStage = new Stage();
                     fStage.setTitle("Datenübertragung");
