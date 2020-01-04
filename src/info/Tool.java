@@ -20,6 +20,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
@@ -49,6 +50,32 @@ public class Tool {
                 .map(entry -> entry.split("="))
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
         return map;
+    }
+
+    public static String humanReadableByteCountSI(long bytes) {
+        String s = bytes < 0 ? "-" : "";
+        long b = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+        return b < 1000L ? bytes + " B"
+                : b < 999_950L ? String.format("%s%.1f kB", s, b / 1e3)
+                : (b /= 1000) < 999_950L ? String.format("%s%.1f MB", s, b / 1e3)
+                : (b /= 1000) < 999_950L ? String.format("%s%.1f GB", s, b / 1e3)
+                : (b /= 1000) < 999_950L ? String.format("%s%.1f TB", s, b / 1e3)
+                : (b /= 1000) < 999_950L ? String.format("%s%.1f PB", s, b / 1e3)
+                : String.format("%s%.1f EB", s, b / 1e6);
+    }
+
+    public static String humanReadableTime(long sec) {
+        long hours = sec / 3600;
+        long minutes = (sec % 3600) / 60;
+        long seconds = sec % 60;
+
+        if (hours == 0 & minutes == 0) {
+            return String.format("%02d Sek.", seconds);
+        } else if (hours == 0) {
+            return String.format("%02d:%02d", minutes, seconds);
+        } else {
+            return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        }
     }
 
     public static Socket isOnline(InetAddress ip, int port){
@@ -142,14 +169,14 @@ public class Tool {
                         }
                     }
                 } catch (Exception e) {
+                    System.out.println("UPLOAD STOPED");
                     e.printStackTrace();
                 }
             }
         }).start();
     }
 
-    public static void sendFileOutput(ZipOutputStream zipOpStream, File outFile)
-            throws Exception {
+    public static void sendFileOutput(ZipOutputStream zipOpStream, File outFile) throws Exception {
         String relativePath = outFile.getAbsoluteFile().getParentFile().getAbsolutePath();
         System.out.println("relativePath[" + relativePath + "]");
         outFile = outFile.getAbsoluteFile();
@@ -193,6 +220,7 @@ public class Tool {
             crc.update(fileByte, 0, readBytes);
         }
         bis.close();
+
         ZipEntry zipEntry = new ZipEntry(zipEntryFileName);
         zipEntry.setMethod(ZipEntry.STORED);
         zipEntry.setCompressedSize(file.length());
@@ -207,6 +235,7 @@ public class Tool {
             zipOpStream.write(fileByte, 0, readBytes);
         }
         bis.close();
+
     }
 
     public static long calculateFolderSize(File directory) {
@@ -231,20 +260,14 @@ public class Tool {
 
                     FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/pages/file_transfer_window.fxml"));
                     Parent root1 = fxmlLoader.load();
-                    FileTransferController controller = fxmlLoader.<FileTransferController>getController();
-                    controller.initData(path, ip, port, folderName, size);
 
                     Stage fStage = new Stage();
                     fStage.setTitle("Datenübertragung");
                     fStage.getIcons().add(new Image(settings.get("defaulticon")));
                     fStage.setResizable(false);
-                    fStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                        @Override
-                        public void handle(WindowEvent event) {
-                            // TODO: HERE WHEN CLOSED!
-                        }
-                    });
-                    fStage.setScene(new Scene(root1, 500, 300));
+                    fStage.setScene(new Scene(root1, 500, 170));
+                    FileTransferController controller = fxmlLoader.<FileTransferController>getController();
+                    controller.initData(path, fStage, ip, port, folderName, size);
                     fStage.show();
                 } catch (IOException e) {
                     e.printStackTrace();

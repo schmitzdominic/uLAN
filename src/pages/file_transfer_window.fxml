@@ -3,10 +3,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="200.0" prefWidth="500.0" styleClass="window_background" stylesheets="@../style/win10.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pages.FileTransferController">
+<AnchorPane prefHeight="170.0" prefWidth="500.0" styleClass="window_background" stylesheets="@../style/win10.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pages.FileTransferController">
    <children>
-      <Label fx:id="labelFolderName" layoutX="26.0" layoutY="26.0" styleClass="client_label" stylesheets="@../style/win10.css" text="folderName" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0" />
-      <ProgressBar fx:id="progressBar" layoutX="14.0" layoutY="64.0" prefWidth="200.0" progress="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="60.0" />
-      <Label fx:id="labelPercent" layoutX="438.0" layoutY="60.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s %" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="52.0" />
+      <Label fx:id="labelFolderName" layoutX="26.0" layoutY="26.0" styleClass="download_title" stylesheets="@../style/win10.css" text="folderName" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="15.0" />
+      <Label fx:id="labelTime" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="50.0" />
+      <Label fx:id="labelActualFolderSize" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s GB" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="50.0" />
+      <Label fx:id="labelFolderSize" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s GB" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" />
+      <ProgressBar fx:id="progressBar" layoutX="14.0" layoutY="64.0" prefWidth="200.0" progress="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="90.0" />
+      <Label fx:id="labelPercent" layoutX="438.0" layoutY="60.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s %" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="82.0" />
+      <ProgressBar fx:id="progressBarFile" layoutX="14.0" layoutY="64.0" prefWidth="200.0" progress="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="120.0" />
+      <Label fx:id="labelPercentFile" layoutX="438.0" layoutY="60.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s %" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="112.0" />
+      <Label fx:id="labelFileName" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="fileName" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="140.0" />
+      <Label fx:id="labelDataPerSecond" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s GB/s" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="140.0" />
+      <Label fx:id="labelTimeLeft" layoutX="26.0" layoutY="26.0" styleClass="download_title" stylesheets="@../style/win10.css" textFill="WHITE" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="15.0" />
    </children>
 </AnchorPane>

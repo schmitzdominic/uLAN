@@ -121,6 +121,14 @@
     -fx-background-color: transparent;
 }
 
+.download_title {
+    -fx-font-size: 14pt;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: orange;
+    -fx-alignment: center-left;
+    -fx-background-color: transparent;
+}
+
 .client_information {
     -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Light";
