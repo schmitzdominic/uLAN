@@ -53,7 +53,6 @@ public class Registry {
             } else {
                 this.setSetting("properties", "defaultfiletransferpath", System.getProperty("user.home"));
             }
-            this.setSetting("properties", "defaultfiletransferpath", this.DEFAULTTRANSFERPATH);
         }
         if(!this.checkIfPropertiesExist("defaulticon")){
             this.setSetting("properties", "defaulticon", this.DEFAULTICON);
