@@ -101,6 +101,8 @@ public class Tool {
                 try {
                     File[] files = path.listFiles();
 
+                    Tool.sendMessage(socket, Info.getDownloadFolderPackage());
+
                     BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
                     DataOutputStream dos = new DataOutputStream(bos);
 
@@ -118,6 +120,12 @@ public class Tool {
     }
 
     public static void downloadFile(Socket socket, File path) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // DOWNLOAD FILE!
+            }
+        }).start();
 
     }
 }

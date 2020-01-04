@@ -148,7 +148,6 @@ public class Client {
                         try {
                             listener = true;
                             while((line = reader.readLine()) != null) {
-                                System.out.println("INCOME: " + line);
                                 Map<String, String> info = Tool.convertMessage(line);
                                 String mode = info.get("MODE");
                                 if (mode != null) {
@@ -175,6 +174,9 @@ public class Client {
                                             // TODO: ERROR, NO RELEASE FOUND!
                                             // Maybe we should make an extra window with security issues
                                         }
+                                    } else if (mode.equals("DOWNLOAD")) {
+                                        String dPath = reg.getProperties().get("defaultfiletransferpath");
+                                        System.out.println("DOWNLOAD TO " + dPath);
                                     }
                                 }
                             }

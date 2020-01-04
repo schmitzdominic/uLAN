@@ -98,6 +98,14 @@ public class Info {
         return map;
     }
 
+    public static HashMap<String ,String> getDownloadFolderPackage() {
+        HashMap<String, String> settings = getSettings();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("MODE","DOWNLOAD");
+        map.put("ID",settings.get("id"));
+        return map;
+    }
+
     public static HashMap<String, String> getDisconnectPackage() {
         HashMap<String, String> settings = getSettings();
         HashMap<String, String> map = new HashMap<>();
