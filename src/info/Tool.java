@@ -157,12 +157,17 @@ public class Tool {
                         Socket socket = listener.accept();
 
                         if (path.exists()) {
-                            ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
-                            sendFileOutput(zipOpStream, path);
-                            zipOpStream.flush();
-                            socket.close();
-                            listener.close();
 
+                            try {
+                                ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
+                                sendFileOutput(zipOpStream, path);
+                                zipOpStream.flush();
+                            } catch (Exception e) {
+                                System.out.println("OTHER SIDE STOPED DOWNLOAD!");
+                            } finally {
+                                socket.close();
+                                listener.close();
+                            }
                         } else {
                             // TODO: Exception handling! REMOVE SOP!
                             System.out.println("Folder to read does not exist ["+path.getAbsolutePath()+"]");
