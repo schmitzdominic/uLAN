@@ -1,8 +1,19 @@
 package info;
 
 import javafx.collections.ObservableMap;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import network.Client;
+import start.Main;
+import start.MainController;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -17,6 +28,8 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import static info.Info.getSettings;
 
 
 public class Tool {
@@ -211,6 +224,7 @@ public class Tool {
             public void run() {
                 try {
                     System.out.println("DOWNLOAD FILE TO " + path.getName());
+                    openFileTransferWindow(MainController.init);
                     InetAddress ipAddress = InetAddress.getByName(ip);
                     Socket dSocket = new Socket(ipAddress, port);
                     BufferedInputStream bis = new BufferedInputStream(dSocket.getInputStream());
@@ -264,5 +278,29 @@ public class Tool {
                 }
             }
         }).start();
+    }
+
+    public static void openFileTransferWindow(Initializable sStage) {
+        try {
+            HashMap<String, String> settings = getSettings();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/file_transfer_window.fxml"));
+            Parent root1 = fxmlLoader.load();
+
+            Stage fStage = new Stage();
+            fStage.setTitle("Datenübertragung");
+            fStage.getIcons().add(new Image(settings.get("defaulticon")));
+            fStage.setResizable(false);
+            fStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    // TODO: HERE WHEN CLOSED!
+                }
+            });
+            fStage.setScene(new Scene(root1, 500, 300));
+            fStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

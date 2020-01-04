@@ -103,6 +103,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     @FXML
     ImageView loadingGIF;
 
+    public static Initializable init;
     public static Stage releaseStage;
 
     private Clients clients;
@@ -115,6 +116,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        MainController.init = this;
         this.createServer();
         this.createClientList();
         this.createReleasesList();
