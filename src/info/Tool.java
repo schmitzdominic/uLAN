@@ -123,6 +123,7 @@ public class Tool {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                System.out.println("DOWNLOAD FILE TO " + path.getName());
                 // DOWNLOAD FILE!
             }
         }).start();

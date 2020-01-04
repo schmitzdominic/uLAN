@@ -176,7 +176,16 @@ public class Client {
                                         }
                                     } else if (mode.equals("DOWNLOAD")) {
                                         String dPath = reg.getProperties().get("defaultfiletransferpath");
-                                        System.out.println("DOWNLOAD TO " + dPath);
+                                        if (dPath != null) {
+                                            File path = new File(dPath);
+                                            if (path.isDirectory()) {
+                                                Tool.downloadFile(socket, path);
+                                            } else {
+                                                // TODO: ERROR, NO PATH FOUND!
+                                            }
+                                        } else {
+                                            // TODO: ERROR, NO DOWNLOAD PATH FOUND!
+                                        }
                                     }
                                 }
                             }
