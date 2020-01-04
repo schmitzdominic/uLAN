@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
@@ -114,13 +115,12 @@ public class Tool {
                     Socket socket = listener.accept();
 
                     if (path.exists()) {
-                        File[] files = path.listFiles();
-                        assert files != null;
-                        System.out.println(files.length);
+                        System.out.println("FOLDER SIZE: " + calculateFolderSize(path));
                         ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
                         sendFileOutput(zipOpStream, path);
                         zipOpStream.flush();
                         socket.close();
+                        listener.close();
                     } else {
                         System.out.println("Folder to read does not exist ["+path.getAbsolutePath()+"]");
                     }
@@ -190,7 +190,19 @@ public class Tool {
             zipOpStream.write(fileByte, 0, readBytes);
         }
         bis.close();
+    }
 
+    public static long calculateFolderSize(File directory) {
+        long length = 0;
+        if (directory != null) {
+            for (File file : Objects.requireNonNull(directory.listFiles())) {
+                if (file.isFile())
+                    length += file.length();
+                else
+                    length += calculateFolderSize(file);
+            }
+        }
+        return length;
     }
 
     public static void downloadFile(File path, String ip, int port) {
@@ -204,6 +216,7 @@ public class Tool {
                     BufferedInputStream bis = new BufferedInputStream(dSocket.getInputStream());
                     ZipInputStream zips = new ZipInputStream(bis);
                     ZipEntry zipEntry = null;
+                    long size = 0;
 
 
                     while(null != (zipEntry = zips.getNextEntry())){
@@ -228,6 +241,7 @@ public class Tool {
                             }
 
                             System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
+                            size += zipEntry.getSize();
 
                             System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
                             System.out.println("FILE EXISTS: " + outFile.exists());
@@ -240,6 +254,9 @@ public class Tool {
                             fos.close();
                         }
                     }
+
+                    System.out.println("FINISH: " + size);
+                    dSocket.close();
 
                 } catch (IOException e) {
                     e.printStackTrace();
