@@ -10,20 +10,27 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import network.*;
 import registry.Registry;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
+import static info.Info.getSettings;
 
 public class MainController implements ClientFoundListener, Initializable, ClientList {
 
@@ -101,6 +108,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     private Client client;
     private Releases releases;
     private Finder finder = new Finder();
+    private Registry registry = new Registry();
     private String actualRelease;
     private int port;
 
@@ -346,22 +354,36 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     }
 
     public void buttonReleases(ActionEvent event) {
-        Registry registry = new Registry();
-        String[] initReleases = registry.getReleases();
-        Stage releaseStage = Tool.openReleases(this, Main.main);
-        releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                boolean changed = false;
-                String[] releases = registry.getReleases();
-                if (releases != null) {
-                    changed = !Arrays.equals(releases, initReleases);
+        try {
+            HashMap<String, String> settings = getSettings();
+            String[] initReleases = registry.getReleases();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/release_window.fxml"));
+            Parent root1 = fxmlLoader.load();
+            Stage rStage = new Stage();
+            rStage.initModality(Modality.WINDOW_MODAL);
+            rStage.setTitle("Freigaben");
+            rStage.getIcons().add(new Image(settings.get("defaulticon")));
+            rStage.setResizable(false);
+            rStage.initOwner(Main.main);
+            rStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    boolean changed = false;
+                    String[] releases = registry.getReleases();
+                    if (releases != null) {
+                        changed = !Arrays.equals(releases, initReleases);
+                    }
+                    if (changed) {
+                        Tool.sendReleasesChange(clients.getClientMap());
+                    }
                 }
-                if (changed) {
-                    Tool.sendReleasesChange(clients.getClientMap());
-                }
-            }
-        });
-        releaseStage.showAndWait();
+            });
+            rStage.setScene(new Scene(root1, 500, 300));
+            rStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
