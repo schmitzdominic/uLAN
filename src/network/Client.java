@@ -23,7 +23,6 @@ public class Client {
     private Thread tcpListener;
     private ClientsCallback clientsCallback;
     private PrintWriter out;
-
     private HashMap<String, String> releases;
 
     public Client(String id, InetAddress ip, String hostname) {
@@ -122,6 +121,10 @@ public class Client {
         this.releases = releases;
     }
 
+    public void setOut(PrintWriter out) {
+        this.out = out;
+    }
+
     public boolean isListener() {
         return listener;
     }
@@ -137,7 +140,9 @@ public class Client {
                 if (socket != null) {
                     try {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        out = new PrintWriter(socket.getOutputStream());
+                        if (out == null) {
+                            out = new PrintWriter(socket.getOutputStream());
+                        }
                         String line;
                         // Wait for Package
                         try {

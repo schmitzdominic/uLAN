@@ -53,14 +53,16 @@ public class Tool {
         }
     }
 
-    public static void sendMessage(Socket socket, HashMap<String, String> message) {
+    public static PrintWriter sendMessage(Socket socket, HashMap<String, String> message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream());
             out.println(message);
             out.flush();
+            return out;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static void sendMessage(Client client, HashMap<String, String> message) {

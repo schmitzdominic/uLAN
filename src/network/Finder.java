@@ -7,6 +7,7 @@ import info.Tool;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
@@ -56,22 +57,22 @@ public class Finder {
                         if (!(ownIp).equals(ip.getHostAddress())) {
 
                             // Check if the client is online
-                            Socket client = isOnline(ip, port);
+                            Socket socket = isOnline(ip, port);
 
-                            if (client != null) {
+                            if (socket != null) {
                                 // If the Client is available
                                 try {
                                     // Send a initialize Package
-                                    Tool.sendMessage(client, Info.getInitializePackage());
-                                    BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                                    PrintWriter out = Tool.sendMessage(socket, Info.getInitializePackage());
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                     String line;
                                     // Wait for the REPEAT Package
                                     try {
                                         while((line = reader.readLine()) != null) {
-                                            repeat(line, client);
+                                            repeat(line, socket, out);
                                         }
                                     } catch (SocketException e) {
-                                        String removeClient = client.getInetAddress().getHostAddress();
+                                        String removeClient = socket.getInetAddress().getHostAddress();
                                         System.out.println(String.format("Client %s reset", removeClient));
                                         clientListener.onClientRemoveIp(removeClient);
                                     }
@@ -137,7 +138,7 @@ public class Finder {
         }
     }
 
-    private void repeat(String message, Socket socket) {
+    private void repeat(String message, Socket socket, PrintWriter out) {
 
         if (this.clientListener != null) {
 
@@ -145,6 +146,7 @@ public class Finder {
 
             if (client != null) {
                 client.setSocket(socket);
+                client.setOut(out);
                 client.addTCPListener();
                 clientListener.onClientFound(client);
             }
