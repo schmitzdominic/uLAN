@@ -230,13 +230,15 @@ public class Tool {
 
                         System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
                         System.out.println("FILE EXISTS: " + outFile.exists());
-                        FileOutputStream fos = new FileOutputStream(outFile);
-                        int fileLength = (int)zipEntry.getSize();
+                        if (!outFile.exists()) {
+                            FileOutputStream fos = new FileOutputStream(outFile);
+                            int fileLength = (int)zipEntry.getSize();
 
-                        byte[] fileByte = new byte[fileLength];
-                        zips.read(fileByte);
-                        fos.write(fileByte);
-                        fos.close();
+                            byte[] fileByte = new byte[fileLength];
+                            zips.read(fileByte);
+                            fos.write(fileByte);
+                            fos.close();
+                        }
                     }
 
                 } catch (IOException e) {
