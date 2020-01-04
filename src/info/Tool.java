@@ -209,28 +209,28 @@ public class Tool {
                     while(null != (zipEntry = zips.getNextEntry())){
                         String fileName = zipEntry.getName();
                         File outFile = new File(path.getAbsolutePath() + "/" + fileName);
-                        System.out.println("----["+outFile.getName()+"], filesize["+zipEntry.getCompressedSize()+"]");
-
-
-                        if(zipEntry.isDirectory()){
-                            File zipEntryFolder = new File(zipEntry.getName());
-                            if(!zipEntryFolder.exists()){
-                                outFile.mkdirs();
-                            }
-
-                            continue;
-                        }else{
-                            File parentFolder = outFile.getParentFile();
-                            if(!parentFolder.exists()){
-                                parentFolder.mkdirs();
-                            }
-                        }
-
-                        System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
-
-                        System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
-                        System.out.println("FILE EXISTS: " + outFile.exists());
                         if (!outFile.exists()) {
+                            System.out.println("----["+outFile.getName()+"], filesize["+zipEntry.getCompressedSize()+"]");
+
+
+                            if(zipEntry.isDirectory()){
+                                File zipEntryFolder = new File(zipEntry.getName());
+                                if(!zipEntryFolder.exists()){
+                                    outFile.mkdirs();
+                                }
+
+                                continue;
+                            }else{
+                                File parentFolder = outFile.getParentFile();
+                                if(!parentFolder.exists()){
+                                    parentFolder.mkdirs();
+                                }
+                            }
+
+                            System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
+
+                            System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
+                            System.out.println("FILE EXISTS: " + outFile.exists());
                             FileOutputStream fos = new FileOutputStream(outFile);
                             int fileLength = (int)zipEntry.getSize();
 
