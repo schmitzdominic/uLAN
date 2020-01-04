@@ -70,8 +70,10 @@ public class Tool {
     }
 
     public static void sendMessage(Client client, HashMap<String, String> message) {
-        client.getOut().println(message);
-        client.getOut().flush();
+        if (client != null) {
+            client.getOut().println(message);
+            client.getOut().flush();
+        }
     }
 
     public static Map<String, String> convertMessage(String message) {
@@ -112,21 +114,13 @@ public class Tool {
                     Socket socket = listener.accept();
 
                     if (path.exists()) {
+                        File[] files = path.listFiles();
+                        assert files != null;
+                        System.out.println(files.length);
                         ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
                         sendFileOutput(zipOpStream, path);
                         zipOpStream.flush();
-
-                        /*File[] files = path.listFiles();
-
-                        BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-                        DataOutputStream dos = new DataOutputStream(bos);
-
-                        assert files != null;
-                        dos.writeInt(files.length);
-
-                        for(File file : files) {
-                            System.out.println("PROVIDING " + file.getName());
-                        }*/
+                        socket.close();
                     } else {
                         System.out.println("Folder to read does not exist ["+path.getAbsolutePath()+"]");
                     }
@@ -234,6 +228,8 @@ public class Tool {
 
                         System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
 
+                        System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
+                        System.out.println("FILE EXISTS: " + outFile.exists());
                         FileOutputStream fos = new FileOutputStream(outFile);
                         int fileLength = (int)zipEntry.getSize();
 
