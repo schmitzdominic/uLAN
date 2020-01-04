@@ -6,6 +6,7 @@ import network.Client;
 
 import java.io.*;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -97,13 +98,18 @@ public class Tool {
         }
     }
 
-    public static void provideFileToClient(Socket socket, File path) {
+    public static void provideFolderToClient(Socket communicationSocket, File path) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+
+                    int port = 50000;
                     // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
-                    Tool.sendMessage(socket, Info.getDownloadFolderPackage());
+                    Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(port));
+
+                    ServerSocket listener = new ServerSocket(port);
+                    Socket socket = listener.accept();
 
                     if (path.exists()) {
                         ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
@@ -193,13 +199,15 @@ public class Tool {
 
     }
 
-    public static void downloadFile(Socket socket, File path) {
+    public static void downloadFile(File path, String ip, int port) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     System.out.println("DOWNLOAD FILE TO " + path.getName());
-                    BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+                    InetAddress ipAddress = InetAddress.getByName(ip);
+                    Socket dSocket = new Socket(ipAddress, port);
+                    BufferedInputStream bis = new BufferedInputStream(dSocket.getInputStream());
                     ZipInputStream zips = new ZipInputStream(bis);
                     ZipEntry zipEntry = null;
 
@@ -225,8 +233,6 @@ public class Tool {
                         }
 
                         System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
-
-
 
                         FileOutputStream fos = new FileOutputStream(outFile);
                         int fileLength = (int)zipEntry.getSize();

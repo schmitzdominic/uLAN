@@ -165,7 +165,7 @@ public class Client {
                                             if (release != null) {
                                                 File path = new File(release);
                                                 if (path.isDirectory()) {
-                                                    Tool.provideFileToClient(socket, path);
+                                                    Tool.provideFolderToClient(socket, path);
                                                 } else {
                                                     // TODO: ERROR, NO PATH FOUND!
                                                 }
@@ -175,16 +175,22 @@ public class Client {
                                             // Maybe we should make an extra window with security issues
                                         }
                                     } else if (mode.equals("DOWNLOAD")) {
-                                        String dPath = reg.getProperties().get("defaultfiletransferpath");
-                                        if (dPath != null) {
-                                            File path = new File(dPath);
-                                            if (path.isDirectory()) {
-                                                Tool.downloadFile(socket, path);
+                                        try {
+                                            String dPath = reg.getProperties().get("defaultfiletransferpath");
+                                            int port = Integer.parseInt(info.get("PORT"));
+                                            if (dPath != null) {
+                                                File path = new File(dPath);
+                                                if (path.isDirectory()) {
+                                                    Tool.downloadFile(path, getIp(), port);
+                                                } else {
+                                                    // TODO: ERROR, NO PATH FOUND!
+                                                }
                                             } else {
-                                                // TODO: ERROR, NO PATH FOUND!
+                                                // TODO: ERROR, NO DOWNLOAD PATH FOUND!
                                             }
-                                        } else {
-                                            // TODO: ERROR, NO DOWNLOAD PATH FOUND!
+                                        } catch (NumberFormatException e) {
+                                            System.out.println("PORT IS NOT A INTEGER NUMBER! " + info.get("PORT"));
+                                            // TODO: ERROR, PORT IS NOT A INTEGER NUMBER!
                                         }
                                     }
                                 }
