@@ -58,7 +58,7 @@ public class Tool {
             PrintWriter out = new PrintWriter(socket.getOutputStream());
             out.println(message);
             out.flush();
-            out.close();
+            socket.shutdownOutput();
         } catch (IOException e) {
             e.printStackTrace();
         }
