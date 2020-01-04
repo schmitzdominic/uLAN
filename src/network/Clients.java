@@ -157,7 +157,7 @@ public class Clients implements ClientsCallback {
                     try {
                         Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), port);
                         if (socket != null) {
-                            Tool.sendMessage(socket, Info.getDisconnectPackage());
+                            Tool.sendMessage(client, Info.getDisconnectPackage());
                         }
                     } catch (UnknownHostException e) {
                         e.printStackTrace();

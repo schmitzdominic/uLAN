@@ -58,10 +58,14 @@ public class Tool {
             PrintWriter out = new PrintWriter(socket.getOutputStream());
             out.println(message);
             out.flush();
-            socket.shutdownOutput();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void sendMessage(Client client, HashMap<String, String> message) {
+        client.getOut().println(message);
+        client.getOut().flush();
     }
 
     public static Map<String, String> convertMessage(String message) {
@@ -83,7 +87,7 @@ public class Tool {
     public static void sendReleasesChange(ObservableMap<String, Client> clientList) {
         for (Client client : clientList.values()) {
             if (client.getSocket() != null) {
-                sendMessage(client.getSocket(), Info.getReleasesChangedPackage());
+                sendMessage(client, Info.getReleasesChangedPackage());
             }
         }
     }

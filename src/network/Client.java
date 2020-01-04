@@ -4,16 +4,10 @@ import Interfaces.ClientsCallback;
 import info.Tool;
 import registry.Registry;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +22,7 @@ public class Client {
     private Socket socket;
     private Thread tcpListener;
     private ClientsCallback clientsCallback;
+    private PrintWriter out;
 
     private HashMap<String, String> releases;
 
@@ -87,6 +82,10 @@ public class Client {
         return this.tcpListener;
     }
 
+    public PrintWriter getOut() {
+        return this.out;
+    }
+
     public void setListener(boolean listener) {
         this.listener = listener;
     }
@@ -138,6 +137,7 @@ public class Client {
                 if (socket != null) {
                     try {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        out = new PrintWriter(socket.getOutputStream());
                         String line;
                         // Wait for Package
                         try {

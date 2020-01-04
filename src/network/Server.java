@@ -85,7 +85,7 @@ public class Server extends Thread {
 
                 client.setSocket(socket);
                 client.addTCPListener();
-                Tool.sendMessage(socket, Info.getRepeatPackage());
+                Tool.sendMessage(client, Info.getRepeatPackage());
                 clientListener.onClientFound(client);
             }
         }
