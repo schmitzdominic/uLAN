@@ -68,9 +68,8 @@ public class Finder {
                                     String line;
                                     // Wait for the REPEAT Package
                                     try {
-                                        while((line = reader.readLine()) != null) {
+                                        if ((line = reader.readLine()) != null) {
                                             repeat(line, socket, out);
-                                            break;
                                         }
                                     } catch (SocketException e) {
                                         String removeClient = socket.getInetAddress().getHostAddress();
