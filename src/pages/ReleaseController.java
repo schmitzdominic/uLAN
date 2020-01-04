@@ -109,7 +109,7 @@ public class ReleaseController implements Initializable {
 
     public void buttonAdd(ActionEvent event) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(Tool.releaseStage);
+        File selectedDirectory = directoryChooser.showDialog(MainController.releaseStage);
         if (selectedDirectory != null) {
             String path = selectedDirectory.getAbsolutePath();
             boolean added = registry.addRelease(path);
@@ -134,7 +134,7 @@ public class ReleaseController implements Initializable {
 
     public void buttonOk(ActionEvent event) {
         MainController.releaseStage.getOnCloseRequest().handle(new WindowEvent(
-                Tool.releaseStage, WindowEvent.WINDOW_CLOSE_REQUEST
+                MainController.releaseStage, WindowEvent.WINDOW_CLOSE_REQUEST
         ));
         MainController.releaseStage.close();
     }
