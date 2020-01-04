@@ -143,6 +143,7 @@ public class Client {
                         try {
                             listener = true;
                             while((line = reader.readLine()) != null) {
+                                System.out.println("INCOME: " + line);
                                 Map<String, String> info = Tool.convertMessage(line);
                                 String mode = info.get("MODE");
                                 if (mode != null) {

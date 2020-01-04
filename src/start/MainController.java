@@ -274,6 +274,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         this.clients.changeClient(this.clientTitle.getText(), this.client);
         this.refreshClientInfo();
         this.resetChangeName();
+        this.selectClient(this.client);
     }
 
     public void refreshClientInfo(){

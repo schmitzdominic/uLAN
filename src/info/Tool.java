@@ -56,7 +56,7 @@ public class Tool {
     public static void sendMessage(Socket socket, HashMap<String, String> message) {
         try {
             PrintWriter out = new PrintWriter(socket.getOutputStream());
-            out.print(message + "\n");
+            out.println(message + "\u0004");
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
