@@ -1,13 +1,7 @@
 package info;
 
 import javafx.collections.ObservableMap;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import network.Client;
 
@@ -19,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static info.Info.getSettings;
 
 public class Tool {
 
@@ -119,26 +112,5 @@ public class Tool {
 
     public static void downloadFile(Socket socket, File path) {
 
-    }
-
-    public static Stage openReleases(Initializable parentController, Stage parentStage) {
-        Stage rStage = new Stage();
-        try {
-
-            HashMap<String, String> settings = getSettings();
-
-            Tool.releaseStage = rStage;
-            Parent fxStage = FXMLLoader.load(parentController.getClass().getResource("/release_window.fxml"));
-            rStage.setTitle("Freigaben");
-            rStage.setScene(new Scene(fxStage, 500, 300));
-            rStage.getIcons().add(new Image(settings.get("defaulticon")));
-            rStage.setResizable(false);
-            rStage.initModality(Modality.WINDOW_MODAL);
-            rStage.initOwner(parentStage);
-            return rStage;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return rStage;
     }
 }

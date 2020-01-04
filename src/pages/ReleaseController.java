@@ -4,7 +4,6 @@ import info.Tool;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -66,7 +65,7 @@ public class ReleaseController implements Initializable {
 
     private void setReleases() {
         this.listReleases.getItems().clear();
-        if (isReleasesNotEmpty(registry.getReleases())) {
+        if (ReleasesNotEmpty(registry.getReleases())) {
             this.listReleases.getItems().addAll(registry.getReleases());
             this.setTooltip();
         }
@@ -94,7 +93,10 @@ public class ReleaseController implements Initializable {
         });
     }
 
-    private boolean isReleasesNotEmpty(String[] releases) {
+    private boolean ReleasesNotEmpty(String[] releases) {
+        if (releases == null) {
+            return false;
+        }
         if (releases.length == 0) {
             return false;
         } else if (releases.length == 1 & releases[0].isEmpty()) {
@@ -120,7 +122,7 @@ public class ReleaseController implements Initializable {
         boolean removed = registry.removeRelease(this.release);
         if (removed) {
             this.setReleases();
-            if (!isReleasesNotEmpty(registry.getReleases())) {
+            if (!ReleasesNotEmpty(registry.getReleases())) {
                 this.buttonRemove.setVisible(false);
                 this.listReleases.getItems().clear();
             } else {
