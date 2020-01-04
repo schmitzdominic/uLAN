@@ -108,14 +108,14 @@ public class Tool {
                 try {
 
                     int port = 50000;
+                    long folderSize = calculateFolderSize(path);
                     // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
-                    Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(port));
+                    Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(port, folderSize));
 
                     ServerSocket listener = new ServerSocket(port);
                     Socket socket = listener.accept();
 
                     if (path.exists()) {
-                        System.out.println("FOLDER SIZE: " + calculateFolderSize(path));
                         ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
                         sendFileOutput(zipOpStream, path);
                         zipOpStream.flush();
@@ -242,7 +242,7 @@ public class Tool {
 
                             // System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
                             aSize += zipEntry.getSize();
-                            System.out.println(String.format("PROGRESS: %s/%s", aSize, size);
+                            System.out.println(String.format("PROGRESS: %s/%s", aSize, size));
 
                             // System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
                             // System.out.println("FILE EXISTS: " + outFile.exists());
