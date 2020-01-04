@@ -13,6 +13,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import registry.Registry;
+import start.MainController;
 
 import java.io.File;
 import java.net.URL;
@@ -132,9 +133,9 @@ public class ReleaseController implements Initializable {
     }
 
     public void buttonOk(ActionEvent event) {
-        Tool.releaseStage.getOnCloseRequest().handle(new WindowEvent(
+        MainController.releaseStage.getOnCloseRequest().handle(new WindowEvent(
                 Tool.releaseStage, WindowEvent.WINDOW_CLOSE_REQUEST
         ));
-        Tool.releaseStage.close();
+        MainController.releaseStage.close();
     }
 }

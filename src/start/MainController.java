@@ -103,7 +103,8 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     @FXML
     ImageView loadingGIF;
 
-    private Server server;
+    public static Stage releaseStage;
+
     private Clients clients;
     private Client client;
     private Releases releases;
@@ -133,9 +134,9 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     private void createServer() {
         HashMap<String, String> settings = Info.getSettings();
         this.port = Integer.parseInt(settings.get("port"));
-        this.server = new Server(this, this.port);
-        this.server.registerClientFoundListener(this);
-        this.server.start();
+        Server server = new Server(this, this.port);
+        server.registerClientFoundListener(this);
+        server.start();
     }
 
     private void createClientList() {
@@ -360,13 +361,13 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/release_window.fxml"));
             Parent root1 = fxmlLoader.load();
-            Stage rStage = new Stage();
-            rStage.initModality(Modality.WINDOW_MODAL);
-            rStage.setTitle("Freigaben");
-            rStage.getIcons().add(new Image(settings.get("defaulticon")));
-            rStage.setResizable(false);
-            rStage.initOwner(Main.main);
-            rStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            releaseStage = new Stage();
+            releaseStage.initModality(Modality.WINDOW_MODAL);
+            releaseStage.setTitle("Freigaben");
+            releaseStage.getIcons().add(new Image(settings.get("defaulticon")));
+            releaseStage.setResizable(false);
+            releaseStage.initOwner(Main.main);
+            releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
                     boolean changed = false;
@@ -379,8 +380,8 @@ public class MainController implements ClientFoundListener, Initializable, Clien
                     }
                 }
             });
-            rStage.setScene(new Scene(root1, 500, 300));
-            rStage.showAndWait();
+            releaseStage.setScene(new Scene(root1, 500, 300));
+            releaseStage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
