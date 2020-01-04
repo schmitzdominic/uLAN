@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import start.MainController;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -126,63 +127,61 @@ public class FileTransferController implements Initializable {
                     time.schedule(dt, 0, 1000);
                     time.schedule(tl, 0, 3000);
 
-                    while(null != (zipEntry = zips.getNextEntry())){
-                        String fileName = zipEntry.getName();
-                        File outFile = new File(path.getAbsolutePath() + "/" + fileName);
+                    try {
+                        while(null != (zipEntry = zips.getNextEntry())){
+                            String fileName = zipEntry.getName();
+                            File outFile = new File(path.getAbsolutePath() + "/" + fileName);
 
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressBarFile.setProgress(0);
-                                labelFileName.setText(fileName);
-                            }
-                        });
-
-                        if (createDirectoryIfNotExist(zipEntry, outFile)) {
-                            continue;
-                        }
-
-                        FileOutputStream fos = new FileOutputStream(outFile);
-                        int fileLength = (int)zipEntry.getSize();
-
-                        byte[] fileByte = new byte[fileLength];
-
-                        double fSize = 0;
-                        int readSize;
-                        while ((readSize = zips.read(fileByte)) > 0) {
-                            fos.write(fileByte, 0, readSize);
-
-
-                            aSize += readSize;
-                            fSize += readSize;
-                            final double progress = (double)(aSize/size)*100;
-                            final double fileProgress = (double)(fSize/zipEntry.getSize())*100;
-                            long finalASize = (long) aSize;
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    labelActualFolderSize.setText(Tool.humanReadableByteCountSI(finalASize) + " /");
-                                    progressBar.setProgress(progress/100);
-                                    progressBarFile.setProgress(fileProgress/100);
-                                    labelPercent.setText((int)progress + " %");
-                                    labelPercentFile.setText((int)fileProgress + " %");
-                                    dt.updateDownloaded(finalASize);
-                                    tl.updateDownloaded(finalASize);
+                                    progressBarFile.setProgress(0);
+                                    labelFileName.setText(fileName);
                                 }
                             });
+
+                            if (createDirectoryIfNotExist(zipEntry, outFile)) {
+                                continue;
+                            }
+
+                            FileOutputStream fos = new FileOutputStream(outFile);
+                            int fileLength = (int)zipEntry.getSize();
+
+                            byte[] fileByte = new byte[fileLength];
+
+                            double fSize = 0;
+                            int readSize;
+                            while ((readSize = zips.read(fileByte)) > 0) {
+                                fos.write(fileByte, 0, readSize);
+
+                                aSize += readSize;
+                                fSize += readSize;
+                                final double progress = (double)(aSize/size)*100;
+                                final double fileProgress = (double)(fSize/zipEntry.getSize())*100;
+                                long finalASize = (long) aSize;
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        labelActualFolderSize.setText(Tool.humanReadableByteCountSI(finalASize) + " /");
+                                        progressBar.setProgress(progress/100);
+                                        progressBarFile.setProgress(fileProgress/100);
+                                        labelPercent.setText((int)progress + " %");
+                                        labelPercentFile.setText((int)fileProgress + " %");
+                                        dt.updateDownloaded(finalASize);
+                                        tl.updateDownloaded(finalASize);
+                                    }
+                                });
+                            }
+                            fos.close();
                         }
+                    } catch (IOException e) {
 
-                        fos.close();
-
-                        /*if (!outFile.exists()) {
-                        }*/
+                    } finally {
+                        dt.cancel();
+                        tl.cancel();
+                        socket.close();
+                        closeWindow();
                     }
-
-                    System.out.println("FINISH: " + aSize + "/" + size);
-                    dt.cancel();
-                    tl.cancel();
-                    socket.close();
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -209,6 +208,16 @@ public class FileTransferController implements Initializable {
         }
     }
 
+    private void closeWindow() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                stage.getOnCloseRequest().handle(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+                stage.close();
+            }
+        });
+    }
+
     static class DownloadProgressTask extends TimerTask
     {
         private Label dataSec;
@@ -222,11 +231,9 @@ public class FileTransferController implements Initializable {
 
         private long folderSize;
 
-        public DownloadProgressTask (Label dataSec, Label time, long folderSize)
-        {
+        public DownloadProgressTask (Label dataSec, Label time, long folderSize) {
             this.dataSec = dataSec;
             this.time = time;
-            this.timeLeft = timeLeft;
             this.folderSize = folderSize;
         }
 
@@ -235,8 +242,7 @@ public class FileTransferController implements Initializable {
             this.folderSize = folderSize;
         }
 
-        public void run()
-        {
+        public void run() {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -260,8 +266,7 @@ public class FileTransferController implements Initializable {
             });
         }
 
-        public void updateDownloaded (long newVal)
-        {
+        public void updateDownloaded (long newVal) {
             this.sinceLastTime.addAndGet(newVal - this.downloaded.get());
             this.downloaded.set(newVal);
             this.dataLeft.set(this.folderSize - this.downloaded.get());

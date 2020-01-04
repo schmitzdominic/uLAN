@@ -110,6 +110,15 @@ public class Tool {
 
     public static void sendMessage(Client client, HashMap<String, String> message) {
         if (client != null) {
+            if (client.getSocket() != null) {
+                if (client.getOut() == null) {
+                    try {
+                        client.setOut(new PrintWriter(client.getSocket().getOutputStream()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             client.getOut().println(message);
             client.getOut().flush();
         }
@@ -270,7 +279,7 @@ public class Tool {
                     fStage.setTitle("Datenübertragung");
                     fStage.getIcons().add(new Image(settings.get("defaulticon")));
                     fStage.setResizable(false);
-                    fStage.setScene(new Scene(root1, 500, 170));
+                    fStage.setScene(new Scene(root1, 400, 170));
                     FileTransferController controller = fxmlLoader.<FileTransferController>getController();
                     controller.initData(path, fStage, ip, port, folderName, size);
                     fStage.show();
