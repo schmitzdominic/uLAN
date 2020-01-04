@@ -70,6 +70,7 @@ public class Finder {
                                     try {
                                         while((line = reader.readLine()) != null) {
                                             repeat(line, socket, out);
+                                            break;
                                         }
                                     } catch (SocketException e) {
                                         String removeClient = socket.getInetAddress().getHostAddress();
