@@ -178,10 +178,11 @@ public class Client {
                                         try {
                                             String dPath = reg.getProperties().get("defaultfiletransferpath");
                                             int port = Integer.parseInt(info.get("PORT"));
+                                            long size = Long.parseLong(info.get("SIZE"));
                                             if (dPath != null) {
                                                 File path = new File(dPath);
                                                 if (path.isDirectory()) {
-                                                    Tool.downloadFile(path, getIp(), port);
+                                                    Tool.downloadFile(path, getIp(), port, size);
                                                 } else {
                                                     // TODO: ERROR, NO PATH FOUND!
                                                 }
@@ -189,7 +190,7 @@ public class Client {
                                                 // TODO: ERROR, NO DOWNLOAD PATH FOUND!
                                             }
                                         } catch (NumberFormatException e) {
-                                            System.out.println("PORT IS NOT A INTEGER NUMBER! " + info.get("PORT"));
+                                            System.out.println("PORT OR SIZE IS NOT A INTEGER OR LONG NUMBER! PORT:" + info.get("PORT") + " SIZE:" + info.get("SIZE"));
                                             // TODO: ERROR, PORT IS NOT A INTEGER NUMBER!
                                         }
                                     }

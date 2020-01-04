@@ -205,7 +205,7 @@ public class Tool {
         return length;
     }
 
-    public static void downloadFile(File path, String ip, int port) {
+    public static void downloadFile(File path, String ip, int port, long size) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -216,7 +216,7 @@ public class Tool {
                     BufferedInputStream bis = new BufferedInputStream(dSocket.getInputStream());
                     ZipInputStream zips = new ZipInputStream(bis);
                     ZipEntry zipEntry = null;
-                    long size = 0;
+                    long aSize = 0;
 
 
                     while(null != (zipEntry = zips.getNextEntry())){
@@ -240,11 +240,12 @@ public class Tool {
                                 }
                             }
 
-                            System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
-                            size += zipEntry.getSize();
+                            // System.out.println("ZipEntry::"+zipEntry.getCompressedSize());
+                            aSize += zipEntry.getSize();
+                            System.out.println(String.format("PROGRESS: %s/%s", aSize, size);
 
-                            System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
-                            System.out.println("FILE EXISTS: " + outFile.exists());
+                            // System.out.println("SAVE FILE TO: " + outFile.getAbsolutePath());
+                            // System.out.println("FILE EXISTS: " + outFile.exists());
                             FileOutputStream fos = new FileOutputStream(outFile);
                             int fileLength = (int)zipEntry.getSize();
 
@@ -255,7 +256,7 @@ public class Tool {
                         }
                     }
 
-                    System.out.println("FINISH: " + size);
+                    System.out.println("FINISH");
                     dSocket.close();
 
                 } catch (IOException e) {

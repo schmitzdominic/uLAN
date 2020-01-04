@@ -98,12 +98,13 @@ public class Info {
         return map;
     }
 
-    public static HashMap<String ,String> getDownloadFolderPackage(int port) {
+    public static HashMap<String ,String> getDownloadFolderPackage(int port, long size) {
         HashMap<String, String> settings = getSettings();
         HashMap<String, String> map = new HashMap<>();
         map.put("MODE","DOWNLOAD");
         map.put("ID",settings.get("id"));
         map.put("PORT", port+"");
+        map.put("SIZE", size+"");
         return map;
     }
 
