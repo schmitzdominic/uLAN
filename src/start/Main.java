@@ -29,7 +29,7 @@ public class Main extends Application {
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("uLAN");
-        this.primaryStage.getIcons().add(new Image(this.properties.get("defaulticon")));
+        this.primaryStage.getIcons().add(new Image(this.properties.get("windowicon")));
         this.primaryStage.setScene(new Scene(root, 650, 500));
         this.primaryStage.setResizable(false);
         Main.main = this.primaryStage;

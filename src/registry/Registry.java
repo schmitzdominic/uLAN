@@ -19,7 +19,8 @@ public class Registry {
 
     // Default settings
     final private String DEFAULTTRANSFERPATH = System.getProperty("user.home") + "\\downloads";
-    final private String DEFAULTICON = "/icons/baseline_account_tree_white_18dp.png";
+    final private String DEFAULTICON = "/icons/server.png";
+    final private String WINDOWICON = "/icons/server-256.png";
     final private String ID = "";
     final private int DEFAULTMESSAGE = 1; // NOT USED
     final private int PORT = 33123;
@@ -55,6 +56,9 @@ public class Registry {
         }
         if(!this.checkIfPropertiesExist("defaulticon")){
             this.setSetting("properties", "defaulticon", this.DEFAULTICON);
+        }
+        if(!this.checkIfPropertiesExist("windowicon")){
+            this.setSetting("properties", "windowicon", this.WINDOWICON);
         }
         if(!this.checkIfPropertiesExist("defaultmessage")){
             this.setSetting("properties", "defaultmessage", "" + this.DEFAULTMESSAGE);
