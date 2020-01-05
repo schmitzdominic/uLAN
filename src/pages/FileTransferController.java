@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -157,6 +158,7 @@ public class FileTransferController implements Initializable {
                                 @Override
                                 public void run() {
                                     labelFolderName.setText(fName + " nach " + path);
+                                    labelFolderName.setTooltip(new Tooltip(path.getAbsolutePath()));
                                     stage.setTitle(fName + " wird heruntergeladen...");
                                     progressBarFile.setProgress(0);
                                     labelFileName.setText(fileName);
