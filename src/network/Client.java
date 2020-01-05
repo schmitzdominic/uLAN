@@ -177,23 +177,22 @@ public class Client {
                                         }
                                     } else if (mode.equals("DOWNLOAD")) {
                                         try {
-                                            String dPath = reg.getProperties().get("defaultfiletransferpath");
-                                            int port = Integer.parseInt(info.get("PORT"));
-                                            long size = Long.parseLong(info.get("SIZE"));
-                                            if (dPath != null) {
-                                                File path = new File(dPath);
-                                                if (path.isDirectory()) {
-                                                    Tool.openFileTransferWindow(MainController.init,
-                                                            path, getIp(), port, info.get("FOLDERNAME"), size);
+                                            if (!Tool.downloadExist(info.get("ID"), info.get(info.get("FOLDERNAME")))){
+                                                Tool.addDownload(info.get("ID"), info.get("FOLDERNAME"));
+                                                String dPath = reg.getProperties().get("defaultfiletransferpath");
+                                                if (dPath != null) {
+                                                    File path = new File(dPath);
+                                                    if (path.isDirectory()) {
+                                                        Tool.openFileTransferWindow(MainController.init,
+                                                                path, getIp(), info);
+                                                    } else {
+                                                        // TODO: ERROR, NO PATH FOUND!
+                                                    }
                                                 } else {
-                                                    // TODO: ERROR, NO PATH FOUND!
+                                                    // TODO: ERROR, NO DOWNLOAD PATH FOUND!
                                                 }
-                                            } else {
-                                                // TODO: ERROR, NO DOWNLOAD PATH FOUND!
                                             }
                                         } catch (NumberFormatException e) {
-                                            System.out.println("PORT OR SIZE IS NOT A INTEGER OR LONG NUMBER! PORT:" + info.get("PORT") + " SIZE:" + info.get("SIZE"));
-                                            // TODO: ERROR, PORT IS NOT A INTEGER NUMBER!
                                         }
                                     }
                                 }

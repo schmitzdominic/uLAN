@@ -352,7 +352,6 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
     public void buttonDownload(ActionEvent event) {
         if (this.actualRelease != null) {
-            // TODO: Check if its already exists!
             Tool.sendMessage(this.client, Info.getProvideFolderPackage(this.actualRelease));
         }
     }

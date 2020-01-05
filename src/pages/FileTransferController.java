@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import start.MainController;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -19,6 +18,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -65,23 +65,28 @@ public class FileTransferController implements Initializable {
     private Stage stage;
     private InetAddress ip;
     private Socket socket;
-    private int port;
-    private String folderName;
-    private long size;
     private Thread transferThread;
+    private String folderName;
+    private String id;
+    private String serverPath;
+    private int port;
+    private long size;
     private double aSize = 0;
+    private boolean initError = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {}
 
-    public void initData(File path, Stage stage, String ip, int port, String folderName, long size) {
+    public void initData(File path, Stage stage, String ip, Map<String, String> info) {
         try {
             this.path = path;
             this.stage = stage;
             this.ip = InetAddress.getByName(ip);
-            this.port = port;
-            this.folderName = folderName;
-            this.size = size;
+            this.id = info.get("ID");
+            this.serverPath = info.get("FOLDERNAME");
+            this.port = Integer.parseInt(info.get("PORT"));
+            this.folderName = info.get("FOLDERNAME");
+            this.size = Long.parseLong(info.get("SIZE"));
 
             this.initListeners();
 
@@ -89,10 +94,18 @@ public class FileTransferController implements Initializable {
             this.labelFolderSize.setText(Tool.humanReadableByteCountSI(size));
             this.progressBar.setProgress(0);
 
-            this.transferData().start();
         } catch (UnknownHostException e) {
             // TODO: InetAddress, Error Message that the other side did not exists!
             e.printStackTrace();
+            this.initError = true;
+        } catch (NumberFormatException e) {
+            System.out.println("PORT OR SIZE IS NOT A INTEGER OR LONG NUMBER! PORT:" + info.get("PORT") + " SIZE:" + info.get("SIZE"));
+            // TODO: ERROR, PORT IS NOT A INTEGER NUMBER!
+            this.initError = true;
+        }
+
+        if (!this.initError) {
+            this.transferData().start();
         }
     }
 
@@ -174,12 +187,13 @@ public class FileTransferController implements Initializable {
                             }
                             fos.close();
                         }
-                    } catch (IOException e) {
+                    } catch (IOException ignored) {
 
                     } finally {
                         dt.cancel();
                         tl.cancel();
                         socket.close();
+                        Tool.removeDownload(id, serverPath);
                         closeWindow();
                     }
                 } catch (IOException e) {

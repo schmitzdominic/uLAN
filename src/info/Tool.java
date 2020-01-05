@@ -1,8 +1,9 @@
 package info;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -10,30 +11,100 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import network.Client;
 import pages.FileTransferController;
 import registry.Registry;
-import start.MainController;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import static info.Info.getSettings;
 
+class Download {
+    private String id;
+    private String path;
+
+    public Download(String id, String path) {
+        this.id = id;
+        this.path = path;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+}
 
 public class Tool {
 
-    private static int MAX_READ_SIZE = 1024;
+    public static int MAX_READ_SIZE = 1024;
+
+    public static ObservableList<Download> downloads;
+
+    public static void addDownload(String id, String path) {
+        if (Tool.downloads == null) {
+            Tool.downloads = FXCollections.observableArrayList();
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (Tool.downloadExist(id, path))
+                Tool.downloads.add(new Download(id, path));
+            }
+        });
+    }
+
+    public static boolean downloadExist(String id, String path) {
+        if (Tool.downloads != null) {
+            for (Download download : Tool.downloads) {
+                if (download.getId().equals(id) & download.getPath().equals(path)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void removeDownload(String id, String path) {
+        if (Tool.downloads != null) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    int index = 0;
+                    for (Download download : Tool.downloads) {
+                        if (download.getId().equals(id) & download.getPath().equals(path)) {
+                            break;
+                        }
+                        index++;
+                    }
+                    if (index != Tool.downloads.size()) {
+                        Tool.downloads.remove(index);
+                    }
+                }
+            });
+        }
+    }
 
     public static ImageView resizeImage(ImageView image){
         return resizeImage(image, 22, 22);
@@ -161,7 +232,7 @@ public class Tool {
 
                         // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
                         System.out.println("USE PORT: " + listener.getLocalPort());
-                        Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(listener.getLocalPort(), path.getName(), folderSize));
+                        Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(listener.getLocalPort(), path.getAbsolutePath(), folderSize));
 
                         Socket socket = listener.accept();
 
@@ -265,7 +336,7 @@ public class Tool {
         return length;
     }
 
-    public static void openFileTransferWindow(Initializable sStage, File path, String ip, int port, String folderName, long size) {
+    public static void openFileTransferWindow(Initializable sStage, File path, String ip, Map<String, String> info) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -281,7 +352,7 @@ public class Tool {
                     fStage.setResizable(false);
                     fStage.setScene(new Scene(root1, 400, 170));
                     FileTransferController controller = fxmlLoader.<FileTransferController>getController();
-                    controller.initData(path, fStage, ip, port, folderName, size);
+                    controller.initData(path, fStage, ip, info);
                     fStage.show();
                 } catch (IOException e) {
                     e.printStackTrace();
