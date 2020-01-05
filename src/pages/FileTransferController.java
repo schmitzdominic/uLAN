@@ -85,7 +85,7 @@ public class FileTransferController implements Initializable {
             this.id = info.get("ID");
             this.serverPath = info.get("FOLDERNAME");
             this.port = Integer.parseInt(info.get("PORT"));
-            this.folderName = info.get("FOLDERNAME");
+            this.folderName = Tool.convertReleasesString(info.get("FOLDERNAME")).get(info.get("FOLDERNAME"));
             this.size = Long.parseLong(info.get("SIZE"));
 
             this.initListeners();
