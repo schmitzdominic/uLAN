@@ -181,7 +181,7 @@ public class Client {
                                                 System.out.println(x.getId() + " " + x.getPath());
                                             }
                                         }
-                                        if (!Tool.downloadExist(info.get("ID"), info.get(info.get("FOLDERNAME")))){
+                                        if (!Tool.downloadExist(info.get("ID"), info.get("FOLDERNAME"))){
                                             Tool.addDownload(info.get("ID"), info.get("FOLDERNAME"));
                                             String dPath = reg.getProperties().get("defaultfiletransferpath");
                                             if (dPath != null) {

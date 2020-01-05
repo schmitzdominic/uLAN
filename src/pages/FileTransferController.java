@@ -18,6 +18,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -66,13 +67,15 @@ public class FileTransferController implements Initializable {
     private InetAddress ip;
     private Socket socket;
     private Thread transferThread;
-    private String folderName;
+    private String fName;
     private String id;
     private String serverPath;
+    private FileOutputStream fos;
     private int port;
     private long size;
     private double aSize = 0;
     private boolean initError = false;
+    private boolean downloadError = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {}
@@ -85,12 +88,11 @@ public class FileTransferController implements Initializable {
             this.id = info.get("ID");
             this.serverPath = info.get("FOLDERNAME");
             this.port = Integer.parseInt(info.get("PORT"));
-            this.folderName = Tool.convertReleasesString(info.get("FOLDERNAME")).get(info.get("FOLDERNAME"));
+            this.fName = Tool.convertReleasesString(info.get("FOLDERNAME")).get(info.get("FOLDERNAME"));
             this.size = Long.parseLong(info.get("SIZE"));
 
             this.initListeners();
 
-            this.labelFolderName.setText(this.folderName);
             this.labelFolderSize.setText(Tool.humanReadableByteCountSI(size));
             this.progressBar.setProgress(0);
 
@@ -140,14 +142,22 @@ public class FileTransferController implements Initializable {
                     time.schedule(dt, 0, 1000);
                     time.schedule(tl, 0, 3000);
 
+                    int counter = 0;
+
                     try {
                         while(null != (zipEntry = zips.getNextEntry())){
                             String fileName = zipEntry.getName();
                             File outFile = new File(path.getAbsolutePath() + "/" + fileName);
 
+                            if (counter == 0) {
+                                fName = getFirstFolderName(fileName);
+                            }
+
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
+                                    labelFolderName.setText(fName + " nach " + path);
+                                    stage.setTitle(fName + " wird heruntergeladen...");
                                     progressBarFile.setProgress(0);
                                     labelFileName.setText(fileName);
                                 }
@@ -157,14 +167,16 @@ public class FileTransferController implements Initializable {
                                 continue;
                             }
 
-                            FileOutputStream fos = new FileOutputStream(outFile);
+                            fos = new FileOutputStream(outFile);
                             int fileLength = (int)zipEntry.getSize();
 
                             byte[] fileByte = new byte[fileLength];
 
                             double fSize = 0;
                             int readSize;
+
                             while ((readSize = zips.read(fileByte)) > 0) {
+
                                 fos.write(fileByte, 0, readSize);
 
                                 aSize += readSize;
@@ -186,15 +198,28 @@ public class FileTransferController implements Initializable {
                                 });
                             }
                             fos.close();
+                            counter++;
                         }
                     } catch (IOException ignored) {
-
+                        downloadError = true;
                     } finally {
                         dt.cancel();
                         tl.cancel();
-                        socket.close();
+                        if (fos != null) {
+                            fos.close();
+                        }
+                        if (!socket.isClosed()) {
+                            socket.close();
+                        }
                         Tool.removeDownload(id, serverPath);
                         closeWindow();
+
+                        if (downloadError) {
+                            File pathToDelete = new File(path.getAbsolutePath() + "\\" + fName);
+                            if (pathToDelete.isDirectory()) {
+                                deleteDir(pathToDelete);
+                            }
+                        }
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -222,6 +247,20 @@ public class FileTransferController implements Initializable {
         }
     }
 
+    private boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir (new File(dir, children[i]));
+
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+
     private void closeWindow() {
         Platform.runLater(new Runnable() {
             @Override
@@ -230,6 +269,13 @@ public class FileTransferController implements Initializable {
                 stage.close();
             }
         });
+    }
+
+    private String getFirstFolderName(String path) {
+       if (path.contains("\\")) {
+           return path.split("\\\\")[0];
+       }
+       return "";
     }
 
     static class DownloadProgressTask extends TimerTask
