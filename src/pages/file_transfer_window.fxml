@@ -2,9 +2,10 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+
 <AnchorPane prefHeight="170.0" prefWidth="500.0" styleClass="window_background" stylesheets="@../style/win10.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pages.FileTransferController">
    <children>
-      <Label fx:id="labelFolderName" layoutX="26.0" layoutY="26.0" styleClass="download_title" stylesheets="@../style/win10.css" text="folderName" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="280.0" AnchorPane.topAnchor="15.0" />
+      <Label fx:id="labelFolderName" layoutX="26.0" layoutY="26.0" styleClass="download_title" stylesheets="@../style/win10.css" text="folderName" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="130.0" AnchorPane.topAnchor="15.0" />
       <Label fx:id="labelTime" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="50.0" />
       <Label fx:id="labelActualFolderSize" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s GB" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="50.0" />
       <Label fx:id="labelFolderSize" layoutX="26.0" layoutY="26.0" styleClass="normal_text" stylesheets="@../style/win10.css" text="\%s GB" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0" />
