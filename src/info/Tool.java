@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import network.Client;
+import network.Download;
 import pages.FileTransferController;
 import registry.Registry;
 
@@ -30,32 +31,6 @@ import java.util.zip.ZipOutputStream;
 
 import static info.Info.getSettings;
 
-class Download {
-    private String id;
-    private String path;
-
-    public Download(String id, String path) {
-        this.id = id;
-        this.path = path;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public String getPath() {
-        return this.path;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-}
-
 public class Tool {
 
     public static int MAX_READ_SIZE = 1024;
@@ -69,8 +44,9 @@ public class Tool {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (Tool.downloadExist(id, path))
-                Tool.downloads.add(new Download(id, path));
+                if (!Tool.downloadExist(id, path)){
+                    Tool.downloads.add(new Download(id, path));
+                }
             }
         });
     }

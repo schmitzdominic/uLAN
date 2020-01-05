@@ -176,23 +176,25 @@ public class Client {
                                             // Maybe we should make an extra window with security issues
                                         }
                                     } else if (mode.equals("DOWNLOAD")) {
-                                        try {
-                                            if (!Tool.downloadExist(info.get("ID"), info.get(info.get("FOLDERNAME")))){
-                                                Tool.addDownload(info.get("ID"), info.get("FOLDERNAME"));
-                                                String dPath = reg.getProperties().get("defaultfiletransferpath");
-                                                if (dPath != null) {
-                                                    File path = new File(dPath);
-                                                    if (path.isDirectory()) {
-                                                        Tool.openFileTransferWindow(MainController.init,
-                                                                path, getIp(), info);
-                                                    } else {
-                                                        // TODO: ERROR, NO PATH FOUND!
-                                                    }
-                                                } else {
-                                                    // TODO: ERROR, NO DOWNLOAD PATH FOUND!
-                                                }
+                                        if (Tool.downloads != null) {
+                                            for (Download x : Tool.downloads) {
+                                                System.out.println(x.getId() + " " + x.getPath());
                                             }
-                                        } catch (NumberFormatException e) {
+                                        }
+                                        if (!Tool.downloadExist(info.get("ID"), info.get(info.get("FOLDERNAME")))){
+                                            Tool.addDownload(info.get("ID"), info.get("FOLDERNAME"));
+                                            String dPath = reg.getProperties().get("defaultfiletransferpath");
+                                            if (dPath != null) {
+                                                File path = new File(dPath);
+                                                if (path.isDirectory()) {
+                                                    Tool.openFileTransferWindow(MainController.init,
+                                                            path, getIp(), info);
+                                                } else {
+                                                    // TODO: ERROR, NO PATH FOUND!
+                                                }
+                                            } else {
+                                                // TODO: ERROR, NO DOWNLOAD PATH FOUND!
+                                            }
                                         }
                                     }
                                 }
