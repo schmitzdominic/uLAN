@@ -105,17 +105,18 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
     public static Initializable init;
     public static Stage releaseStage;
+    public static Stage infoStage;
 
     private Clients clients;
     private Client client;
     private Releases releases;
-    private Finder finder = new Finder();
-    private Registry registry = new Registry();
+    private final Finder finder = new Finder();
+    private final Registry registry = new Registry();
     private String actualRelease;
     private int port;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         MainController.init = this;
         this.createServer();
         this.createClientList();
@@ -124,19 +125,18 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         this.setOwnInformation();
         this.searchClients();
 
-        Runtime.getRuntime().addShutdownHook(new Thread()
-        {
-            public void run()
-            {
-                clients.disconnect();
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                MainController.this.clients.disconnect();
             }
         });
     }
 
     private void createServer() {
-        HashMap<String, String> settings = Info.getSettings();
+        final HashMap<String, String> settings = Info.getSettings();
         this.port = Integer.parseInt(settings.get("port"));
-        Server server = new Server(this, this.port);
+        final Server server = new Server(this, this.port);
         server.registerClientFoundListener(this);
         server.start();
     }
@@ -147,9 +147,9 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
         this.clientList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String value) {
-                buttonDownload.setVisible(false);
-                selectClient(clients.getClientByListName(value));
+            public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String value) {
+                MainController.this.buttonDownload.setVisible(false);
+                MainController.this.selectClient(MainController.this.clients.getClientByListName(value));
             }
         });
     }
@@ -159,9 +159,9 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
         this.releaseList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String value) {
-                buttonDownload.setVisible(true);
-                actualRelease = releases.getPathFromListItem(value);
+            public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String value) {
+                MainController.this.buttonDownload.setVisible(true);
+                MainController.this.actualRelease = MainController.this.releases.getPathFromListItem(value);
             }
         });
     }
@@ -187,7 +187,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     }
 
     private void setOwnInformation() {
-        Tooltip tooltip = new Tooltip(Info.getIp());
+        final Tooltip tooltip = new Tooltip(Info.getIp());
         this.labelOwnHostname.setText(Info.getHostname());
         this.labelOwnHostname.setTooltip(tooltip);
     }
@@ -196,8 +196,8 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         this.searchClients(Integer.parseInt(Info.getSettings().get("clientscount")));
     }
 
-    public void searchClients(int count) {
-        if (!finder.active) {
+    public void searchClients(final int count) {
+        if (!this.finder.active) {
             this.finder.registerClientFoundListener(this);
             this.finder.setCount(count);
             this.finder.setPort(this.port);
@@ -206,36 +206,36 @@ public class MainController implements ClientFoundListener, Initializable, Clien
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    loadingGIF.setVisible(true);
-                    buttonRefresh.setVisible(false);
-                    while (finder.active) {
+                    MainController.this.loadingGIF.setVisible(true);
+                    MainController.this.buttonRefresh.setVisible(false);
+                    while (MainController.this.finder.active) {
                         try {
                             Thread.sleep(50);
-                        } catch (InterruptedException e) {
+                        } catch (final InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    loadingGIF.setVisible(false);
-                    buttonRefresh.setVisible(true);
+                    MainController.this.loadingGIF.setVisible(false);
+                    MainController.this.buttonRefresh.setVisible(true);
                 }
             }).start();
         }
     }
 
     @Override
-    public void onClientFound(Client client) {
+    public void onClientFound(final Client client) {
         if (!this.clients.clientExists(client)) {
             this.addClient(client);
         }
     }
 
     @Override
-    public void onClientRemove(String id) {
+    public void onClientRemove(final String id) {
         this.removeClient(id);
     }
 
     @Override
-    public void onClientRemoveIp(String ip) {
+    public void onClientRemoveIp(final String ip) {
         this.removeClientByIp(ip);
     }
 
@@ -247,8 +247,8 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         this.clientReleases.setVisible(false);
     }
 
-    private void selectClient(Client client){
-        if(!this.clientTitle.isVisible()){
+    private void selectClient(final Client client) {
+        if (!this.clientTitle.isVisible()) {
             this.makeClientInfoVisible();
         }
         if (client != null) {
@@ -265,13 +265,13 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         }
     }
 
-    private void makeClientInfoVisible(){
+    private void makeClientInfoVisible() {
         this.clientTitle.setVisible(true);
         this.buttonChangeName.setVisible(true);
         this.clientInformation.setVisible(true);
     }
 
-    private void saveClientListName(){
+    private void saveClientListName() {
         this.client.setListName(this.textFieldChangeName.getText().toLowerCase());
         this.clients.changeClient(this.clientTitle.getText(), this.client);
         this.refreshClientInfo();
@@ -279,52 +279,52 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         this.selectClient(this.client);
     }
 
-    public void refreshClientInfo(){
-        this.clientTitle.setText(client.getListName());
-        this.labelHostnameText.setText(client.getHostname());
-        this.labelIPText.setText(client.getIp());
+    public void refreshClientInfo() {
+        this.clientTitle.setText(this.client.getListName());
+        this.labelHostnameText.setText(this.client.getHostname());
+        this.labelIPText.setText(this.client.getIp());
     }
 
-    public void resetChangeName(){
+    public void resetChangeName() {
         this.buttonSaveName.setVisible(false);
         this.textFieldChangeName.setVisible(false);
         this.buttonChangeName.setVisible(true);
         this.clientTitle.setVisible(true);
     }
 
-    public void addClient(Client client){
+    public void addClient(final Client client) {
         this.clients.addClient(client);
     }
 
-    public void removeClient(Client client) {
+    public void removeClient(final Client client) {
         this.clients.removeClient(client);
     }
 
-    public void removeClient(String id) {
+    public void removeClient(final String id) {
         this.clients.removeClientById(id);
     }
 
-    public void removeClientByIp(String ip) {
+    public void removeClientByIp(final String ip) {
         this.clients.removeClientByIp(ip);
     }
 
-    public void addReleases(Client client) {
+    public void addReleases(final Client client) {
         this.releases.addReleases(client);
     }
 
-    public void removeAllReleases(Client client) {
+    public void removeAllReleases(final Client client) {
         this.releases.removeAllReleases(client);
     }
 
-    public boolean checkIfCientNameExist(String name){
+    public boolean checkIfCientNameExist(final String name) {
         return this.clients.existName(name);
     }
 
-    public void buttonRefresh(ActionEvent event) {
+    public void buttonRefresh(final ActionEvent event) {
         this.searchClients();
     }
 
-    public void buttonChangeName(ActionEvent event) {
+    public void buttonChangeName(final ActionEvent event) {
         this.buttonChangeName.setVisible(false);
         this.buttonSaveName.setVisible(true);
         this.clientTitle.setVisible(false);
@@ -334,35 +334,35 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                textFieldChangeName.requestFocus();
+                MainController.this.textFieldChangeName.requestFocus();
             }
         });
     }
 
-    public void buttonSaveName(ActionEvent event) {
-        String newName = this.textFieldChangeName.getText().toLowerCase();
-        if(!this.checkIfCientNameExist(newName)){
+    public void buttonSaveName(final ActionEvent event) {
+        final String newName = this.textFieldChangeName.getText().toLowerCase();
+        if (!this.checkIfCientNameExist(newName)) {
             this.saveClientListName();
-        } else if (this.client.getHostname().equals(newName)){
+        } else if (this.client.getHostname().equals(newName)) {
             this.saveClientListName();
         } else {
             System.out.println("EXISTS!");  // TODO: Popup Message!
         }
     }
 
-    public void buttonDownload(ActionEvent event) {
+    public void buttonDownload(final ActionEvent event) {
         if (this.actualRelease != null) {
             Tool.sendMessage(this.client, Info.getProvideFolderPackage(this.actualRelease));
         }
     }
 
-    public void buttonReleases(ActionEvent event) {
+    public void buttonReleases(final ActionEvent event) {
         try {
-            HashMap<String, String> settings = getSettings();
-            String[] initReleases = registry.getReleases();
+            final HashMap<String, String> settings = getSettings();
+            final String[] initReleases = this.registry.getReleases();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pages/release_window.fxml"));
-            Parent root = fxmlLoader.load();
+            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pages/release_window.fxml"));
+            final Parent root = fxmlLoader.load();
             releaseStage = new Stage();
             releaseStage.initModality(Modality.WINDOW_MODAL);
             releaseStage.setTitle("Freigaben");
@@ -371,22 +371,79 @@ public class MainController implements ClientFoundListener, Initializable, Clien
             releaseStage.initOwner(Main.main);
             releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
-                public void handle(WindowEvent event) {
+                public void handle(final WindowEvent event) {
                     boolean changed = false;
-                    String[] releases = registry.getReleases();
+                    final String[] releases = MainController.this.registry.getReleases();
                     if (releases != null) {
                         changed = !Arrays.equals(releases, initReleases);
                     }
                     if (changed) {
-                        Tool.sendReleasesChange(clients.getClientMap());
+                        Tool.sendReleasesChange(MainController.this.clients.getClientMap());
                     }
                 }
             });
             releaseStage.setScene(new Scene(root, 500, 300));
             releaseStage.showAndWait();
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void buttonInfo(final ActionEvent event) {
+
+        try {
+            final HashMap<String, String> settings = getSettings();
+            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pages/info_window.fxml"));
+            final Parent root = fxmlLoader.load();
+            infoStage = new Stage();
+            infoStage.initModality(Modality.WINDOW_MODAL);
+            infoStage.setTitle("Info");
+            infoStage.getIcons().add(new Image(settings.get("defaulticon")));
+            infoStage.setResizable(false);
+            infoStage.initOwner(Main.main);
+            infoStage.setScene(new Scene(root, 500, 300));
+            infoStage.showAndWait();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void buttonSettings(final ActionEvent event) {
+        try {
+            final HashMap<String, String> settings = getSettings();
+            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pages/settings_window.fxml"));
+            final Parent root = fxmlLoader.load();
+            infoStage = new Stage();
+            infoStage.initModality(Modality.WINDOW_MODAL);
+            infoStage.setTitle("Einstellungen");
+            infoStage.getIcons().add(new Image(settings.get("defaulticon")));
+            infoStage.setResizable(false);
+            infoStage.initOwner(Main.main);
+            infoStage.setScene(new Scene(root, 500, 300));
+            infoStage.showAndWait();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void buttonHistory(final ActionEvent event) {
+        try {
+            final HashMap<String, String> settings = getSettings();
+            final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pages/history_window.fxml"));
+            final Parent root = fxmlLoader.load();
+            infoStage = new Stage();
+            infoStage.initModality(Modality.WINDOW_MODAL);
+            infoStage.setTitle("Historie");
+            infoStage.getIcons().add(new Image(settings.get("defaulticon")));
+            infoStage.setResizable(false);
+            infoStage.initOwner(Main.main);
+            infoStage.setScene(new Scene(root, 500, 300));
+            infoStage.showAndWait();
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

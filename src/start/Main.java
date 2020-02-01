@@ -20,36 +20,36 @@ public class Main extends Application {
     public static Stage main;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(final Stage primaryStage) throws Exception {
         this.registry = new Registry();
-        this.properties = registry.getProperties();
+        this.properties = this.registry.getProperties();
 
         Platform.setImplicitExit(false);
-        Parent root = FXMLLoader.load(getClass().getResource("main_window.fxml"));
+        final Parent root = FXMLLoader.load(this.getClass().getResource("main_window.fxml"));
 
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("uLAN");
         this.primaryStage.getIcons().add(new Image(this.properties.get("windowicon")));
-        this.primaryStage.setScene(new Scene(root, 650, 500));
+        this.primaryStage.setScene(new Scene(root, 650, 520));
         this.primaryStage.setResizable(false);
         Main.main = this.primaryStage;
 
         new Tray(this);
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    public static void main(final String[] args) {
+        Application.launch(args);
     }
 
-    public Stage getPrimaryStage(){
+    public Stage getPrimaryStage() {
         return this.primaryStage;
     }
 
-    public HashMap<String, String> getProperties(){
+    public HashMap<String, String> getProperties() {
         return this.properties;
     }
 
-    public void exitApplication(){
+    public void exitApplication() {
         Platform.exit();
         System.exit(0);
     }
