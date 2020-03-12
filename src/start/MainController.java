@@ -1,9 +1,9 @@
 package start;
 
-import Interfaces.ClientFoundListener;
-import Interfaces.ClientList;
 import info.Info;
 import info.Tool;
+import interfaces.ClientFoundListener;
+import interfaces.ClientList;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

@@ -1,9 +1,9 @@
 package network;
 
-import Interfaces.ClientList;
-import Interfaces.ClientsCallback;
 import info.Info;
 import info.Tool;
+import interfaces.ClientList;
+import interfaces.ClientsCallback;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -15,17 +15,18 @@ import java.net.UnknownHostException;
 
 public class Clients implements ClientsCallback {
 
-    private ObservableMap<String, Client> clientMap;
-    private ListView<String> clientList;
-    private ClientList controller;
-    private String id;
-    private int port;
+    private final ObservableMap<String, Client> clientMap;
+    private final ListView<String> clientList;
+    private final ClientList controller;
+    private final String id;
+    private final int port;
 
     /**
      * Constructor
+     *
      * @param clientList ListView<String> to view clients
      */
-    public Clients(ListView<String> clientList, ClientList controller){
+    public Clients(final ListView<String> clientList, final ClientList controller) {
         this.clientMap = FXCollections.observableHashMap();
         this.clientList = clientList;
         this.controller = controller;
@@ -38,110 +39,110 @@ public class Clients implements ClientsCallback {
         return this.clientMap;
     }
 
-    public Client getClientById(String id){
+    public Client getClientById(final String id) {
         return this.clientMap.get(id);
     }
 
-    public Client getClientByListName(String listName){
-        for(Client c : this.clientMap.values()){
-            if(c.getListName().equals(listName)){
+    public Client getClientByListName(final String listName) {
+        for (final Client c : this.clientMap.values()) {
+            if (c.getListName().equals(listName)) {
                 return c;
             }
         }
         return null;
     }
 
-    public boolean clientExists(Client client) {
-        if (clientMap.get(client.getId()) == null) {
+    public boolean clientExists(final Client client) {
+        if (this.clientMap.get(client.getId()) == null) {
             return false;
         } else {
             return true;
         }
     }
 
-    public void addClient(Client client) {
+    public void addClient(final Client client) {
         if (client != null) {
             client.registerClientsCallback(this);
         }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (!client.getId().equals(id)) {
-                    if (!clientList.getItems().contains(client.getListName()) & clientMap.get(client.getId()) == null){
-                        clientList.getItems().add(client.getListName());
-                        clientMap.put(client.getId(), client);
+                if (!client.getId().equals(Clients.this.id)) {
+                    if (!Clients.this.clientList.getItems().contains(client.getListName()) & Clients.this.clientMap.get(client.getId()) == null) {
+                        Clients.this.clientList.getItems().add(client.getListName());
+                        Clients.this.clientMap.put(client.getId(), client);
                     }
                 } else {
-                    clientMap.get(client.getId()).refresh(client);
-                    clientList.refresh();
+                    Clients.this.clientMap.get(client.getId()).refresh(client);
+                    Clients.this.clientList.refresh();
                 }
             }
         });
     }
 
-    public void removeClientById(String id) {
-        for(Client client : clientMap.values()) {
+    public void removeClientById(final String id) {
+        for (final Client client : this.clientMap.values()) {
             if (client.getId().equals(id)) {
                 this.removeClient(client);
             }
         }
     }
 
-    public void removeClientByIp(String ip) {
-        for(Client client : clientMap.values()) {
+    public void removeClientByIp(final String ip) {
+        for (final Client client : this.clientMap.values()) {
             if (client.getIp().equals(ip)) {
                 this.removeClient(client);
             }
         }
     }
 
-    public void removeClient(Client client) {
+    public void removeClient(final Client client) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 int index = 0;
-                for(String c : clientList.getItems()) {
+                for (final String c : Clients.this.clientList.getItems()) {
                     if (c.equals(client.getListName())) {
-                        Client cTemp = clientMap.get(client.getId());
+                        final Client cTemp = Clients.this.clientMap.get(client.getId());
                         if (cTemp.getSocket() != null) {
-                            clientMap.get(client.getId()).closeSocket();
-                            clientMap.get(client.getId()).getTcpListener().interrupt();
+                            Clients.this.clientMap.get(client.getId()).closeSocket();
+                            Clients.this.clientMap.get(client.getId()).getTcpListener().interrupt();
                         }
-                        clientMap.remove(client.getId());
+                        Clients.this.clientMap.remove(client.getId());
                         break;
                     }
                     index++;
                 }
-                if (clientList.getSelectionModel().isSelected(index)) {
-                    if (clientList.getItems().size() > 1) {
-                        clientList.getSelectionModel().select(0);
+                if (Clients.this.clientList.getSelectionModel().isSelected(index)) {
+                    if (Clients.this.clientList.getItems().size() > 1) {
+                        Clients.this.clientList.getSelectionModel().select(0);
                     } else {
-                        clientList.getSelectionModel().clearSelection();
-                        controller.makeClientInfoInvisible();
+                        Clients.this.clientList.getSelectionModel().clearSelection();
+                        Clients.this.controller.makeClientInfoInvisible();
                     }
                 }
-                if (clientList.getItems().size() > 0) {
-                    clientList.getItems().remove(index);
+                if (Clients.this.clientList.getItems().size() > 0) {
+                    Clients.this.clientList.getItems().remove(index);
                 }
             }
         });
     }
 
-    public boolean existName(String hostname){
-        for(Client client : this.clientMap.values()){
-            if(client.getListName().equals(hostname) | client.getHostname().equals(hostname)){
+    public boolean existName(final String hostname) {
+        for (final Client client : this.clientMap.values()) {
+            if (client.getListName().equals(hostname) | client.getHostname().equals(hostname)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void changeClient(String oldName, Client client){
-        if(this.clientMap.get(client.getId()) != null){
+    public void changeClient(final String oldName, final Client client) {
+        if (this.clientMap.get(client.getId()) != null) {
             this.clientMap.put(client.getId(), client);
             int index = 0;
-            for(String name : this.clientList.getItems()){
-                if(name.equals(oldName)){
+            for (final String name : this.clientList.getItems()) {
+                if (name.equals(oldName)) {
                     this.clientList.getItems().set(index, client.getListName());
                 }
                 index++;
@@ -150,16 +151,16 @@ public class Clients implements ClientsCallback {
     }
 
     public void disconnect() {
-        for(Client client : this.clientMap.values()) {
+        for (final Client client : this.clientMap.values()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), port);
+                        final Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), Clients.this.port);
                         if (socket != null) {
                             Tool.sendMessage(client, Info.getDisconnectPackage());
                         }
-                    } catch (UnknownHostException e) {
+                    } catch (final UnknownHostException e) {
                         e.printStackTrace();
                     }
                 }
@@ -170,13 +171,13 @@ public class Clients implements ClientsCallback {
     @Override
     public void notifyClientHasChanged() {
         this.clientList.refresh();
-        int selected = this.clientList.getSelectionModel().getSelectedIndex();
+        final int selected = this.clientList.getSelectionModel().getSelectedIndex();
         this.clientList.getSelectionModel().clearSelection();
         this.clientList.getSelectionModel().select(selected);
     }
 
     @Override
-    public void removeClient(String id) {
+    public void removeClient(final String id) {
         this.removeClientById(id);
     }
 }
