@@ -7,24 +7,24 @@ import entities.payload.DefaultPayload;
 
 public class Income {
 
-    private String mode;
+    private Payload mode;
     private String json;
 
     public Income(final String json) {
         try {
             final JsonNode parent = new ObjectMapper().readTree(json);
-            mode = parent.get("mode").asText();
+            mode = Payload.valueOf(parent.get("mode").asText());
             this.json = json;
         } catch (final JsonProcessingException jpe) {
             jpe.printStackTrace();
         }
     }
 
-    public String getMode() {
+    public Payload getMode() {
         return mode;
     }
 
-    public void setMode(final String mode) {
+    public void setMode(final Payload mode) {
         this.mode = mode;
     }
 
@@ -37,7 +37,7 @@ public class Income {
     }
 
     public <T extends DefaultPayload> T getObject() {
-        return Payload.valueOf(mode).getPayloadInstanceFromJson(json);
+        return mode.getPayloadInstanceFromJson(json);
     }
 
     @Override

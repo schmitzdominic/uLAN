@@ -142,6 +142,8 @@ public class Finder {
 
     private void repeat(final String message, final Socket socket, final PrintWriter out) {
 
+        System.out.println("INCOMMING REPEAT MESSAGE: " + message);
+
         if (clientListener != null) {
 
             final Client client = buildClient(message);

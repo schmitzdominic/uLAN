@@ -1,7 +1,10 @@
 package network;
 
+import entities.Income;
+import entities.Payload;
+import entities.Release;
+import entities.payload.Initialize;
 import helpers.Info;
-import helpers.Tool;
 import interfaces.ClientFoundListener;
 import start.MainController;
 
@@ -10,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
+import java.util.HashMap;
 
 
 public class Server extends Thread {
@@ -51,16 +54,14 @@ public class Server extends Thread {
             public void run() {
                 try {
                     final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    System.out.println("INPUT: " + in.readLine());
-                    final Map<String, String> info = Tool.convertMessage(in.readLine());
-                    final String mode = info.get("MODE");
-                    if (mode != null) {
-                        if (mode.equals("INITIALIZE")) {
-                            if (!info.get("ID").equals(id)) {
-                                initialize(info, socket);
+                    final Income income = new Income(in.readLine());
+                    if (income.getMode() != null) {
+                        if (income.getMode().equals(Payload.INITIALIZE)) {
+                            if (!income.getObject().getId().equals(id)) {
+                                initialize(income, socket);
                             }
-                        } else if (mode.equals("DISCONNECT")) {
-                            disconnectClient(info);
+                        } else if (income.getMode().equals(Payload.DISCONNECT)) {
+                            disconnectClient(income);
                         }
                     }
                 } catch (final IOException e) {
@@ -70,30 +71,36 @@ public class Server extends Thread {
         }).start();
     }
 
-    private void initialize(final Map<String, String> info, final Socket socket) {
+    private void initialize(final Income income, final Socket socket) {
         if (clientListener != null) {
 
-            final String id = info.get("ID");
-            final String ip = info.get("IP");
-            final String hostname = info.get("HOSTNAME");
+            final Initialize init = income.getObject();
 
-            if (id != null & ip != null & hostname != null) {
-                final Client client = new Client(id, ip, hostname);
+            if (init.getId() != null & init.getIp() != null & init.getHostName() != null) {
+                final Client client = new Client(init.getId(), init.getIp(), init.getHostName());
 
-                if (info.get("RELEASES") != null) {
-                    client.setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+                if (init.getReleases() != null && init.getReleases().size() > 0) {
+
+                    // TODO: Change to List with release object!
+                    final HashMap<String, String> releases = new HashMap<>();
+
+                    for (final Release release : init.getReleases()) {
+                        releases.put(release.getPath(), release.getName());
+                    }
+                    client.setReleases(releases);
                 }
 
                 client.setSocket(socket);
                 client.addTCPListener();
-                Tool.sendMessage(client, Info.getRepeatPackage());
+                Payload.INIT_REPEAT.send(client.getSocket());
+                // Tool.sendMessage(client, Info.getRepeatPackage());
                 clientListener.onClientFound(client);
             }
         }
     }
 
-    private void disconnectClient(final Map<String, String> info) {
-        clientListener.onClientRemove(info.get("ID"));
+    private void disconnectClient(final Income income) {
+        clientListener.onClientRemove(income.getObject().getId());
     }
 
     public void registerClientFoundListener(final ClientFoundListener clientListener) {
