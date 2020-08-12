@@ -1,7 +1,7 @@
 package network;
 
-import info.Info;
-import info.Tool;
+import helpers.Info;
+import helpers.Tool;
 import interfaces.ClientFoundListener;
 
 import java.io.BufferedReader;
@@ -25,7 +25,7 @@ public class Finder {
     private ClientFoundListener clientListener;
 
     public Finder() {
-        this.counter = new AtomicInteger();
+        counter = new AtomicInteger();
     }
 
     public void setCount(final int count) {
@@ -37,16 +37,16 @@ public class Finder {
     }
 
     public void searchClients() {
-        this.ownIp = Info.getIp();
-        this.active = true;
-        this.counter.set(0);
-        final String ipAddress = this.getNetworkIP(Info.getIp());
+        ownIp = Info.getIp();
+        active = true;
+        counter.set(0);
+        final String ipAddress = getNetworkIP(Info.getIp());
         if (ipAddress == null) {
-            this.counter.set(this.count);
-            this.active = false;
+            counter.set(count);
+            active = false;
             return;
         }
-        for (int i = 2; i < this.count + 2; i++) {
+        for (int i = 2; i < count + 2; i++) {
             final int client = i;
             final Thread search = new Thread(new Runnable() {
                 @Override
@@ -54,10 +54,10 @@ public class Finder {
                     try {
                         // Build a InetAddress and check if the ip is not ours
                         final InetAddress ip = InetAddress.getByName(ipAddress + client);
-                        if (!(Finder.this.ownIp).equals(ip.getHostAddress())) {
+                        if (!(ownIp).equals(ip.getHostAddress())) {
 
                             // Check if the client is online
-                            final Socket socket = Finder.this.isOnline(ip, Finder.this.port);
+                            final Socket socket = isOnline(ip, port);
 
                             if (socket != null) {
                                 // If the Client is available
@@ -69,20 +69,20 @@ public class Finder {
                                     // Wait for the REPEAT Package
                                     try {
                                         if ((line = reader.readLine()) != null) {
-                                            Finder.this.repeat(line, socket, out);
+                                            repeat(line, socket, out);
                                         }
                                     } catch (final SocketException e) {
                                         final String removeClient = socket.getInetAddress().getHostAddress();
                                         System.out.println(String.format("Client %s reset", removeClient));
-                                        Finder.this.clientListener.onClientRemoveIp(removeClient);
+                                        clientListener.onClientRemoveIp(removeClient);
                                     }
                                 } catch (final IOException e) {
                                     e.printStackTrace();
                                 }
                             }
 
-                            if (Finder.this.count == Finder.this.counter.addAndGet(1)) {
-                                Finder.this.active = false;
+                            if (count == counter.addAndGet(1)) {
+                                active = false;
                             }
                         }
                     } catch (final UnknownHostException e) {
@@ -97,8 +97,8 @@ public class Finder {
                 public void run() {
                     try {
                         Thread.sleep(12000);
-                        if (Finder.this.count == Finder.this.counter.addAndGet(1)) {
-                            Finder.this.active = false;
+                        if (count == counter.addAndGet(1)) {
+                            active = false;
                         }
                         search.interrupt();
                     } catch (final InterruptedException e) {
@@ -141,15 +141,15 @@ public class Finder {
 
     private void repeat(final String message, final Socket socket, final PrintWriter out) {
 
-        if (this.clientListener != null) {
+        if (clientListener != null) {
 
-            final Client client = this.buildClient(message);
+            final Client client = buildClient(message);
 
             if (client != null) {
                 client.setSocket(socket);
                 client.setOut(out);
                 client.addTCPListener();
-                this.clientListener.onClientFound(client);
+                clientListener.onClientFound(client);
             }
         }
     }

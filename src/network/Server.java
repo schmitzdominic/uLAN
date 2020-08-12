@@ -1,7 +1,7 @@
 package network;
 
-import info.Info;
-import info.Tool;
+import helpers.Info;
+import helpers.Tool;
 import interfaces.ClientFoundListener;
 import start.MainController;
 
@@ -24,19 +24,19 @@ public class Server extends Thread {
     public Server(final MainController mainController, final int port) {
         this.mainController = mainController;
         this.port = port;
-        this.id = Info.getSettings().get("id");
-        this.ip = Info.getIp();
+        id = Info.getSettings().get("id");
+        ip = Info.getIp();
     }
 
     @Override
     public void run() {
         try {
-            final ServerSocket listener = new ServerSocket(this.port);
+            final ServerSocket listener = new ServerSocket(port);
 
             while (true) {
                 final Socket socket = listener.accept();
-                if (!socket.getInetAddress().getHostAddress().equals(this.ip)) {
-                    this.checkMessage(socket);
+                if (!socket.getInetAddress().getHostAddress().equals(ip)) {
+                    checkMessage(socket);
                 }
             }
         } catch (final IOException e) {
@@ -55,11 +55,11 @@ public class Server extends Thread {
                     final String mode = info.get("MODE");
                     if (mode != null) {
                         if (mode.equals("INITIALIZE")) {
-                            if (!info.get("ID").equals(Server.this.id)) {
-                                Server.this.initialize(info, socket);
+                            if (!info.get("ID").equals(id)) {
+                                initialize(info, socket);
                             }
                         } else if (mode.equals("DISCONNECT")) {
-                            Server.this.disconnectClient(info);
+                            disconnectClient(info);
                         }
                     }
                 } catch (final IOException e) {
@@ -70,7 +70,7 @@ public class Server extends Thread {
     }
 
     private void initialize(final Map<String, String> info, final Socket socket) {
-        if (this.clientListener != null) {
+        if (clientListener != null) {
 
             final String id = info.get("ID");
             final String ip = info.get("IP");
@@ -86,13 +86,13 @@ public class Server extends Thread {
                 client.setSocket(socket);
                 client.addTCPListener();
                 Tool.sendMessage(client, Info.getRepeatPackage());
-                this.clientListener.onClientFound(client);
+                clientListener.onClientFound(client);
             }
         }
     }
 
     private void disconnectClient(final Map<String, String> info) {
-        this.clientListener.onClientRemove(info.get("ID"));
+        clientListener.onClientRemove(info.get("ID"));
     }
 
     public void registerClientFoundListener(final ClientFoundListener clientListener) {

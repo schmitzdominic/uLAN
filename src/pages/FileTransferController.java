@@ -1,6 +1,6 @@
 package pages;
 
-import info.Tool;
+import helpers.Tool;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,7 +19,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.nio.file.Files;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -79,46 +78,47 @@ public class FileTransferController implements Initializable {
     private boolean downloadError = false;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {}
+    public void initialize(final URL location, final ResourceBundle resources) {
+    }
 
-    public void initData(File path, Stage stage, String ip, Map<String, String> info) {
+    public void initData(final File path, final Stage stage, final String ip, final Map<String, String> info) {
         try {
             this.path = path;
             this.stage = stage;
             this.ip = InetAddress.getByName(ip);
-            this.id = info.get("ID");
-            this.serverPath = info.get("FOLDERNAME");
-            this.port = Integer.parseInt(info.get("PORT"));
-            this.fName = Tool.convertReleasesString(info.get("FOLDERNAME")).get(info.get("FOLDERNAME"));
-            this.size = Long.parseLong(info.get("SIZE"));
+            id = info.get("ID");
+            serverPath = info.get("FOLDERNAME");
+            port = Integer.parseInt(info.get("PORT"));
+            fName = Tool.convertReleasesString(info.get("FOLDERNAME")).get(info.get("FOLDERNAME"));
+            size = Long.parseLong(info.get("SIZE"));
 
-            this.initListeners();
+            initListeners();
 
-            this.labelFolderSize.setText(Tool.humanReadableByteCountSI(size));
-            this.progressBar.setProgress(0);
+            labelFolderSize.setText(Tool.humanReadableByteCountSI(size));
+            progressBar.setProgress(0);
 
-        } catch (UnknownHostException e) {
+        } catch (final UnknownHostException e) {
             // TODO: InetAddress, Error Message that the other side did not exists!
             e.printStackTrace();
-            this.initError = true;
-        } catch (NumberFormatException e) {
+            initError = true;
+        } catch (final NumberFormatException e) {
             System.out.println("PORT OR SIZE IS NOT A INTEGER OR LONG NUMBER! PORT:" + info.get("PORT") + " SIZE:" + info.get("SIZE"));
             // TODO: ERROR, PORT IS NOT A INTEGER NUMBER!
-            this.initError = true;
+            initError = true;
         }
 
-        if (!this.initError) {
-            this.transferData().start();
+        if (!initError) {
+            transferData().start();
         }
     }
 
     public void initListeners() {
-        this.stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
-            public void handle(WindowEvent event) {
+            public void handle(final WindowEvent event) {
                 try {
                     socket.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -126,19 +126,19 @@ public class FileTransferController implements Initializable {
     }
 
     private Thread transferData() {
-        this.transferThread = new Thread(new Runnable() {
+        transferThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     socket = new Socket(ip, port);
-                    BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
-                    ZipInputStream zips = new ZipInputStream(bis);
+                    final BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+                    final ZipInputStream zips = new ZipInputStream(bis);
                     ZipEntry zipEntry = null;
 
-                    Timer time = new Timer();
+                    final Timer time = new Timer();
 
-                    DownloadProgressTask dt = new DownloadProgressTask(labelDataPerSecond, labelTime, size);
-                    DownloadProgressTask tl = new DownloadProgressTask(labelTimeLeft, size);
+                    final DownloadProgressTask dt = new DownloadProgressTask(labelDataPerSecond, labelTime, size);
+                    final DownloadProgressTask tl = new DownloadProgressTask(labelTimeLeft, size);
 
                     time.schedule(dt, 0, 1000);
                     time.schedule(tl, 0, 3000);
@@ -146,9 +146,9 @@ public class FileTransferController implements Initializable {
                     int counter = 0;
 
                     try {
-                        while(null != (zipEntry = zips.getNextEntry())){
-                            String fileName = zipEntry.getName();
-                            File outFile = new File(path.getAbsolutePath() + "/" + fileName);
+                        while (null != (zipEntry = zips.getNextEntry())) {
+                            final String fileName = zipEntry.getName();
+                            final File outFile = new File(path.getAbsolutePath() + "/" + fileName);
 
                             if (counter == 0) {
                                 fName = getFirstFolderName(fileName);
@@ -170,9 +170,9 @@ public class FileTransferController implements Initializable {
                             }
 
                             fos = new FileOutputStream(outFile);
-                            int fileLength = (int)zipEntry.getSize();
+                            final int fileLength = (int) zipEntry.getSize();
 
-                            byte[] fileByte = new byte[fileLength];
+                            final byte[] fileByte = new byte[fileLength];
 
                             double fSize = 0;
                             int readSize;
@@ -183,17 +183,17 @@ public class FileTransferController implements Initializable {
 
                                 aSize += readSize;
                                 fSize += readSize;
-                                final double progress = (double)(aSize/size)*100;
-                                final double fileProgress = (double)(fSize/zipEntry.getSize())*100;
-                                long finalASize = (long) aSize;
+                                final double progress = (double) (aSize / size) * 100;
+                                final double fileProgress = (double) (fSize / zipEntry.getSize()) * 100;
+                                final long finalASize = (long) aSize;
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
                                         labelActualFolderSize.setText(Tool.humanReadableByteCountSI(finalASize) + " /");
-                                        progressBar.setProgress(progress/100);
-                                        progressBarFile.setProgress(fileProgress/100);
-                                        labelPercent.setText((int)progress + " %");
-                                        labelPercentFile.setText((int)fileProgress + " %");
+                                        progressBar.setProgress(progress / 100);
+                                        progressBarFile.setProgress(fileProgress / 100);
+                                        labelPercent.setText((int) progress + " %");
+                                        labelPercentFile.setText((int) fileProgress + " %");
                                         dt.updateDownloaded(finalASize);
                                         tl.updateDownloaded(finalASize);
                                     }
@@ -202,7 +202,7 @@ public class FileTransferController implements Initializable {
                             fos.close();
                             counter++;
                         }
-                    } catch (IOException ignored) {
+                    } catch (final IOException ignored) {
                         downloadError = true;
                     } finally {
                         dt.cancel();
@@ -217,31 +217,31 @@ public class FileTransferController implements Initializable {
                         closeWindow();
 
                         if (downloadError) {
-                            File pathToDelete = new File(path.getAbsolutePath() + "\\" + fName);
+                            final File pathToDelete = new File(path.getAbsolutePath() + "\\" + fName);
                             if (pathToDelete.isDirectory()) {
                                 deleteDir(pathToDelete);
                             }
                         }
                     }
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
         });
-        return this.transferThread;
+        return transferThread;
     }
 
-    private boolean createDirectoryIfNotExist(ZipEntry zipEntry, File outFile) {
-        if(zipEntry.isDirectory()){
-            File zipEntryFolder = new File(zipEntry.getName());
-            if(!zipEntryFolder.exists()){
+    private boolean createDirectoryIfNotExist(final ZipEntry zipEntry, final File outFile) {
+        if (zipEntry.isDirectory()) {
+            final File zipEntryFolder = new File(zipEntry.getName());
+            if (!zipEntryFolder.exists()) {
                 outFile.mkdirs();
             }
             return true;
 
-        }else{
-            File parentFolder = outFile.getParentFile();
-            if(!parentFolder.exists()){
+        } else {
+            final File parentFolder = outFile.getParentFile();
+            if (!parentFolder.exists()) {
                 parentFolder.mkdirs();
             }
             return false;
@@ -249,11 +249,11 @@ public class FileTransferController implements Initializable {
         }
     }
 
-    private boolean deleteDir(File dir) {
+    private boolean deleteDir(final File dir) {
         if (dir.isDirectory()) {
-            String[] children = dir.list();
+            final String[] children = dir.list();
             for (int i = 0; i < children.length; i++) {
-                boolean success = deleteDir (new File(dir, children[i]));
+                final boolean success = deleteDir(new File(dir, children[i]));
 
                 if (!success) {
                     return false;
@@ -273,37 +273,37 @@ public class FileTransferController implements Initializable {
         });
     }
 
-    private String getFirstFolderName(String path) {
-       if (path.contains("\\")) {
-           return path.split("\\\\")[0];
-       }
-       return "";
+    private String getFirstFolderName(final String path) {
+        if (path.contains("\\")) {
+            return path.split("\\\\")[0];
+        }
+        return "";
     }
 
-    static class DownloadProgressTask extends TimerTask
-    {
+    static class DownloadProgressTask extends TimerTask {
         private Label dataSec;
         private Label time;
         private Label timeLeft;
 
-        private AtomicLong downloaded = new AtomicLong();
-        private AtomicLong sinceLastTime = new AtomicLong();
-        private AtomicLong dataLeft = new AtomicLong();
-        private AtomicLong leftTime = new AtomicLong();
+        private final AtomicLong downloaded = new AtomicLong();
+        private final AtomicLong sinceLastTime = new AtomicLong();
+        private final AtomicLong dataLeft = new AtomicLong();
+        private final AtomicLong leftTime = new AtomicLong();
 
-        private long folderSize;
+        private final long folderSize;
 
-        public DownloadProgressTask (Label dataSec, Label time, long folderSize) {
+        public DownloadProgressTask(final Label dataSec, final Label time, final long folderSize) {
             this.dataSec = dataSec;
             this.time = time;
             this.folderSize = folderSize;
         }
 
-        public DownloadProgressTask (Label timeLeft, long folderSize) {
+        public DownloadProgressTask(final Label timeLeft, final long folderSize) {
             this.timeLeft = timeLeft;
             this.folderSize = folderSize;
         }
 
+        @Override
         public void run() {
             Platform.runLater(new Runnable() {
                 @Override
@@ -314,9 +314,9 @@ public class FileTransferController implements Initializable {
                     }
                     if (timeLeft != null) {
                         try {
-                            long lTime = dataLeft.get() / (sinceLastTime.get() / 3);
+                            final long lTime = dataLeft.get() / (sinceLastTime.get() / 3);
                             timeLeft.setText("~ " + Tool.humanReadableTime(lTime));
-                        } catch (ArithmeticException e) {
+                        } catch (final ArithmeticException e) {
                             // Ignoring
                         }
                     }
@@ -328,10 +328,10 @@ public class FileTransferController implements Initializable {
             });
         }
 
-        public void updateDownloaded (long newVal) {
-            this.sinceLastTime.addAndGet(newVal - this.downloaded.get());
-            this.downloaded.set(newVal);
-            this.dataLeft.set(this.folderSize - this.downloaded.get());
+        public void updateDownloaded(final long newVal) {
+            sinceLastTime.addAndGet(newVal - downloaded.get());
+            downloaded.set(newVal);
+            dataLeft.set(folderSize - downloaded.get());
         }
     }
 }

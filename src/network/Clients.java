@@ -1,7 +1,7 @@
 package network;
 
-import info.Info;
-import info.Tool;
+import helpers.Info;
+import helpers.Tool;
 import interfaces.ClientList;
 import interfaces.ClientsCallback;
 import javafx.application.Platform;
@@ -27,24 +27,24 @@ public class Clients implements ClientsCallback {
      * @param clientList ListView<String> to view clients
      */
     public Clients(final ListView<String> clientList, final ClientList controller) {
-        this.clientMap = FXCollections.observableHashMap();
+        clientMap = FXCollections.observableHashMap();
         this.clientList = clientList;
         this.controller = controller;
-        this.id = Info.getSettings().get("id");
-        this.port = Integer.parseInt(Info.getSettings().get("port"));
+        id = Info.getSettings().get("id");
+        port = Integer.parseInt(Info.getSettings().get("port"));
         // this.clientList.getItems().sort(Comparator.naturalOrder()); TODO SORT!
     }
 
     public ObservableMap<String, Client> getClientMap() {
-        return this.clientMap;
+        return clientMap;
     }
 
     public Client getClientById(final String id) {
-        return this.clientMap.get(id);
+        return clientMap.get(id);
     }
 
     public Client getClientByListName(final String listName) {
-        for (final Client c : this.clientMap.values()) {
+        for (final Client c : clientMap.values()) {
             if (c.getListName().equals(listName)) {
                 return c;
             }
@@ -53,7 +53,7 @@ public class Clients implements ClientsCallback {
     }
 
     public boolean clientExists(final Client client) {
-        if (this.clientMap.get(client.getId()) == null) {
+        if (clientMap.get(client.getId()) == null) {
             return false;
         } else {
             return true;
@@ -67,31 +67,31 @@ public class Clients implements ClientsCallback {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (!client.getId().equals(Clients.this.id)) {
-                    if (!Clients.this.clientList.getItems().contains(client.getListName()) & Clients.this.clientMap.get(client.getId()) == null) {
-                        Clients.this.clientList.getItems().add(client.getListName());
-                        Clients.this.clientMap.put(client.getId(), client);
+                if (!client.getId().equals(id)) {
+                    if (!clientList.getItems().contains(client.getListName()) & clientMap.get(client.getId()) == null) {
+                        clientList.getItems().add(client.getListName());
+                        clientMap.put(client.getId(), client);
                     }
                 } else {
-                    Clients.this.clientMap.get(client.getId()).refresh(client);
-                    Clients.this.clientList.refresh();
+                    clientMap.get(client.getId()).refresh(client);
+                    clientList.refresh();
                 }
             }
         });
     }
 
     public void removeClientById(final String id) {
-        for (final Client client : this.clientMap.values()) {
+        for (final Client client : clientMap.values()) {
             if (client.getId().equals(id)) {
-                this.removeClient(client);
+                removeClient(client);
             }
         }
     }
 
     public void removeClientByIp(final String ip) {
-        for (final Client client : this.clientMap.values()) {
+        for (final Client client : clientMap.values()) {
             if (client.getIp().equals(ip)) {
-                this.removeClient(client);
+                removeClient(client);
             }
         }
     }
@@ -101,35 +101,35 @@ public class Clients implements ClientsCallback {
             @Override
             public void run() {
                 int index = 0;
-                for (final String c : Clients.this.clientList.getItems()) {
+                for (final String c : clientList.getItems()) {
                     if (c.equals(client.getListName())) {
-                        final Client cTemp = Clients.this.clientMap.get(client.getId());
+                        final Client cTemp = clientMap.get(client.getId());
                         if (cTemp.getSocket() != null) {
-                            Clients.this.clientMap.get(client.getId()).closeSocket();
-                            Clients.this.clientMap.get(client.getId()).getTcpListener().interrupt();
+                            clientMap.get(client.getId()).closeSocket();
+                            clientMap.get(client.getId()).getTcpListener().interrupt();
                         }
-                        Clients.this.clientMap.remove(client.getId());
+                        clientMap.remove(client.getId());
                         break;
                     }
                     index++;
                 }
-                if (Clients.this.clientList.getSelectionModel().isSelected(index)) {
-                    if (Clients.this.clientList.getItems().size() > 1) {
-                        Clients.this.clientList.getSelectionModel().select(0);
+                if (clientList.getSelectionModel().isSelected(index)) {
+                    if (clientList.getItems().size() > 1) {
+                        clientList.getSelectionModel().select(0);
                     } else {
-                        Clients.this.clientList.getSelectionModel().clearSelection();
-                        Clients.this.controller.makeClientInfoInvisible();
+                        clientList.getSelectionModel().clearSelection();
+                        controller.makeClientInfoInvisible();
                     }
                 }
-                if (Clients.this.clientList.getItems().size() > 0) {
-                    Clients.this.clientList.getItems().remove(index);
+                if (clientList.getItems().size() > 0) {
+                    clientList.getItems().remove(index);
                 }
             }
         });
     }
 
     public boolean existName(final String hostname) {
-        for (final Client client : this.clientMap.values()) {
+        for (final Client client : clientMap.values()) {
             if (client.getListName().equals(hostname) | client.getHostname().equals(hostname)) {
                 return true;
             }
@@ -138,12 +138,12 @@ public class Clients implements ClientsCallback {
     }
 
     public void changeClient(final String oldName, final Client client) {
-        if (this.clientMap.get(client.getId()) != null) {
-            this.clientMap.put(client.getId(), client);
+        if (clientMap.get(client.getId()) != null) {
+            clientMap.put(client.getId(), client);
             int index = 0;
-            for (final String name : this.clientList.getItems()) {
+            for (final String name : clientList.getItems()) {
                 if (name.equals(oldName)) {
-                    this.clientList.getItems().set(index, client.getListName());
+                    clientList.getItems().set(index, client.getListName());
                 }
                 index++;
             }
@@ -151,12 +151,12 @@ public class Clients implements ClientsCallback {
     }
 
     public void disconnect() {
-        for (final Client client : this.clientMap.values()) {
+        for (final Client client : clientMap.values()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        final Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), Clients.this.port);
+                        final Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), port);
                         if (socket != null) {
                             Tool.sendMessage(client, Info.getDisconnectPackage());
                         }
@@ -170,14 +170,14 @@ public class Clients implements ClientsCallback {
 
     @Override
     public void notifyClientHasChanged() {
-        this.clientList.refresh();
-        final int selected = this.clientList.getSelectionModel().getSelectedIndex();
-        this.clientList.getSelectionModel().clearSelection();
-        this.clientList.getSelectionModel().select(selected);
+        clientList.refresh();
+        final int selected = clientList.getSelectionModel().getSelectedIndex();
+        clientList.getSelectionModel().clearSelection();
+        clientList.getSelectionModel().select(selected);
     }
 
     @Override
     public void removeClient(final String id) {
-        this.removeClientById(id);
+        removeClientById(id);
     }
 }

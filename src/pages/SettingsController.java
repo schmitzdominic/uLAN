@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import static info.Info.getSettings;
+import static helpers.Info.getSettings;
 
 public class SettingsController implements Initializable {
 
@@ -31,12 +31,12 @@ public class SettingsController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.initData();
+        initData();
     }
 
     public void initData() {
-        this.labelTextDownloadPath.setText(this.descriptionDownloadPath);
-        this.labelDownloadPath.setText(this.settings.get("defaultfiletransferpath"));
+        labelTextDownloadPath.setText(descriptionDownloadPath);
+        labelDownloadPath.setText(settings.get("defaultfiletransferpath"));
     }
 
     public void buttonChooseDownloadPath(final ActionEvent event) {
@@ -44,8 +44,8 @@ public class SettingsController implements Initializable {
         final File selectedDirectory = directoryChooser.showDialog(MainController.settingsStage);
         if (selectedDirectory != null) {
             final String path = selectedDirectory.getAbsolutePath();
-            this.registry.setSetting("properties", "defaultfiletransferpath", path);
-            this.labelDownloadPath.setText(path);
+            registry.setSetting("properties", "defaultfiletransferpath", path);
+            labelDownloadPath.setText(path);
         }
     }
 

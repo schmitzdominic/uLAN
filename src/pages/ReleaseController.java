@@ -1,6 +1,6 @@
 package pages;
 
-import info.Tool;
+import helpers.Tool;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -40,16 +40,16 @@ public class ReleaseController implements Initializable {
     String release;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.initListeners();
-        this.setButtonIcons();
-        this.setReleases();
+    public void initialize(final URL location, final ResourceBundle resources) {
+        initListeners();
+        setButtonIcons();
+        setReleases();
     }
 
     private void initListeners() {
-        this.listReleases.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        listReleases.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String value) {
+            public void changed(final ObservableValue<? extends String> observable, final String oldValue, final String value) {
                 release = value;
                 buttonRemove.setVisible(true);
             }
@@ -57,30 +57,30 @@ public class ReleaseController implements Initializable {
     }
 
     private void setButtonIcons() {
-        this.imageButtonAdd.setImage(new Image("/icons/baseline_add_white_18dp.png"));
-        this.imageButtonRemove.setImage(new Image("/icons/baseline_delete_outline_white_18dp.png"));
+        imageButtonAdd.setImage(new Image("/icons/baseline_add_white_18dp.png"));
+        imageButtonRemove.setImage(new Image("/icons/baseline_delete_outline_white_18dp.png"));
 
-        Tool.resizeImage(this.imageButtonAdd);
-        Tool.resizeImage(this.imageButtonRemove);
+        Tool.resizeImage(imageButtonAdd);
+        Tool.resizeImage(imageButtonRemove);
     }
 
     private void setReleases() {
-        this.listReleases.getItems().clear();
+        listReleases.getItems().clear();
         if (ReleasesNotEmpty(registry.getReleases())) {
-            this.listReleases.getItems().addAll(registry.getReleases());
-            this.setTooltip();
+            listReleases.getItems().addAll(registry.getReleases());
+            setTooltip();
         }
     }
 
     private void setTooltip() {
-        this.listReleases.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        listReleases.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
-            public ListCell<String> call(ListView<String> param) {
+            public ListCell<String> call(final ListView<String> param) {
                 final Label leadLbl = new Label();
                 final Tooltip tooltip = new Tooltip();
                 return new ListCell<String>() {
                     @Override
-                    public void updateItem(String item, boolean empty) {
+                    public void updateItem(final String item, final boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
                             leadLbl.setText(item);
@@ -94,7 +94,7 @@ public class ReleaseController implements Initializable {
         });
     }
 
-    private boolean ReleasesNotEmpty(String[] releases) {
+    private boolean ReleasesNotEmpty(final String[] releases) {
         if (releases == null) {
             return false;
         }
@@ -107,32 +107,32 @@ public class ReleaseController implements Initializable {
         }
     }
 
-    public void buttonAdd(ActionEvent event) {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        File selectedDirectory = directoryChooser.showDialog(MainController.releaseStage);
+    public void buttonAdd(final ActionEvent event) {
+        final DirectoryChooser directoryChooser = new DirectoryChooser();
+        final File selectedDirectory = directoryChooser.showDialog(MainController.releaseStage);
         if (selectedDirectory != null) {
-            String path = selectedDirectory.getAbsolutePath();
-            boolean added = registry.addRelease(path);
+            final String path = selectedDirectory.getAbsolutePath();
+            final boolean added = registry.addRelease(path);
             if (added) {
-                this.setReleases();
+                setReleases();
             }
         }
     }
 
-    public void buttonRemove(ActionEvent event) {
-        boolean removed = registry.removeRelease(this.release);
+    public void buttonRemove(final ActionEvent event) {
+        final boolean removed = registry.removeRelease(release);
         if (removed) {
-            this.setReleases();
+            setReleases();
             if (!ReleasesNotEmpty(registry.getReleases())) {
-                this.buttonRemove.setVisible(false);
-                this.listReleases.getItems().clear();
+                buttonRemove.setVisible(false);
+                listReleases.getItems().clear();
             } else {
-                this.listReleases.getSelectionModel().select(0);
+                listReleases.getSelectionModel().select(0);
             }
         }
     }
 
-    public void buttonOk(ActionEvent event) {
+    public void buttonOk(final ActionEvent event) {
         MainController.releaseStage.getOnCloseRequest().handle(new WindowEvent(
                 MainController.releaseStage, WindowEvent.WINDOW_CLOSE_REQUEST
         ));

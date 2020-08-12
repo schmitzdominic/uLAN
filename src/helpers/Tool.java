@@ -1,5 +1,6 @@
-package info;
+package helpers;
 
+import entities.Release;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,16 +21,13 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static info.Info.getSettings;
+import static helpers.Info.getSettings;
 
 public class Tool {
 
@@ -37,23 +35,23 @@ public class Tool {
 
     public static ObservableList<Download> downloads;
 
-    public static void addDownload(String id, String path) {
+    public static void addDownload(final String id, final String path) {
         if (Tool.downloads == null) {
             Tool.downloads = FXCollections.observableArrayList();
         }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if (!Tool.downloadExist(id, path)){
+                if (!Tool.downloadExist(id, path)) {
                     Tool.downloads.add(new Download(id, path));
                 }
             }
         });
     }
 
-    public static boolean downloadExist(String id, String path) {
+    public static boolean downloadExist(final String id, final String path) {
         if (Tool.downloads != null) {
-            for (Download download : Tool.downloads) {
+            for (final Download download : Tool.downloads) {
                 if (download.getId().equals(id) & download.getPath().equals(path)) {
                     return true;
                 }
@@ -62,13 +60,13 @@ public class Tool {
         return false;
     }
 
-    public static void removeDownload(String id, String path) {
+    public static void removeDownload(final String id, final String path) {
         if (Tool.downloads != null) {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     int index = 0;
-                    for (Download download : Tool.downloads) {
+                    for (final Download download : Tool.downloads) {
                         if (download.getId().equals(id) & download.getPath().equals(path)) {
                             break;
                         }
@@ -82,25 +80,25 @@ public class Tool {
         }
     }
 
-    public static ImageView resizeImage(ImageView image){
+    public static ImageView resizeImage(final ImageView image) {
         return resizeImage(image, 22, 22);
     }
 
-    public static ImageView resizeImage(ImageView image, int width, int height){
+    public static ImageView resizeImage(final ImageView image, final int width, final int height) {
         image.setFitHeight(height);
         image.setFitWidth(width);
         return image;
     }
 
-    public static Map<String, String> convertWithStream(String mapAsString) {
-        Map<String, String> map = Arrays.stream(mapAsString.split(","))
+    public static Map<String, String> convertWithStream(final String mapAsString) {
+        final Map<String, String> map = Arrays.stream(mapAsString.split(","))
                 .map(entry -> entry.split("="))
                 .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
         return map;
     }
 
-    public static String humanReadableByteCountSI(long bytes) {
-        String s = bytes < 0 ? "-" : "";
+    public static String humanReadableByteCountSI(final long bytes) {
+        final String s = bytes < 0 ? "-" : "";
         long b = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
         return b < 1000L ? bytes + " B"
                 : b < 999_950L ? String.format("%s%.1f kB", s, b / 1e3)
@@ -111,10 +109,10 @@ public class Tool {
                 : String.format("%s%.1f EB", s, b / 1e6);
     }
 
-    public static String humanReadableTime(long sec) {
-        long hours = sec / 3600;
-        long minutes = (sec % 3600) / 60;
-        long seconds = sec % 60;
+    public static String humanReadableTime(final long sec) {
+        final long hours = sec / 3600;
+        final long minutes = (sec % 3600) / 60;
+        final long seconds = sec % 60;
 
         if (hours == 0 & minutes == 0) {
             return String.format("%02d Sek.", seconds);
@@ -125,43 +123,43 @@ public class Tool {
         }
     }
 
-    public static Socket isOnline(InetAddress ip, int port){
-        try{
+    public static Socket isOnline(final InetAddress ip, final int port) {
+        try {
             return new Socket(ip, port);
-        } catch (IOException x){
+        } catch (final IOException x) {
             return null;
         }
     }
 
-    public static void sendMessage(Socket socket, String message) {
+    public static void sendMessage(final Socket socket, final String message) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            final PrintWriter out = new PrintWriter(socket.getOutputStream());
             out.print(message + "\n");
             out.flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static PrintWriter sendMessage(Socket socket, HashMap<String, String> message) {
+    public static PrintWriter sendMessage(final Socket socket, final HashMap<String, String> message) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            final PrintWriter out = new PrintWriter(socket.getOutputStream());
             out.println(message);
             out.flush();
             return out;
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static void sendMessage(Client client, HashMap<String, String> message) {
+    public static void sendMessage(final Client client, final HashMap<String, String> message) {
         if (client != null) {
             if (client.getSocket() != null) {
                 if (client.getOut() == null) {
                     try {
                         client.setOut(new PrintWriter(client.getSocket().getOutputStream()));
-                    } catch (IOException e) {
+                    } catch (final IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -172,53 +170,64 @@ public class Tool {
     }
 
     public static Map<String, String> convertMessage(String message) {
-        message = message.replaceAll("[{} ]","");
+        message = message.replaceAll("[{} ]", "");
         return Tool.convertWithStream(message);
     }
 
-    public static HashMap<String, String> convertReleasesString(String releases) {
-        HashMap<String, String> map = new HashMap<>();
-        String[] reArray = releases.split(";");
-        for(int i = 0; i < reArray.length; i++) {
-            String[] folderNames = reArray[i].split("\\\\");
-            String folder = folderNames[folderNames.length-1];
+    public static HashMap<String, String> convertReleasesString(final String releases) {
+        final HashMap<String, String> map = new HashMap<>();
+        final String[] reArray = releases.split(";");
+        for (int i = 0; i < reArray.length; i++) {
+            final String[] folderNames = reArray[i].split("\\\\");
+            final String folder = folderNames[folderNames.length - 1];
             map.put(reArray[i], folder);
         }
         return map;
     }
 
-    public static void sendReleasesChange(ObservableMap<String, Client> clientList) {
-        for (Client client : clientList.values()) {
+    public static ArrayList<Release> convertReleasesStringToReleaseList(final String releases) {
+        final ArrayList<Release> list = new ArrayList<>();
+        final String[] reArray = releases.split(";");
+        for (int i = 0; i < reArray.length; i++) {
+            final String[] folderNames = reArray[i].split("\\\\");
+            final String folder = folderNames[folderNames.length - 1];
+            list.add(new Release(reArray[i], folder));
+        }
+        return list;
+    }
+
+    public static void sendReleasesChange(final ObservableMap<String, Client> clientList) {
+        for (final Client client : clientList.values()) {
             if (client.getSocket() != null) {
                 sendMessage(client, Info.getReleasesChangedPackage());
             }
         }
     }
 
-    public static void provideFolderToClient(Socket communicationSocket, File path) {
+    public static void provideFolderToClient(final Socket communicationSocket, final File path) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
 
-                    ServerSocket listener = Tool.getFreeServerSocket();
+                    final ServerSocket listener = Tool.getFreeServerSocket();
 
                     if (listener != null) {
-                        long folderSize = calculateFolderSize(path);
+                        final long folderSize = Tool.calculateFolderSize(path);
 
                         // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
                         System.out.println("USE PORT: " + listener.getLocalPort());
                         Tool.sendMessage(communicationSocket, Info.getDownloadFolderPackage(listener.getLocalPort(), path.getAbsolutePath(), folderSize));
 
-                        Socket socket = listener.accept();
+                        final Socket socket = listener.accept();
 
                         if (path.exists()) {
 
                             try {
-                                ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
-                                sendFileOutput(zipOpStream, path);
+                                final ZipOutputStream zipOpStream = new ZipOutputStream(socket.getOutputStream());
+                                Tool.sendFileOutput(zipOpStream, path);
                                 zipOpStream.flush();
-                            } catch (Exception e) {
+                            } catch (final Exception e) {
                                 System.out.println("OTHER SIDE STOPED DOWNLOAD!");
                             } finally {
                                 socket.close();
@@ -226,10 +235,10 @@ public class Tool {
                             }
                         } else {
                             // TODO: Exception handling! REMOVE SOP!
-                            System.out.println("Folder to read does not exist ["+path.getAbsolutePath()+"]");
+                            System.out.println("Folder to read does not exist [" + path.getAbsolutePath() + "]");
                         }
                     }
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     System.out.println("UPLOAD STOPED");
                     e.printStackTrace();
                 }
@@ -237,17 +246,17 @@ public class Tool {
         }).start();
     }
 
-    public static void sendFileOutput(ZipOutputStream zipOpStream, File outFile) throws Exception {
-        String relativePath = outFile.getAbsoluteFile().getParentFile().getAbsolutePath();
+    public static void sendFileOutput(final ZipOutputStream zipOpStream, File outFile) throws Exception {
+        final String relativePath = outFile.getAbsoluteFile().getParentFile().getAbsolutePath();
         System.out.println("relativePath[" + relativePath + "]");
         outFile = outFile.getAbsoluteFile();
         sendFolder(zipOpStream, outFile, relativePath);
     }
 
-    public static void sendFolder(ZipOutputStream zipOpStream, File folder, String relativePath) throws Exception {
-        File[] filesList = folder.listFiles();
+    public static void sendFolder(final ZipOutputStream zipOpStream, final File folder, final String relativePath) throws Exception {
+        final File[] filesList = folder.listFiles();
         assert filesList != null;
-        for (File file : filesList) {
+        for (final File file : filesList) {
             if (file.isDirectory()) {
                 sendFolder(zipOpStream, file, relativePath);
             } else {
@@ -256,33 +265,33 @@ public class Tool {
         }
     }
 
-    public static void sendFile(ZipOutputStream zipOpStream, File file, String relativePath) throws Exception {
-        String absolutePath = file.getAbsolutePath();
+    public static void sendFile(final ZipOutputStream zipOpStream, final File file, final String relativePath) throws Exception {
+        final String absolutePath = file.getAbsolutePath();
         String zipEntryFileName = absolutePath;
-        int index = absolutePath.indexOf(relativePath);
-        if(absolutePath.startsWith(relativePath)){
+        final int index = absolutePath.indexOf(relativePath);
+        if (absolutePath.startsWith(relativePath)) {
             zipEntryFileName = absolutePath.substring(relativePath.length());
-            if(zipEntryFileName.startsWith(File.separator)){
+            if (zipEntryFileName.startsWith(File.separator)) {
                 zipEntryFileName = zipEntryFileName.substring(1);
             }
-            System.out.println("zipEntryFileName:::"+relativePath.length()+"::"+zipEntryFileName);
-        }else{
+            System.out.println("zipEntryFileName:::" + relativePath.length() + "::" + zipEntryFileName);
+        } else {
             throw new Exception("Invalid Absolute Path");
         }
 
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-        byte[] fileByte = new byte[MAX_READ_SIZE];
+        final byte[] fileByte = new byte[MAX_READ_SIZE];
         int readBytes = 0;
-        CRC32 crc = new CRC32();
+        final CRC32 crc = new CRC32();
         while (0 != (readBytes = bis.read(fileByte))) {
-            if(-1 == readBytes){
+            if (-1 == readBytes) {
                 break;
             }
             crc.update(fileByte, 0, readBytes);
         }
         bis.close();
 
-        ZipEntry zipEntry = new ZipEntry(zipEntryFileName);
+        final ZipEntry zipEntry = new ZipEntry(zipEntryFileName);
         zipEntry.setMethod(ZipEntry.STORED);
         zipEntry.setCompressedSize(file.length());
         zipEntry.setSize(file.length());
@@ -290,7 +299,7 @@ public class Tool {
         zipOpStream.putNextEntry(zipEntry);
         bis = new BufferedInputStream(new FileInputStream(file));
         while (0 != (readBytes = bis.read(fileByte))) {
-            if(-1 == readBytes){
+            if (-1 == readBytes) {
                 break;
             }
             zipOpStream.write(fileByte, 0, readBytes);
@@ -299,10 +308,10 @@ public class Tool {
 
     }
 
-    public static long calculateFolderSize(File directory) {
+    public static long calculateFolderSize(final File directory) {
         long length = 0;
         if (directory != null) {
-            for (File file : Objects.requireNonNull(directory.listFiles())) {
+            for (final File file : Objects.requireNonNull(directory.listFiles())) {
                 if (file.isFile())
                     length += file.length();
                 else
@@ -312,25 +321,25 @@ public class Tool {
         return length;
     }
 
-    public static void openFileTransferWindow(Initializable sStage, File path, String ip, Map<String, String> info) {
+    public static void openFileTransferWindow(final Initializable sStage, final File path, final String ip, final Map<String, String> info) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 try {
-                    HashMap<String, String> settings = getSettings();
+                    final HashMap<String, String> settings = getSettings();
 
-                    FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/pages/file_transfer_window.fxml"));
-                    Parent root1 = fxmlLoader.load();
+                    final FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/pages/file_transfer_window.fxml"));
+                    final Parent root1 = fxmlLoader.load();
 
-                    Stage fStage = new Stage();
+                    final Stage fStage = new Stage();
                     fStage.setTitle("Datenübertragung");
                     fStage.getIcons().add(new Image(settings.get("defaulticon")));
                     fStage.setResizable(false);
                     fStage.setScene(new Scene(root1, 400, 170));
-                    FileTransferController controller = fxmlLoader.<FileTransferController>getController();
+                    final FileTransferController controller = fxmlLoader.<FileTransferController>getController();
                     controller.initData(path, fStage, ip, info);
                     fStage.show();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -338,14 +347,15 @@ public class Tool {
     }
 
     public static ServerSocket getFreeServerSocket() {
-        Registry registry = new Registry();
-        int startPort = Integer.parseInt(registry.getProperties().get("fileport"));
-        int endPort = startPort + 1000;
+        final Registry registry = new Registry();
+        final int startPort = Integer.parseInt(registry.getProperties().get("fileport"));
+        final int endPort = startPort + 1000;
 
-        for (int i=startPort; i < endPort; i++) {
+        for (int i = startPort; i < endPort; i++) {
             try {
                 return new ServerSocket(i);
-            } catch (IOException ignored) {}
+            } catch (final IOException ignored) {
+            }
         }
 
         return null;

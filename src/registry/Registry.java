@@ -1,6 +1,8 @@
 package registry;
 
-import info.Info;
+import entities.Release;
+import helpers.Info;
+import helpers.Tool;
 import network.Client;
 
 import java.io.File;
@@ -36,63 +38,64 @@ public class Registry {
     /**
      * Default Contructor
      */
-    public Registry(){
-        this.settings = Preferences.userRoot().node(this.path);
+    public Registry() {
+        settings = Preferences.userRoot().node(path);
     }
 
     /**
      * Get the Properties
+     *
      * @return list of settings HashMap<String, String>
      */
-    public HashMap<String,String> getProperties(){
+    public HashMap<String, String> getProperties() {
 
-        if(!this.checkIfPropertiesExist("defaultfiletransferpath")){
-            File path = new File(this.DEFAULTTRANSFERPATH);
+        if (!checkIfPropertiesExist("defaultfiletransferpath")) {
+            final File path = new File(DEFAULTTRANSFERPATH);
             if (path.isDirectory()) {
-                this.setSetting("properties", "defaultfiletransferpath", this.DEFAULTTRANSFERPATH);
+                setSetting("properties", "defaultfiletransferpath", DEFAULTTRANSFERPATH);
             } else {
-                this.setSetting("properties", "defaultfiletransferpath", System.getProperty("user.home"));
+                setSetting("properties", "defaultfiletransferpath", System.getProperty("user.home"));
             }
         }
-        if(!this.checkIfPropertiesExist("defaulticon")){
-            this.setSetting("properties", "defaulticon", this.DEFAULTICON);
+        if (!checkIfPropertiesExist("defaulticon")) {
+            setSetting("properties", "defaulticon", DEFAULTICON);
         }
-        if(!this.checkIfPropertiesExist("windowicon")){
-            this.setSetting("properties", "windowicon", this.WINDOWICON);
+        if (!checkIfPropertiesExist("windowicon")) {
+            setSetting("properties", "windowicon", WINDOWICON);
         }
-        if(!this.checkIfPropertiesExist("defaultmessage")){
-            this.setSetting("properties", "defaultmessage", "" + this.DEFAULTMESSAGE);
+        if (!checkIfPropertiesExist("defaultmessage")) {
+            setSetting("properties", "defaultmessage", "" + DEFAULTMESSAGE);
         }
-        if(!this.checkIfPropertiesExist("id")){
-            this.setSetting("properties", "id", this.getId());
+        if (!checkIfPropertiesExist("id")) {
+            setSetting("properties", "id", getId());
         }
-        if(!this.checkIfPropertiesExist("port")){
-            this.setSetting("properties", "port", "" + this.PORT);
+        if (!checkIfPropertiesExist("port")) {
+            setSetting("properties", "port", "" + PORT);
         }
-        if(!this.checkIfPropertiesExist("fileport")){
-            this.setSetting("properties", "fileport", "" + this.FILEPORT);
+        if (!checkIfPropertiesExist("fileport")) {
+            setSetting("properties", "fileport", "" + FILEPORT);
         }
-        if(!this.checkIfPropertiesExist("clientscount")){
-            this.setSetting("properties", "clientscount", "" + this.CLIENTSCOUNT);
+        if (!checkIfPropertiesExist("clientscount")) {
+            setSetting("properties", "clientscount", "" + CLIENTSCOUNT);
         }
-        if(!this.checkIfPropertiesExist("autostart")){
-            this.setSetting("properties", "autostart", "" + this.AUTOSTART);
+        if (!checkIfPropertiesExist("autostart")) {
+            setSetting("properties", "autostart", "" + AUTOSTART);
         }
-        if(!this.checkIfPropertiesExist("notifications")){
-            this.setSetting("properties", "notifications", "" + this.NOTIFICATIONS);
+        if (!checkIfPropertiesExist("notifications")) {
+            setSetting("properties", "notifications", "" + NOTIFICATIONS);
         }
 
         try {
-            this.settings = Preferences.userRoot().node(path+"/properties");
+            settings = Preferences.userRoot().node(path + "/properties");
 
-            HashMap<String,String> x = new HashMap<>();
+            final HashMap<String, String> x = new HashMap<>();
 
-            for (String key : this.settings.keys()){
+            for (final String key : settings.keys()) {
                 x.put(key, settings.get(key, ""));
             }
             return x;
 
-        } catch (BackingStoreException e) {
+        } catch (final BackingStoreException e) {
             e.printStackTrace();
             return null;
         }
@@ -104,37 +107,36 @@ public class Registry {
         String host = "";
         String ip = "";
 
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        final Date date = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         tString = sdf.format(date);
 
         host = Info.getHostname();
         ip = Info.getIp();
 
-        if(host == null) {
+        if (host == null) {
             host = "NA";
         }
 
-        if(ip == null) {
+        if (ip == null) {
             ip = "NA";
         }
 
-        return this.encryptString(String.format("%s;%s;%s", tString, host, ip));
+        return encryptString(String.format("%s;%s;%s", tString, host, ip));
     }
 
-    public String encryptString(String input)
-    {
+    public String encryptString(final String input) {
         try {
             // getInstance() method is called with algorithm SHA-512
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            final MessageDigest md = MessageDigest.getInstance("SHA-256");
 
             // digest() method is called
             // to calculate message digest of the input string
             // returned as array of byte
-            byte[] messageDigest = md.digest(input.getBytes());
+            final byte[] messageDigest = md.digest(input.getBytes());
 
             // Convert byte array into signum representation
-            BigInteger no = new BigInteger(1, messageDigest);
+            final BigInteger no = new BigInteger(1, messageDigest);
 
             // Convert message digest into hex value
             String hashtext = no.toString(16);
@@ -149,53 +151,54 @@ public class Registry {
         }
 
         // For specifying wrong message digest algorithms
-        catch (NoSuchAlgorithmException e) {
+        catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
      * Check if the Software starts the first time
+     *
      * @return true - not the first time / false - yes the first time
      */
-    public boolean checkIfPropertiesExist(String setting){
+    public boolean checkIfPropertiesExist(final String setting) {
         try {
-            if(setting.equals("root")){
-                return this.settings.nodeExists(this.path+"/properties");
-            }
-            else{
-                this.settings = Preferences.userRoot().node(this.path+"/properties");
-                for(String x : this.settings.keys()){
-                    if(x.equals(setting)){
+            if (setting.equals("root")) {
+                return settings.nodeExists(path + "/properties");
+            } else {
+                settings = Preferences.userRoot().node(path + "/properties");
+                for (final String x : settings.keys()) {
+                    if (x.equals(setting)) {
                         return true;
                     }
                 }
-                this.settings = Preferences.userRoot().node(this.path);
+                settings = Preferences.userRoot().node(path);
                 return false;
             }
 
-        } catch (BackingStoreException e) {
+        } catch (final BackingStoreException e) {
             return false;
         }
     }
 
     /**
      * Get one Setting
+     *
      * @param jobName String
-     * @param key String
+     * @param key     String
      * @return one Setting as String
      */
-    public String getSetting(String jobName, String key){
+    public String getSetting(final String jobName, String key) {
         try {
-            this.createJob(jobName.toLowerCase());
+            createJob(jobName.toLowerCase());
             key = key.toLowerCase();
 
-            for (String value : settings.keys()){
-                if(value.equals(key))
+            for (final String value : settings.keys()) {
+                if (value.equals(key))
                     return settings.get(value, "");
             }
             return null;
-        } catch (BackingStoreException e) {
+        } catch (final BackingStoreException e) {
             e.printStackTrace();
             return null;
         }
@@ -203,59 +206,61 @@ public class Registry {
 
     /**
      * Set one setting
+     *
      * @param jobName String
-     * @param set String
+     * @param set     String
      * @param content String NOTE: If it is a path please use / instead of \
      */
-    public void setSetting(String jobName, String set, String content){
+    public void setSetting(String jobName, String set, String content) {
         jobName = jobName.toLowerCase();
         set = set.toLowerCase();
         content = content.toLowerCase();
-        this.createJob(jobName);
-        this.settings.put(set, content);
+        createJob(jobName);
+        settings.put(set, content);
     }
 
     /**
      * Create a Job and set this.settings to the job
+     *
      * @param name String
      */
-    public void createJob(String name){
+    public void createJob(String name) {
         name = name.toLowerCase();
-        this.settings = Preferences.userRoot().node(path+"/"+name);
+        settings = Preferences.userRoot().node(path + "/" + name);
     }
 
-    public boolean checkIfClientExists(Client client){
+    public boolean checkIfClientExists(final Client client) {
         try {
-            String clientName = path+"/"+this.clients+"/"+client.getId();
+            final String clientName = path + "/" + clients + "/" + client.getId();
             return Preferences.userRoot().nodeExists(clientName.toLowerCase());
-        } catch (BackingStoreException e) {
+        } catch (final BackingStoreException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-    public void addClient(Client client){
-        String jobName=String.format("%s/%s", this.clients, client.getId()).toLowerCase();
-        if(client.getId() != null){
-            this.setSetting(jobName, "id", client.getId());
+    public void addClient(final Client client) {
+        final String jobName = String.format("%s/%s", clients, client.getId()).toLowerCase();
+        if (client.getId() != null) {
+            setSetting(jobName, "id", client.getId());
         }
 
-        if(client.getHostname() != null){
-            this.setSetting(jobName, "hostname", client.getHostname());
+        if (client.getHostname() != null) {
+            setSetting(jobName, "hostname", client.getHostname());
         }
 
-        if(client.getListName() != null){
-            this.setSetting(jobName, "listname", client.getListName());
+        if (client.getListName() != null) {
+            setSetting(jobName, "listname", client.getListName());
         }
 
-        if(client.getIp() != null){
-            this.setSetting(jobName, "ip", client.getIp());
+        if (client.getIp() != null) {
+            setSetting(jobName, "ip", client.getIp());
         }
     }
 
     public boolean addRelease(String path) {
         path = path.toLowerCase();
-        String jobName=String.format("%s", this.releases).toLowerCase();
+        final String jobName = String.format("%s", releases).toLowerCase();
         String releases = getSetting(jobName, "releases");
         if (releases == null) {
             setSetting(jobName, "releases", path);
@@ -273,12 +278,12 @@ public class Registry {
 
     public boolean removeRelease(String path) {
         path = path.toLowerCase();
-        String jobName=String.format("%s", this.releases).toLowerCase();
-        String releases = getSetting(jobName, "releases");
+        final String jobName = String.format("%s", releases).toLowerCase();
+        final String releases = getSetting(jobName, "releases");
         if (releases != null) {
             if (releases.contains(path)) {
                 String[] relArray = releases.split(";");
-                List<String> list = new ArrayList<String>(Arrays.asList(relArray));
+                final List<String> list = new ArrayList<String>(Arrays.asList(relArray));
                 list.remove(path);
                 relArray = list.toArray(new String[0]);
                 setSetting(jobName, "releases", String.join(";", relArray));
@@ -289,21 +294,25 @@ public class Registry {
     }
 
     public String[] getReleases() {
-        String jobName=String.format("%s", this.releases).toLowerCase();
+        final String jobName = String.format("%s", releases).toLowerCase();
         String releases = getSetting(jobName, "releases");
         if (releases == null) {
             return null;
         } else {
             if (releases.startsWith(";")) {
-                this.removeRelease("");
+                removeRelease("");
                 releases = getSetting(jobName, "releases");
             }
             return releases.split(";");
         }
     }
 
-    public String getReleaseNormal(String releaseWithoutSpaces) {
-        for(String p : this.getReleases()) {
+    public List<Release> getReleasesList() {
+        return Tool.convertReleasesStringToReleaseList(getReleasesAsString());
+    }
+
+    public String getReleaseNormal(final String releaseWithoutSpaces) {
+        for (final String p : getReleases()) {
             if (p.replace(" ", "").equals(releaseWithoutSpaces)) {
                 return p;
             }
@@ -311,8 +320,8 @@ public class Registry {
         return null;
     }
 
-    public boolean releaseExists(String path) {
-        for(String p : this.getReleases()) {
+    public boolean releaseExists(final String path) {
+        for (final String p : getReleases()) {
             if (p.replace(" ", "").equals(path.replace(" ", ""))) {
                 return true;
             }
@@ -321,34 +330,34 @@ public class Registry {
     }
 
     public String getReleasesAsString() {
-        String jobName=String.format("%s", this.releases).toLowerCase();
+        final String jobName = String.format("%s", releases).toLowerCase();
         String releases = getSetting(jobName, "releases");
         if (releases == null) {
             return null;
         } else {
             if (releases.startsWith(";")) {
-                this.removeRelease("");
+                removeRelease("");
                 releases = getSetting(jobName, "releases");
             }
             return releases;
         }
     }
 
-    public void removeClient(Client client){
-        String name = client.getId();
-        this.settings = Preferences.userRoot().node(path+"/clients/"+name);
+    public void removeClient(final Client client) {
+        final String name = client.getId();
+        settings = Preferences.userRoot().node(path + "/clients/" + name);
         try {
-            this.settings.removeNode();
-        } catch (BackingStoreException e) {
+            settings.removeNode();
+        } catch (final BackingStoreException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void updateClientSettings(Client client){
-        String jobName=String.format("%s/%s", this.clients, client.getId()).toLowerCase();
-        client.setHostname(this.getSetting(jobName, "hostname"));
-        client.setListName(this.getSetting(jobName, "listname"));
-        client.setIp(this.getSetting(jobName, "ip"));
+    public void updateClientSettings(final Client client) {
+        final String jobName = String.format("%s/%s", clients, client.getId()).toLowerCase();
+        client.setHostname(getSetting(jobName, "hostname"));
+        client.setListName(getSetting(jobName, "listname"));
+        client.setIp(getSetting(jobName, "ip"));
     }
 }
