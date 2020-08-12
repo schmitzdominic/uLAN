@@ -106,6 +106,8 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     public static Initializable init;
     public static Stage releaseStage;
     public static Stage infoStage;
+    public static Stage settingsStage;
+    public static Stage historyStage;
 
     private Clients clients;
     private Client client;
@@ -414,14 +416,14 @@ public class MainController implements ClientFoundListener, Initializable, Clien
             final HashMap<String, String> settings = getSettings();
             final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pages/settings_window.fxml"));
             final Parent root = fxmlLoader.load();
-            infoStage = new Stage();
-            infoStage.initModality(Modality.WINDOW_MODAL);
-            infoStage.setTitle("Einstellungen");
-            infoStage.getIcons().add(new Image(settings.get("defaulticon")));
-            infoStage.setResizable(false);
-            infoStage.initOwner(Main.main);
-            infoStage.setScene(new Scene(root, 500, 300));
-            infoStage.showAndWait();
+            settingsStage = new Stage();
+            settingsStage.initModality(Modality.WINDOW_MODAL);
+            settingsStage.setTitle("Einstellungen");
+            settingsStage.getIcons().add(new Image(settings.get("defaulticon")));
+            settingsStage.setResizable(false);
+            settingsStage.initOwner(Main.main);
+            settingsStage.setScene(new Scene(root, 500, 300));
+            settingsStage.showAndWait();
         } catch (final IOException e) {
             e.printStackTrace();
         }
@@ -432,14 +434,14 @@ public class MainController implements ClientFoundListener, Initializable, Clien
             final HashMap<String, String> settings = getSettings();
             final FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/pages/history_window.fxml"));
             final Parent root = fxmlLoader.load();
-            infoStage = new Stage();
-            infoStage.initModality(Modality.WINDOW_MODAL);
-            infoStage.setTitle("Historie");
-            infoStage.getIcons().add(new Image(settings.get("defaulticon")));
-            infoStage.setResizable(false);
-            infoStage.initOwner(Main.main);
-            infoStage.setScene(new Scene(root, 500, 300));
-            infoStage.showAndWait();
+            historyStage = new Stage();
+            historyStage.initModality(Modality.WINDOW_MODAL);
+            historyStage.setTitle("Historie");
+            historyStage.getIcons().add(new Image(settings.get("defaulticon")));
+            historyStage.setResizable(false);
+            historyStage.initOwner(Main.main);
+            historyStage.setScene(new Scene(root, 500, 300));
+            historyStage.showAndWait();
         } catch (final IOException e) {
             e.printStackTrace();
         }
