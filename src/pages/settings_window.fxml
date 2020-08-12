@@ -20,8 +20,10 @@
         </Label>
         <Label fx:id="labelDownloadPath" styleClass="normal_text" text="DOWNLOAD_PATH" AnchorPane.leftAnchor="10.0"
                AnchorPane.topAnchor="110.0"/>
-        <Button fx:id="buttonOk1" defaultButton="true" layoutX="20.0" layoutY="426.0" mnemonicParsing="false"
-                onAction="#buttonOk" styleClass="default-button" stylesheets="@../style/win10.css" text="Ändern"
+        <Button fx:id="buttonChooseDownloadPath" defaultButton="true" layoutX="20.0" layoutY="426.0"
+                mnemonicParsing="false"
+                onAction="#buttonChooseDownloadPath" styleClass="default-button" stylesheets="@../style/win10.css"
+                text="Ändern"
                 AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="95.0"/>
         <Button fx:id="buttonOk" defaultButton="true" layoutX="14.0" layoutY="461.0" mnemonicParsing="false"
                 onAction="#buttonOk" styleClass="default-button" stylesheets="@../style/win10.css" text="OK"

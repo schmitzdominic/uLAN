@@ -97,7 +97,7 @@
                   AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="70.0"/>
         <Button fx:id="buttonRefresh" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false"
                 onAction="#buttonRefresh" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button"
-                stylesheets="@../style/win10.css" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="30.0">
+                stylesheets="@../style/win10.css" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="25.0">
             <graphic>
                 <ImageView fx:id="imageButtonRefresh" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
                            preserveRatio="true"/>
