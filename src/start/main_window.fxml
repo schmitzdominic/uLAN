@@ -6,7 +6,7 @@
 <?import javafx.scene.shape.Line?>
 <AnchorPane fx:id="mainWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="520.0" prefWidth="650.0" styleClass="main_list_background" stylesheets="@../style/win10.css"
-            xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="start.MainController">
     <children>
         <AnchorPane prefHeight="50.0" prefWidth="200.0" styleClass="main_client_info_background"
@@ -113,7 +113,8 @@
         </Button>
         <Button fx:id="buttonInfo" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false"
                 onAction="#buttonInfo" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button"
-                stylesheets="@../style/win10.css" AnchorPane.leftAnchor="77.0" AnchorPane.topAnchor="470.0">
+                stylesheets="@../style/win10.css" visible="false" AnchorPane.leftAnchor="77.0"
+                AnchorPane.topAnchor="470.0">
             <graphic>
                 <ImageView fx:id="imageButtonInfo" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
                            preserveRatio="true"/>
@@ -129,7 +130,8 @@
         </Button>
         <Button fx:id="buttonHistory" defaultButton="true" layoutX="185.0" layoutY="23.0" mnemonicParsing="false"
                 onAction="#buttonHistory" prefHeight="22.0" prefWidth="22.0" styleClass="icon_button"
-                stylesheets="@../style/win10.css" AnchorPane.leftAnchor="181.0" AnchorPane.topAnchor="470.0">
+                stylesheets="@../style/win10.css" visible="false" AnchorPane.leftAnchor="181.0"
+                AnchorPane.topAnchor="470.0">
             <graphic>
                 <ImageView fx:id="imageButtonHistory" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
                            preserveRatio="true"/>

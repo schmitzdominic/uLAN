@@ -186,6 +186,10 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         Tool.resizeImage(this.imageButtonInfo);
         Tool.resizeImage(this.imageButtonSettings);
         Tool.resizeImage(this.imageButtonHistory);
+
+        // TODO: Remove!
+        this.imageButtonInfo.setVisible(false);
+        this.imageButtonHistory.setVisible(false);
     }
 
     private void setOwnInformation() {
