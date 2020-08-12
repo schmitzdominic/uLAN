@@ -1,5 +1,6 @@
 package network;
 
+import entities.Payload;
 import helpers.Info;
 import helpers.Tool;
 import interfaces.ClientFoundListener;
@@ -63,7 +64,7 @@ public class Finder {
                                 // If the Client is available
                                 try {
                                     // Send a initialize Package
-                                    final PrintWriter out = Tool.sendMessage(socket, Info.getInitializePackage());
+                                    final PrintWriter out = Payload.INITIALIZE.send(socket);
                                     final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                     final String line;
                                     // Wait for the REPEAT Package
@@ -115,7 +116,7 @@ public class Finder {
     /**
      * Check if the Client is online or even not!
      *
-     * @param ip   InetAdress
+     * @param ip   InetAddress
      * @param port int
      * @return true - Online / false - Offline
      */

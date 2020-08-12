@@ -3,7 +3,10 @@ package entities;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import entities.payload.*;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.net.Socket;
 
 public enum Payload {
 
@@ -38,6 +41,18 @@ public enum Payload {
         try {
             return (T) defaultPayload.getClass().getConstructor(String.class).newInstance(json);
         } catch (final InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public PrintWriter send(final Socket socket) {
+        try {
+            final PrintWriter out = new PrintWriter(socket.getOutputStream());
+            out.println(serializeToJson());
+            out.flush();
+            return out;
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         return null;

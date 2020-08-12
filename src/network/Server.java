@@ -51,6 +51,7 @@ public class Server extends Thread {
             public void run() {
                 try {
                     final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    System.out.println("INPUT: " + in.readLine());
                     final Map<String, String> info = Tool.convertMessage(in.readLine());
                     final String mode = info.get("MODE");
                     if (mode != null) {
