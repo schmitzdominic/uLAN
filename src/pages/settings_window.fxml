@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<AnchorPane prefHeight="170.0" prefWidth="500.0" styleClass="window_background" stylesheets="@../style/win10.css"
+            xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pages.SettingsController">
+    <children>
+        <Label layoutX="14.0" layoutY="14.0" styleClass="main_client_list_title" stylesheets="@../style/win10.css"
+               text="Einstellungen" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0"/>
+        <Button fx:id="buttonOk" defaultButton="true" layoutX="14.0" layoutY="461.0" mnemonicParsing="false"
+                onAction="#buttonOk" styleClass="default-button" stylesheets="@../style/win10.css" text="OK"
+                AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="10.0"/>
+    </children>
 
-<AnchorPane prefHeight="170.0" prefWidth="500.0" styleClass="window_background" stylesheets="@../style/win10.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pages.SettingsController">
+
 </AnchorPane>
