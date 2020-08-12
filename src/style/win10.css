@@ -1,7 +1,8 @@
 .main_list_background {
-    -fx-background-image: url("../resources/images/list.png");
+    /*-fx-background-image: url("../resources/images/list.png");*/
+    -fx-background-color: #000000;
     -fx-background-size: cover, auto;
-    -fx-content-display:right;
+    -fx-content-display: right;
 }
 
 .list-cell:filled:hover {
@@ -23,34 +24,34 @@
 }
 
 .list-view .scroll-bar:vertical {
-    -fx-background-color:transparent;
+    -fx-background-color: transparent;
 }
 
-.list-view .scroll-bar:vertical .track{
+.list-view .scroll-bar:vertical .track {
     -fx-background-color: transparent;
     -fx-background-radius: 0em;
 }
 
-.list-view .scroll-bar:vertical .thumb{
+.list-view .scroll-bar:vertical .thumb {
     -fx-background-insets: 0, 0, 0;
     -fx-background-radius: 0em;
 }
 
 .list-view .scroll-bar:horizontal {
-    -fx-background-color:transparent;
+    -fx-background-color: transparent;
 }
 
-.list-view .scroll-bar:horizontal .track{
+.list-view .scroll-bar:horizontal .track {
     -fx-background-color: transparent;
     -fx-background-radius: 0em;
 }
 
-.list-view .scroll-bar:horizontal .thumb{
+.list-view .scroll-bar:horizontal .thumb {
     -fx-background-insets: 0, 0, 0;
     -fx-background-radius: 0em;
 }
 
-.list-view:focused{
+.list-view:focused {
     -fx-background-color: transparent;
 }
 
@@ -90,12 +91,12 @@
 }
 
 .window_background {
-    -fx-background-color: #131313;
+    -fx-background-color: #000000;
 }
 
 .client_title {
     -fx-font-size: 20pt;
-    -fx-font-family: "Segoe UI Light";
+    -fx-font-family: "Segoe UI";
     -fx-font-weight: bold;
     -fx-text-fill: white;
     -fx-alignment: center-left;
@@ -124,6 +125,7 @@
 .download_title {
     -fx-font-size: 14pt;
     -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
     -fx-text-fill: orange;
     -fx-alignment: center-left;
     -fx-background-color: transparent;
@@ -139,16 +141,26 @@
 
 .normal_text {
     -fx-font-size: 12pt;
-    -fx-font-family: "Segoe UI Light";
+    -fx-font-family: "Segoe UI";
     -fx-text-fill: white;
     -fx-alignment: center-left;
     -fx-background-color: transparent;
 }
 
+.normal_description_text {
+    -fx-font-size: 10pt;
+    -fx-font-family: "Segoe UI";
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+    -fx-background-color: transparent;
+    -fx-font-weight: bold;
+}
+
 .main_client_list_title {
     -fx-font-size: 20pt;
-    -fx-font-family: "Segoe UI Light";
+    -fx-font-family: "Segoe UI";
     -fx-text-fill: white;
+    -fx-font-weight: bold;
     -fx-alignment: center-left;
 }
 
@@ -175,8 +187,6 @@
 
 .default-button {
     -fx-padding: 5 22 5 22;
-    -fx-border-color: #e2e2e2;
-    -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: #1d1d1d;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
