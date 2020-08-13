@@ -1,5 +1,6 @@
 package helpers;
 
+import entities.Payload;
 import entities.Release;
 import entities.payload.DownloadData;
 import javafx.application.Platform;
@@ -200,7 +201,7 @@ public class Tool {
     public static void sendReleasesChange(final ObservableMap<String, Client> clientList) {
         for (final Client client : clientList.values()) {
             if (client.getSocket() != null) {
-                sendMessage(client, Info.getReleasesChangedPackage());
+                Payload.RELEASE_CHANGE.sendTo(client);
             }
         }
     }

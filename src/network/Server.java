@@ -54,12 +54,13 @@ public class Server extends Thread {
                     final BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     final Income income = new Income(in.readLine());
                     if (income.getMode() != null) {
-                        if (income.getMode().equals(Payload.INITIALIZE)) {
-                            if (!income.getObject().getId().equals(id)) {
+                        switch (income.getMode()) {
+                            case INITIALIZE:
                                 initialize(income, socket);
-                            }
-                        } else if (income.getMode().equals(Payload.DISCONNECT)) {
-                            disconnectClient(income);
+                                break;
+                            case DISCONNECT:
+                                disconnectClient(income);
+                                break;
                         }
                     }
                 } catch (final IOException e) {

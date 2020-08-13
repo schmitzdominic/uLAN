@@ -1,5 +1,6 @@
 package network;
 
+import entities.Payload;
 import helpers.Info;
 import helpers.Tool;
 import interfaces.ClientList;
@@ -158,7 +159,7 @@ public class Clients implements ClientsCallback {
                     try {
                         final Socket socket = Tool.isOnline(InetAddress.getByName(client.getIp()), port);
                         if (socket != null) {
-                            Tool.sendMessage(client, Info.getDisconnectPackage());
+                            Payload.DISCONNECT.sendTo(client);
                         }
                     } catch (final UnknownHostException e) {
                         e.printStackTrace();
