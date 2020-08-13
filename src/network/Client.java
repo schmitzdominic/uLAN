@@ -165,6 +165,9 @@ public class Client {
                                     case DOWNLOAD_FOLDER:
                                         downloadFolder(income.getObject());
                                         break;
+                                    case DISCONNECT:
+                                        // Do nothing, because the server will do all for you ;)
+                                        break;
                                     default:
                                         // TODO: Throw an exception that the income is not valid!
                                 }

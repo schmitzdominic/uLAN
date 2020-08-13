@@ -230,7 +230,7 @@ public class Tool {
                                 Tool.sendFileOutput(zipOpStream, path);
                                 zipOpStream.flush();
                             } catch (final Exception e) {
-                                System.out.println("OTHER SIDE STOPED DOWNLOAD!");
+                                System.out.println("OTHER SIDE STOPPED DOWNLOAD!");
                             } finally {
                                 socket.close();
                                 listener.close();
