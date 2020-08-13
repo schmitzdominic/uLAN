@@ -1,5 +1,6 @@
 package entities.payload;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import helpers.Info;
@@ -34,6 +35,7 @@ public abstract class DefaultPayload {
         return hostName;
     }
 
+    @JsonIgnore
     public boolean isValid() {
         return getId() != null & getIp() != null & getHostName() != null;
     }
