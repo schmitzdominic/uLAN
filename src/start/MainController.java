@@ -359,7 +359,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
     public void buttonDownload(final ActionEvent event) {
         if (actualRelease != null) {
-            Payload.PROVIDE_DATA.sendTo(client);
+            Payload.PROVIDE_DATA.setParams(actualRelease).sendTo(client);
         }
     }
 
