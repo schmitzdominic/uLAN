@@ -159,7 +159,7 @@ public class Client {
                                     case RELEASE_CHANGE:
                                         releaseChange(income.getObject());
                                         break;
-                                    case PROVIDE:
+                                    case PROVIDE_DATA:
                                         provideData(income.getObject());
                                         break;
                                     case DOWNLOAD_FOLDER:
