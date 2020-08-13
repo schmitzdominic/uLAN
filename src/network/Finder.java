@@ -143,11 +143,11 @@ public class Finder {
     private void repeat(final String message, final Socket socket, final PrintWriter out) {
 
         try {
-            final InitRepeat repeat = (new Income(message)).getObject();
+            final Income income = new Income(message);
 
             if (clientListener != null) {
 
-                final Client client = buildClient(repeat);
+                final Client client = buildClient(income.getObject());
 
                 if (client != null) {
                     client.setSocket(socket);
