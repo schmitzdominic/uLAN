@@ -15,7 +15,7 @@ public enum Payload {
     INIT_REPEAT(new InitRepeat()),
     RELEASE_CHANGE(new ReleaseChange()),
     DOWNLOAD_FOLDER(new DownloadData()),
-    PROVIDE(new ProvideData()),
+    PROVIDE_DATA(new ProvideData()),
     DISCONNECT(new Disconnect());
 
     private final DefaultPayload defaultPayload;

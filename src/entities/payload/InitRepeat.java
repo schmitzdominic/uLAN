@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class InitRepeat extends IncludeReleases {
 
-    private final String mode = "REPEAT";
+    private final String mode = "INIT_REPEAT";
 
     public InitRepeat() {
         super();

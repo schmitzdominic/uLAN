@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class DownloadData extends DefaultPayload {
 
-    private final String mode = "DOWNLOAD";
+    private final String mode = "DOWNLOAD_FOLDER";
 
     private String port = null;
     private String folderName = null;

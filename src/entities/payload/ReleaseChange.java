@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ReleaseChange extends IncludeReleases {
 
-    private final String mode = "RELEASECHANGE";
+    private final String mode = "RELEASE_CHANGE";
 
     public ReleaseChange() {
         super();

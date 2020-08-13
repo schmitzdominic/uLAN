@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ProvideData extends DefaultPayload {
 
-    private final String mode = "PROVIDE";
+    private final String mode = "PROVIDE_DATA";
 
     private String path = null;
 
