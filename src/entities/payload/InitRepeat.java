@@ -34,7 +34,7 @@ public class InitRepeat extends IncludeReleases {
 
     @Override
     public boolean hasReleases() {
-        return hasReleases();
+        return super.hasReleases();
     }
 
     @Override

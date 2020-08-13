@@ -19,4 +19,9 @@ public abstract class IncludeReleases extends DefaultPayload {
     public void setReleases(final List<Release> releases) {
         this.releases = releases;
     }
+
+    @Override
+    public boolean hasReleases() {
+        return releases != null && releases.size() > 0;
+    }
 }
