@@ -219,7 +219,7 @@ public class Tool {
 
                         // TELL THE CLIENT THAT THE DOWNLOAD CAN BEGIN
                         System.out.println("USE PORT: " + listener.getLocalPort());
-                        Payload.DOWNLOAD_FOLDER.setParams(listener.getLocalPort() + "", path.getAbsolutePath(), folderSize + "");
+                        Payload.DOWNLOAD_FOLDER.setParams(listener.getLocalPort() + "", path.getAbsolutePath(), folderSize + "").sendTo(communicationSocket);
 
                         final Socket socket = listener.accept();
 
