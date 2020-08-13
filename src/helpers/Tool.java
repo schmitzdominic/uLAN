@@ -1,6 +1,7 @@
 package helpers;
 
 import entities.Release;
+import entities.payload.DownloadData;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -321,7 +322,7 @@ public class Tool {
         return length;
     }
 
-    public static void openFileTransferWindow(final Initializable sStage, final File path, final String ip, final Map<String, String> info) {
+    public static void openFileTransferWindow(final Initializable sStage, final File path, final String ip, final DownloadData downloadData) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -337,7 +338,7 @@ public class Tool {
                     fStage.setResizable(false);
                     fStage.setScene(new Scene(root1, 400, 170));
                     final FileTransferController controller = fxmlLoader.<FileTransferController>getController();
-                    controller.initData(path, fStage, ip, info);
+                    controller.initData(path, fStage, ip, downloadData);
                     fStage.show();
                 } catch (final IOException e) {
                     e.printStackTrace();

@@ -1,5 +1,6 @@
 package network;
 
+import entities.Release;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
@@ -11,23 +12,23 @@ import javafx.util.Callback;
 
 public class Releases {
 
-    private ObservableMap<String, String> releaseMap;
-    private ListView<String> releaseList;
+    private final ObservableMap<String, String> releaseMap;
+    private final ListView<String> releaseList;
 
-    public Releases(ListView<String> releaseList) {
-        this.releaseMap = FXCollections.observableHashMap();
+    public Releases(final ListView<String> releaseList) {
+        releaseMap = FXCollections.observableHashMap();
         this.releaseList = releaseList;
     }
 
-    public void addReleases(Client client) {
+    public void addReleases(final Client client) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 removeAllReleases(client);
                 if (client != null) {
-                    for(String key : client.getReleases().keySet()) {
-                        releaseList.getItems().add(getListItem(client.getReleases().get(key), key));
-                        releaseMap.put(key, client.getReleases().get(key));
+                    for (final Release release : client.getReleases()) {
+                        releaseList.getItems().add(getListItem(release.getName(), release.getPath()));
+                        releaseMap.put(release.getPath(), release.getName());
                     }
                 }
                 setTooltip();
@@ -35,37 +36,37 @@ public class Releases {
         });
     }
 
-    public void removeAllReleases(Client client) {
-        this.releaseList.getItems().clear();
-        this.releaseMap.clear();
+    public void removeAllReleases(final Client client) {
+        releaseList.getItems().clear();
+        releaseMap.clear();
     }
 
-    public void removeRelease(String folder, String path) {
-        String listItem = this.getListItem(folder, path);
+    public void removeRelease(final String folder, final String path) {
+        final String listItem = getListItem(folder, path);
         int index = 0;
-        for(String item : this.releaseList.getItems()) {
+        for (final String item : releaseList.getItems()) {
             if (item.equals(listItem)) {
-                this.releaseList.getItems().remove(index);
-                this.releaseMap.remove(folder);
+                releaseList.getItems().remove(index);
+                releaseMap.remove(folder);
                 return;
             }
             index++;
         }
     }
 
-    private String getListItem(String folder, String path) {
+    private String getListItem(final String folder, final String path) {
         return folder + " | " + path;
     }
 
     private void setTooltip() {
-        this.releaseList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        releaseList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
-            public ListCell<String> call(ListView<String> param) {
+            public ListCell<String> call(final ListView<String> param) {
                 final Label leadLbl = new Label();
                 final Tooltip tooltip = new Tooltip();
                 return new ListCell<String>() {
                     @Override
-                    public void updateItem(String item, boolean empty) {
+                    public void updateItem(final String item, final boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
                             leadLbl.setText(item);
@@ -79,9 +80,9 @@ public class Releases {
         });
     }
 
-    public String getPathFromListItem(String item) {
+    public String getPathFromListItem(final String item) {
         if (item != null) {
-            if(item.contains(" | ")) {
+            if (item.contains(" | ")) {
                 return item.split(" | ")[2];
             } else {
                 return null;

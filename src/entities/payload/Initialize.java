@@ -33,6 +33,11 @@ public class Initialize extends IncludeReleases {
     }
 
     @Override
+    public boolean hasReleases() {
+        return hasReleases();
+    }
+
+    @Override
     public String toString() {
         return "Initialize{" +
                 "mode='" + mode + '\'' +

@@ -1,5 +1,6 @@
 package start;
 
+import entities.Payload;
 import helpers.Info;
 import helpers.Tool;
 import interfaces.ClientFoundListener;
@@ -322,7 +323,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         releases.removeAllReleases(client);
     }
 
-    public boolean checkIfCientNameExist(final String name) {
+    public boolean checkIfClientNameExist(final String name) {
         return clients.existName(name);
     }
 
@@ -347,7 +348,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
     public void buttonSaveName(final ActionEvent event) {
         final String newName = textFieldChangeName.getText().toLowerCase();
-        if (!checkIfCientNameExist(newName)) {
+        if (!checkIfClientNameExist(newName)) {
             saveClientListName();
         } else if (client.getHostname().equals(newName)) {
             saveClientListName();
@@ -358,7 +359,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
 
     public void buttonDownload(final ActionEvent event) {
         if (actualRelease != null) {
-            Tool.sendMessage(client, Info.getProvideFolderPackage(actualRelease));
+            Payload.PROVIDE.sendTo(client);
         }
     }
 

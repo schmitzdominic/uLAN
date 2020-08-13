@@ -46,6 +46,11 @@ public class ProvideData extends DefaultPayload {
     }
 
     @Override
+    public boolean hasReleases() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "ProvideData{" +
                 "mode='" + mode + '\'' +

@@ -1,5 +1,10 @@
 package network;
 
+import entities.Income;
+import entities.Release;
+import entities.payload.DownloadData;
+import entities.payload.ProvideData;
+import entities.payload.ReleaseChange;
 import helpers.Tool;
 import interfaces.ClientsCallback;
 import registry.Registry;
@@ -9,8 +14,8 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
     private String id;
@@ -24,7 +29,7 @@ public class Client {
     private Thread tcpListener;
     private ClientsCallback clientsCallback;
     private PrintWriter out;
-    private HashMap<String, String> releases;
+    private List<Release> releases;
 
     public Client(final String id, final InetAddress ip, final String hostname) {
         this(id, ip.getHostAddress(), hostname);
@@ -35,7 +40,7 @@ public class Client {
     public Client(final String id, final String ip, final String hostname) {
 
         reg = new Registry();
-        releases = new HashMap<>();
+        releases = new ArrayList<>();
         this.id = id;
         listener = false;
 
@@ -70,7 +75,7 @@ public class Client {
         return ipAddress;
     }
 
-    public HashMap<String, String> getReleases() {
+    public List<Release> getReleases() {
         return releases;
     }
 
@@ -118,7 +123,7 @@ public class Client {
         this.socket = socket;
     }
 
-    public void setReleases(final HashMap<String, String> releases) {
+    public void setReleases(final List<Release> releases) {
         this.releases = releases;
     }
 
@@ -131,7 +136,7 @@ public class Client {
     }
 
     public void addRelease(final String folder, final String path) {
-        releases.put(path, folder);
+        releases.add(new Release(folder, path));
     }
 
     public void addTCPListener() {
@@ -149,58 +154,23 @@ public class Client {
                         try {
                             listener = true;
                             while ((line = reader.readLine()) != null) {
-                                final Map<String, String> info = Tool.convertMessage(line);
-                                final String mode = info.get("MODE");
-                                if (mode != null) {
-                                    if (mode.equals("RELEASECHANGE")) {
-                                        final String releases = info.get("RELEASES");
-                                        if (releases == null) {
-                                            setReleases(new HashMap<>());
-                                        } else {
-                                            setReleases(Tool.convertReleasesString(info.get("RELEASES")));
-                                        }
-                                        clientsCallback.notifyClientHasChanged();
-                                    } else if (mode.equals("PROVIDE")) {
-                                        if (reg.releaseExists(info.get("PATH"))) {
-                                            final String release = reg.getReleaseNormal(info.get("PATH"));
-                                            if (release != null) {
-                                                final File path = new File(release);
-                                                if (path.isDirectory()) {
-                                                    Tool.provideFolderToClient(socket, path);
-                                                } else {
-                                                    // TODO: ERROR, NO PATH FOUND!
-                                                }
-                                            }
-                                        } else {
-                                            // TODO: ERROR, NO RELEASE FOUND!
-                                            // Maybe we should make an extra window with security issues
-                                        }
-                                    } else if (mode.equals("DOWNLOAD")) {
-                                        if (Tool.downloads != null) {
-                                            for (final Download x : Tool.downloads) {
-                                                System.out.println(x.getId() + " " + x.getPath());
-                                            }
-                                        }
-                                        if (!Tool.downloadExist(info.get("ID"), info.get("FOLDERNAME"))) {
-                                            Tool.addDownload(info.get("ID"), info.get("FOLDERNAME"));
-                                            final String dPath = reg.getProperties().get("defaultfiletransferpath");
-                                            if (dPath != null) {
-                                                final File path = new File(dPath);
-                                                if (path.isDirectory()) {
-                                                    Tool.openFileTransferWindow(MainController.init,
-                                                            path, getIp(), info);
-                                                } else {
-                                                    // TODO: ERROR, NO PATH FOUND!
-                                                }
-                                            } else {
-                                                // TODO: ERROR, NO DOWNLOAD PATH FOUND!
-                                            }
-                                        }
-                                    }
+                                final Income income = new Income(line);
+                                switch (income.getMode()) {
+                                    case RELEASE_CHANGE:
+                                        releaseChange(income.getObject());
+                                        break;
+                                    case PROVIDE:
+                                        provideData(income.getObject());
+                                        break;
+                                    case DOWNLOAD_FOLDER:
+                                        downloadFolder(income.getObject());
+                                        break;
+                                    default:
+                                        // TODO: Throw an exception that the income is not valid!
                                 }
                             }
                         } catch (final SocketException e) {
-                            System.out.println(String.format("TCP LISTENER %s STOPED!", getListName()));
+                            System.out.printf("TCP LISTENER %s STOPPED! %n", getListName());
                             listener = false;
                             if (clientsCallback != null) {
                                 clientsCallback.removeClient(getId());
@@ -215,8 +185,58 @@ public class Client {
         tcpListener.start();
     }
 
+    private void releaseChange(final ReleaseChange releaseChange) {
+        if (releaseChange.hasReleases()) {
+            setReleases(releaseChange.getReleases());
+        } else {
+            setReleases(new ArrayList<>());
+        }
+        clientsCallback.notifyClientHasChanged();
+    }
+
+    private void provideData(final ProvideData provideData) {
+        if (reg.releaseExists(provideData.getPath())) {
+            final String release = reg.getReleaseNormal(provideData.getPath());
+            if (release != null) {
+                final File path = new File(release);
+                if (path.isDirectory()) {
+                    Tool.provideFolderToClient(socket, path);
+                } else {
+                    // TODO: ERROR, NO PATH FOUND!
+                }
+            }
+        } else {
+            // TODO: ERROR, NO RELEASE FOUND!
+            // Maybe we should make an extra window with security issues
+        }
+    }
+
+    private void downloadFolder(final DownloadData downloadData) {
+        final String clientId = downloadData.getId();
+        if (Tool.downloads != null) {
+            for (final Download x : Tool.downloads) {
+                System.out.println(x.getId() + " " + x.getPath());
+            }
+        }
+        if (!Tool.downloadExist(downloadData.getId(), downloadData.getFolderName())) {
+            Tool.addDownload(downloadData.getId(), downloadData.getFolderName());
+            final String dPath = reg.getProperties().get("defaultfiletransferpath");
+            if (dPath != null) {
+                final File path = new File(dPath);
+                if (path.isDirectory()) {
+                    Tool.openFileTransferWindow(MainController.init,
+                            path, getIp(), downloadData);
+                } else {
+                    // TODO: ERROR, NO PATH FOUND!
+                }
+            } else {
+                // TODO: ERROR, NO DOWNLOAD PATH FOUND!
+            }
+        }
+    }
+
     public void removeRelease(final String path) {
-        releases.remove(path);
+        releases.removeIf(r -> r.getPath().equals(path));
     }
 
     public void closeSocket() {

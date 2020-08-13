@@ -33,6 +33,11 @@ public class InitRepeat extends IncludeReleases {
     }
 
     @Override
+    public boolean hasReleases() {
+        return hasReleases();
+    }
+
+    @Override
     public String toString() {
         return "InitRepeat{" +
                 "mode='" + mode + '\'' +

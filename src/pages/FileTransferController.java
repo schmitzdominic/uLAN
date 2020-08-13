@@ -1,5 +1,6 @@
 package pages;
 
+import entities.payload.DownloadData;
 import helpers.Tool;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -19,7 +20,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -81,16 +81,16 @@ public class FileTransferController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
     }
 
-    public void initData(final File path, final Stage stage, final String ip, final Map<String, String> info) {
+    public void initData(final File path, final Stage stage, final String ip, final DownloadData downloadData) {
         try {
             this.path = path;
             this.stage = stage;
             this.ip = InetAddress.getByName(ip);
-            id = info.get("ID");
-            serverPath = info.get("FOLDERNAME");
-            port = Integer.parseInt(info.get("PORT"));
-            fName = Tool.convertReleasesString(info.get("FOLDERNAME")).get(info.get("FOLDERNAME"));
-            size = Long.parseLong(info.get("SIZE"));
+            id = downloadData.getId();
+            serverPath = downloadData.getFolderName();
+            port = Integer.parseInt(downloadData.getPort());
+            fName = Tool.convertReleasesString(downloadData.getFolderName()).get(downloadData.getFolderName());
+            size = Long.parseLong(downloadData.getSize());
 
             initListeners();
 
@@ -102,7 +102,7 @@ public class FileTransferController implements Initializable {
             e.printStackTrace();
             initError = true;
         } catch (final NumberFormatException e) {
-            System.out.println("PORT OR SIZE IS NOT A INTEGER OR LONG NUMBER! PORT:" + info.get("PORT") + " SIZE:" + info.get("SIZE"));
+            System.out.println("PORT OR SIZE IS NOT A INTEGER OR LONG NUMBER! PORT:" + downloadData.getPort() + " SIZE:" + downloadData.getSize());
             // TODO: ERROR, PORT IS NOT A INTEGER NUMBER!
             initError = true;
         }

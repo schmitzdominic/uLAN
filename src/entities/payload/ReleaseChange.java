@@ -33,6 +33,11 @@ public class ReleaseChange extends IncludeReleases {
     }
 
     @Override
+    public boolean hasReleases() {
+        return hasReleases();
+    }
+
+    @Override
     public String toString() {
         return "ReleaseChange{" +
                 "mode='" + mode + '\'' +

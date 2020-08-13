@@ -3,6 +3,7 @@ package entities;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.payload.*;
+import network.Client;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -47,7 +48,11 @@ public enum Payload {
         return null;
     }
 
-    public PrintWriter send(final Socket socket) {
+    public PrintWriter sendTo(final Client client) {
+        return sendTo(client.getSocket());
+    }
+
+    public PrintWriter sendTo(final Socket socket) {
         try {
             final PrintWriter out = new PrintWriter(socket.getOutputStream());
             out.println(serializeToJson());

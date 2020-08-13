@@ -2,7 +2,6 @@ package network;
 
 import entities.Income;
 import entities.Payload;
-import entities.Release;
 import entities.payload.Initialize;
 import helpers.Info;
 import interfaces.ClientFoundListener;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 
 
 public class Server extends Thread {
@@ -74,26 +72,18 @@ public class Server extends Thread {
     private void initialize(final Income income, final Socket socket) {
         if (clientListener != null) {
 
-            final Initialize init = income.getObject();
+            final Initialize payload = income.getObject();
 
-            if (init.getId() != null & init.getIp() != null & init.getHostName() != null) {
-                final Client client = new Client(init.getId(), init.getIp(), init.getHostName());
+            if (payload.isValid()) {
+                final Client client = new Client(payload.getId(), payload.getIp(), payload.getHostName());
 
-                if (init.getReleases() != null && init.getReleases().size() > 0) {
-
-                    // TODO: Change to List with release object!
-                    final HashMap<String, String> releases = new HashMap<>();
-
-                    for (final Release release : init.getReleases()) {
-                        releases.put(release.getPath(), release.getName());
-                    }
-                    client.setReleases(releases);
+                if (payload.hasReleases()) {
+                    client.setReleases(payload.getReleases());
                 }
 
                 client.setSocket(socket);
                 client.addTCPListener();
-                Payload.INIT_REPEAT.send(client.getSocket());
-                // Tool.sendMessage(client, Info.getRepeatPackage());
+                Payload.INIT_REPEAT.sendTo(client);
                 clientListener.onClientFound(client);
             }
         }

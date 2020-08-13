@@ -64,6 +64,11 @@ public class DownloadData extends DefaultPayload {
     }
 
     @Override
+    public boolean hasReleases() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "DownloadData{" +
                 "mode='" + mode + '\'' +

@@ -1,8 +1,9 @@
 package network;
 
+import entities.Income;
 import entities.Payload;
+import entities.payload.InitRepeat;
 import helpers.Info;
-import helpers.Tool;
 import interfaces.ClientFoundListener;
 
 import java.io.BufferedReader;
@@ -13,7 +14,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Finder {
@@ -64,7 +64,7 @@ public class Finder {
                                 // If the Client is available
                                 try {
                                     // Send a initialize Package
-                                    final PrintWriter out = Payload.INITIALIZE.send(socket);
+                                    final PrintWriter out = Payload.INITIALIZE.sendTo(socket);
                                     final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                     final String line;
                                     // Wait for the REPEAT Package
@@ -142,34 +142,34 @@ public class Finder {
 
     private void repeat(final String message, final Socket socket, final PrintWriter out) {
 
-        System.out.println("INCOMMING REPEAT MESSAGE: " + message);
+        try {
+            final InitRepeat repeat = (new Income(message)).getObject();
 
-        if (clientListener != null) {
+            if (clientListener != null) {
 
-            final Client client = buildClient(message);
+                final Client client = buildClient(repeat);
 
-            if (client != null) {
-                client.setSocket(socket);
-                client.setOut(out);
-                client.addTCPListener();
-                clientListener.onClientFound(client);
+                if (client != null) {
+                    client.setSocket(socket);
+                    client.setOut(out);
+                    client.addTCPListener();
+                    clientListener.onClientFound(client);
+                }
             }
+        } catch (final NullPointerException npe) {
+            System.out.println("INCOMING REPEAT MESSAGE IS NOT VALID! Message: " + message);
+            npe.printStackTrace();
         }
     }
 
-    private Client buildClient(final String message) {
+    private Client buildClient(final InitRepeat payload) {
+        if (payload.isValid()) {
+            final Client client = new Client(payload.getId(), payload.getIp(), payload.getHostName());
 
-        final Map<String, String> info = Tool.convertMessage(message);
-
-        final String id = info.get("ID");
-        final String ip = info.get("IP");
-        final String hostname = info.get("HOSTNAME");
-
-        if (id != null & ip != null & hostname != null) {
-            final Client client = new Client(id, ip, hostname);
-
-            if (info.get("RELEASES") != null) {
-                client.setReleases(Tool.convertReleasesString(info.get("RELEASES")));
+            if (payload.hasReleases()) {
+                client.setReleases(payload.getReleases());
+            } else {
+                // Do nothing, because the other client does not have any releases
             }
 
             return client;

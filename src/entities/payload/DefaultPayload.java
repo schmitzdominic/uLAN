@@ -20,6 +20,8 @@ public abstract class DefaultPayload {
 
     public abstract void setParams(final String... params);
 
+    public abstract boolean hasReleases();
+
     public String getId() {
         return id;
     }
@@ -30,6 +32,10 @@ public abstract class DefaultPayload {
 
     public String getHostName() {
         return hostName;
+    }
+
+    public boolean isValid() {
+        return getId() != null & getIp() != null & getHostName() != null;
     }
 
     protected void setId(final String id) {
