@@ -4,9 +4,13 @@ import entities.Release;
 
 import java.util.List;
 
-abstract class IncludeReleases extends DefaultPayload {
+public abstract class IncludeReleases extends DefaultPayload {
 
     private List<Release> releases = registry.getReleasesList();
+
+    public IncludeReleases() {
+        super();
+    }
 
     public List<Release> getReleases() {
         return releases;

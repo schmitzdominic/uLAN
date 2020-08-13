@@ -11,14 +11,14 @@ public abstract class DefaultPayload {
     private String ip = Info.getIp();
     private String hostName = Info.getHostname();
 
+    final Registry registry = new Registry();
+    final ObjectMapper objectMapper = new ObjectMapper();
+
     public abstract String getMode();
 
     public abstract String serializeToJson() throws JsonProcessingException;
 
     public abstract void setParams(final String... params);
-
-    final Registry registry = new Registry();
-    final ObjectMapper objectMapper = new ObjectMapper();
 
     public String getId() {
         return id;

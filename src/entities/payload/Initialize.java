@@ -15,7 +15,6 @@ public class Initialize extends IncludeReleases {
         super.setId(initialize.getId());
         super.setIp(initialize.getIp());
         super.setHostName(initialize.getHostName());
-        super.setReleases(initialize.getReleases());
     }
 
     @Override

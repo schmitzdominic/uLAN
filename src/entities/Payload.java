@@ -1,11 +1,11 @@
 package entities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import entities.payload.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Socket;
 
 public enum Payload {
@@ -39,8 +39,9 @@ public enum Payload {
 
     public <T extends DefaultPayload> T getPayloadInstanceFromJson(final String json) {
         try {
-            return (T) defaultPayload.getClass().getConstructor(String.class).newInstance(json);
-        } catch (final InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            final ObjectMapper objectMapper = new ObjectMapper();
+            return (T) objectMapper.readValue(json, defaultPayload.getClass());
+        } catch (final JsonProcessingException e) {
             e.printStackTrace();
         }
         return null;

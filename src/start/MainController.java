@@ -1,8 +1,5 @@
 package start;
 
-import entities.Income;
-import entities.Payload;
-import entities.payload.ProvideData;
 import helpers.Info;
 import helpers.Tool;
 import interfaces.ClientFoundListener;
@@ -129,23 +126,6 @@ public class MainController implements ClientFoundListener, Initializable, Clien
         setButtonIcons();
         setOwnInformation();
         searchClients();
-
-        System.out.println(Payload.PROVIDE.setParams("TEST_PATH").serializeToJson());
-        final String provide = Payload.PROVIDE.setParams("TEST_PATH").serializeToJson();
-        System.out.println(Payload.DISCONNECT.serializeToJson());
-        System.out.println(Payload.DOWNLOAD_FOLDER.setParams("12345", "CUSTOM_FOLDER", "500mb").serializeToJson());
-        System.out.println(Payload.INIT_REPEAT.serializeToJson());
-        System.out.println(Payload.INITIALIZE.serializeToJson());
-        System.out.println(Payload.RELEASE_CHANGE.serializeToJson());
-
-        final Income income = new Income(provide);
-        final ProvideData pd = income.getObject();
-        System.out.println(pd.getId());
-        System.out.println(pd.getIp());
-        System.out.println(pd.getHostName());
-        System.out.println(pd.getPath());
-        System.out.println(pd.getMode());
-
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override

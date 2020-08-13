@@ -15,7 +15,6 @@ public class InitRepeat extends IncludeReleases {
         super.setId(initRepeat.getId());
         super.setIp(initRepeat.getIp());
         super.setHostName(initRepeat.getHostName());
-        super.setReleases(initRepeat.getReleases());
     }
 
     @Override

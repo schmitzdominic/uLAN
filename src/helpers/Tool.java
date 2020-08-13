@@ -191,7 +191,7 @@ public class Tool {
         for (int i = 0; i < reArray.length; i++) {
             final String[] folderNames = reArray[i].split("\\\\");
             final String folder = folderNames[folderNames.length - 1];
-            list.add(new Release(reArray[i], folder));
+            list.add(new Release(folder, reArray[i]));
         }
         return list;
     }

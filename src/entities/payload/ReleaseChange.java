@@ -15,7 +15,6 @@ public class ReleaseChange extends IncludeReleases {
         super.setId(releaseChange.getId());
         super.setIp(releaseChange.getIp());
         super.setHostName(releaseChange.getHostName());
-        super.setReleases(releaseChange.getReleases());
     }
 
     @Override
