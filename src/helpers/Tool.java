@@ -1,8 +1,8 @@
 package helpers;
 
-import entities.Payload;
 import entities.Release;
 import entities.payload.DownloadData;
+import entities.payload.Payload;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,12 +19,16 @@ import network.Download;
 import pages.FileTransferController;
 import registry.Registry;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -92,13 +96,6 @@ public class Tool {
         return image;
     }
 
-    public static Map<String, String> convertWithStream(final String mapAsString) {
-        final Map<String, String> map = Arrays.stream(mapAsString.split(","))
-                .map(entry -> entry.split("="))
-                .collect(Collectors.toMap(entry -> entry[0], entry -> entry[1]));
-        return map;
-    }
-
     public static String humanReadableByteCountSI(final long bytes) {
         final String s = bytes < 0 ? "-" : "";
         long b = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
@@ -131,49 +128,6 @@ public class Tool {
         } catch (final IOException x) {
             return null;
         }
-    }
-
-    public static void sendMessage(final Socket socket, final String message) {
-        try {
-            final PrintWriter out = new PrintWriter(socket.getOutputStream());
-            out.print(message + "\n");
-            out.flush();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static PrintWriter sendMessage(final Socket socket, final HashMap<String, String> message) {
-        try {
-            final PrintWriter out = new PrintWriter(socket.getOutputStream());
-            out.println(message);
-            out.flush();
-            return out;
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static void sendMessage(final Client client, final HashMap<String, String> message) {
-        if (client != null) {
-            if (client.getSocket() != null) {
-                if (client.getOut() == null) {
-                    try {
-                        client.setOut(new PrintWriter(client.getSocket().getOutputStream()));
-                    } catch (final IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            client.getOut().println(message);
-            client.getOut().flush();
-        }
-    }
-
-    public static Map<String, String> convertMessage(String message) {
-        message = message.replaceAll("[{} ]", "");
-        return Tool.convertWithStream(message);
     }
 
     public static HashMap<String, String> convertReleasesString(final String releases) {

@@ -12,14 +12,6 @@ public class ProvideData extends DefaultPayload {
         super();
     }
 
-    public ProvideData(final String json) throws JsonProcessingException {
-        final ProvideData provideData = objectMapper.readValue(json, getClass());
-        super.setId(provideData.getId());
-        super.setIp(provideData.getIp());
-        super.setHostName(provideData.getHostName());
-        setPath(provideData.getPath());
-    }
-
     public String getPath() {
         return path;
     }

@@ -1,8 +1,7 @@
-package entities;
+package entities.payload;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import entities.payload.*;
 import network.Client;
 
 import java.io.IOException;

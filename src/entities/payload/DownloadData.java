@@ -14,16 +14,6 @@ public class DownloadData extends DefaultPayload {
         super();
     }
 
-    public DownloadData(final String json) throws JsonProcessingException {
-        final DownloadData downloadData = objectMapper.readValue(json, getClass());
-        super.setId(downloadData.getId());
-        super.setIp(downloadData.getIp());
-        super.setHostName(downloadData.getHostName());
-        port = downloadData.getPort();
-        folderName = downloadData.getFolderName();
-        size = downloadData.getSize();
-    }
-
     public String getPort() {
         return port;
     }

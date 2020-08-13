@@ -1,6 +1,6 @@
 package start;
 
-import entities.Payload;
+import entities.payload.Payload;
 import helpers.Info;
 import helpers.Tool;
 import interfaces.ClientFoundListener;

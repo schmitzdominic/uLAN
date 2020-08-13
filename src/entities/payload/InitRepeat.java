@@ -10,13 +10,6 @@ public class InitRepeat extends IncludeReleases {
         super();
     }
 
-    public InitRepeat(final String json) throws JsonProcessingException {
-        final InitRepeat initRepeat = objectMapper.readValue(json, getClass());
-        super.setId(initRepeat.getId());
-        super.setIp(initRepeat.getIp());
-        super.setHostName(initRepeat.getHostName());
-    }
-
     @Override
     public String getMode() {
         return mode;

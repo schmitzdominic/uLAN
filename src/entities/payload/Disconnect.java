@@ -10,13 +10,6 @@ public class Disconnect extends DefaultPayload {
         super();
     }
 
-    public Disconnect(final String json) throws JsonProcessingException {
-        final Disconnect disconnect = objectMapper.readValue(json, getClass());
-        super.setId(disconnect.getId());
-        super.setIp(disconnect.getIp());
-        super.setHostName(disconnect.getHostName());
-    }
-
     @Override
     public String getMode() {
         return mode;

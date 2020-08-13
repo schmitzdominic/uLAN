@@ -1,8 +1,8 @@
 package network;
 
 import entities.Income;
-import entities.Payload;
 import entities.payload.InitRepeat;
+import entities.payload.Payload;
 import helpers.Info;
 import interfaces.ClientFoundListener;
 

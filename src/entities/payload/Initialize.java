@@ -10,13 +10,6 @@ public class Initialize extends IncludeReleases {
         super();
     }
 
-    public Initialize(final String json) throws JsonProcessingException {
-        final Initialize initialize = objectMapper.readValue(json, getClass());
-        super.setId(initialize.getId());
-        super.setIp(initialize.getIp());
-        super.setHostName(initialize.getHostName());
-    }
-
     @Override
     public String getMode() {
         return mode;

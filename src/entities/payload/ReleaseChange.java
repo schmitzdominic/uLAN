@@ -10,13 +10,6 @@ public class ReleaseChange extends IncludeReleases {
         super();
     }
 
-    public ReleaseChange(final String json) throws JsonProcessingException {
-        final ReleaseChange releaseChange = objectMapper.readValue(json, getClass());
-        super.setId(releaseChange.getId());
-        super.setIp(releaseChange.getIp());
-        super.setHostName(releaseChange.getHostName());
-    }
-
     @Override
     public String getMode() {
         return mode;
