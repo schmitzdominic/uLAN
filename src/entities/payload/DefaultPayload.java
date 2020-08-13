@@ -8,7 +8,7 @@ import registry.Registry;
 
 public abstract class DefaultPayload {
 
-    private String id = Info.getSettings().get("id");
+    private String id = Info.getProperties().get("id");
     private String ip = Info.getIp();
     private String hostName = Info.getHostname();
 

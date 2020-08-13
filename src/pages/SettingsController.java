@@ -1,6 +1,7 @@
 package pages;
 
 
+import entities.windows.Window;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,7 +15,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import static helpers.Info.getSettings;
+import static helpers.Info.getProperties;
 
 public class SettingsController implements Initializable {
 
@@ -24,7 +25,7 @@ public class SettingsController implements Initializable {
     @FXML
     Label labelDownloadPath;
 
-    HashMap<String, String> settings = getSettings();
+    HashMap<String, String> settings = getProperties();
     Registry registry = new Registry();
 
     final String descriptionDownloadPath = "Hier werden alle deine Downloads gespeichert";
@@ -50,6 +51,6 @@ public class SettingsController implements Initializable {
     }
 
     public void buttonOk(final ActionEvent event) {
-        MainController.settingsStage.close();
+        Window.SETTINGS.close();
     }
 }

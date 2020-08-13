@@ -1,52 +1,27 @@
 package start;
 
+import entities.windows.Window;
+import helpers.Info;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import registry.Registry;
 import tray.Tray;
-
-import java.util.HashMap;
 
 public class Main extends Application {
 
-    private Stage primaryStage;
-    private Registry registry;
-    private HashMap<String, String> properties;
     public static Stage main;
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
-        this.registry = new Registry();
-        this.properties = this.registry.getProperties();
-
+    public void start(final Stage primaryStage) {
         Platform.setImplicitExit(false);
-        final Parent root = FXMLLoader.load(this.getClass().getResource("main_window.fxml"));
-
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("uLAN");
-        this.primaryStage.getIcons().add(new Image(this.properties.get("windowicon")));
-        this.primaryStage.setScene(new Scene(root, 650, 520));
-        this.primaryStage.setResizable(false);
-        Main.main = this.primaryStage;
-
+        // TODO remove Main.main
+        Main.main = Window.MAIN.fillStage(primaryStage, new Image(Info.getProperties().get("windowicon")), null);
         new Tray(this);
     }
 
     public static void main(final String[] args) {
         Application.launch(args);
-    }
-
-    public Stage getPrimaryStage() {
-        return this.primaryStage;
-    }
-
-    public HashMap<String, String> getProperties() {
-        return this.properties;
     }
 
     public void exitApplication() {

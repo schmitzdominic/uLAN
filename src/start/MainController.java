@@ -1,6 +1,7 @@
 package start;
 
 import entities.payload.Payload;
+import entities.windows.Window;
 import helpers.Info;
 import helpers.Tool;
 import interfaces.ClientFoundListener;
@@ -9,29 +10,20 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import network.*;
 import registry.Registry;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
-import static helpers.Info.getSettings;
 
 public class MainController implements ClientFoundListener, Initializable, ClientList {
 
@@ -137,7 +129,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     }
 
     private void createServer() {
-        final HashMap<String, String> settings = Info.getSettings();
+        final HashMap<String, String> settings = Info.getProperties();
         port = Integer.parseInt(settings.get("port"));
         final Server server = new Server(this, port);
         server.registerClientFoundListener(this);
@@ -200,7 +192,7 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     }
 
     public void searchClients() {
-        searchClients(Integer.parseInt(Info.getSettings().get("clientscount")));
+        searchClients(Integer.parseInt(Info.getProperties().get("clientscount")));
     }
 
     public void searchClients(final int count) {
@@ -364,93 +356,28 @@ public class MainController implements ClientFoundListener, Initializable, Clien
     }
 
     public void buttonReleases(final ActionEvent event) {
-        try {
-            final HashMap<String, String> settings = getSettings();
-            final String[] initReleases = registry.getReleases();
 
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pages/release_window.fxml"));
-            final Parent root = fxmlLoader.load();
-            releaseStage = new Stage();
-            releaseStage.initModality(Modality.WINDOW_MODAL);
-            releaseStage.setTitle("Freigaben");
-            releaseStage.getIcons().add(new Image(settings.get("defaulticon")));
-            releaseStage.setResizable(false);
-            releaseStage.initOwner(Main.main);
-            releaseStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                @Override
-                public void handle(final WindowEvent event) {
-                    boolean changed = false;
-                    final String[] releases = registry.getReleases();
-                    if (releases != null) {
-                        changed = !Arrays.equals(releases, initReleases);
-                    }
-                    if (changed) {
-                        Tool.sendReleasesChange(clients.getClientMap());
-                    }
-                }
-            });
-            releaseStage.setScene(new Scene(root, 500, 300));
-            releaseStage.showAndWait();
-
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        Window.RELEASES.setOnCloseHandler(handlerEvent -> {
+            boolean changed = false;
+            final String[] releases = registry.getReleases();
+            if (releases != null) {
+                changed = !Arrays.equals(releases, registry.getReleases());
+            }
+            if (changed) {
+                Tool.sendReleasesChange(clients.getClientMap());
+            }
+        }).showAndWait(Window.MAIN.getStage());
     }
 
     public void buttonInfo(final ActionEvent event) {
-
-        try {
-            final HashMap<String, String> settings = getSettings();
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pages/info_window.fxml"));
-            final Parent root = fxmlLoader.load();
-            infoStage = new Stage();
-            infoStage.initModality(Modality.WINDOW_MODAL);
-            infoStage.setTitle("Info");
-            infoStage.getIcons().add(new Image(settings.get("defaulticon")));
-            infoStage.setResizable(false);
-            infoStage.initOwner(Main.main);
-            infoStage.setScene(new Scene(root, 500, 300));
-            infoStage.showAndWait();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void buttonSettings(final ActionEvent event) {
-        try {
-            final HashMap<String, String> settings = getSettings();
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pages/settings_window.fxml"));
-            final Parent root = fxmlLoader.load();
-            settingsStage = new Stage();
-            settingsStage.initModality(Modality.WINDOW_MODAL);
-            settingsStage.setTitle("Einstellungen");
-            settingsStage.getIcons().add(new Image(settings.get("defaulticon")));
-            settingsStage.setResizable(false);
-            settingsStage.initOwner(Main.main);
-            settingsStage.setScene(new Scene(root, 500, 300));
-            settingsStage.showAndWait();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        Window.INFORMATIONS.showAndWait(Window.MAIN.getStage());
     }
 
     public void buttonHistory(final ActionEvent event) {
-        try {
-            final HashMap<String, String> settings = getSettings();
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/pages/history_window.fxml"));
-            final Parent root = fxmlLoader.load();
-            historyStage = new Stage();
-            historyStage.initModality(Modality.WINDOW_MODAL);
-            historyStage.setTitle("Historie");
-            historyStage.getIcons().add(new Image(settings.get("defaulticon")));
-            historyStage.setResizable(false);
-            historyStage.initOwner(Main.main);
-            historyStage.setScene(new Scene(root, 500, 300));
-            historyStage.showAndWait();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+        Window.HISTORY.showAndWait(Window.MAIN.getStage());
     }
 
-
+    public void buttonSettings(final ActionEvent event) {
+        Window.SETTINGS.showAndWait(Window.MAIN.getStage());
+    }
 }

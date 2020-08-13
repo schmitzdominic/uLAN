@@ -33,7 +33,7 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static helpers.Info.getSettings;
+import static helpers.Info.getProperties;
 
 public class Tool {
 
@@ -282,7 +282,7 @@ public class Tool {
             @Override
             public void run() {
                 try {
-                    final HashMap<String, String> settings = getSettings();
+                    final HashMap<String, String> settings = getProperties();
 
                     final FXMLLoader fxmlLoader = new FXMLLoader(sStage.getClass().getResource("/pages/file_transfer_window.fxml"));
                     final Parent root1 = fxmlLoader.load();

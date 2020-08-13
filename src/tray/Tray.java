@@ -1,5 +1,7 @@
 package tray;
 
+import entities.windows.Window;
+import helpers.Info;
 import javafx.application.Platform;
 import start.Main;
 
@@ -9,12 +11,12 @@ import java.awt.event.ActionListener;
 
 public class Tray {
 
-    private MenuItem clientsItem;
-    private MenuItem exitItem;
-    private TrayIcon trayIcon;
-    private Main main;
+    private final MenuItem clientsItem;
+    private final MenuItem exitItem;
+    private final TrayIcon trayIcon;
+    private final Main main;
 
-    public Tray(Main main){
+    public Tray(final Main main) {
 
         this.main = main;
 
@@ -24,14 +26,14 @@ public class Tray {
         }
 
         // Tray Icon
-        Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(main.getProperties().get("defaulticon")));
+        final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getResource(Info.getProperties().get("defaulticon")));
 
         final PopupMenu popup = new PopupMenu();
         final SystemTray tray = SystemTray.getSystemTray();
-        this.trayIcon = new TrayIcon(image, "uLAN", popup);
+        trayIcon = new TrayIcon(image, "uLAN", popup);
 
-        this.clientsItem = new MenuItem("Clients");
-        this.exitItem = new MenuItem("Exit");
+        clientsItem = new MenuItem("Clients");
+        exitItem = new MenuItem("Exit");
 
         // Add components to pop-up menu
         popup.add(clientsItem);
@@ -41,42 +43,45 @@ public class Tray {
 
         try {
             tray.add(trayIcon);
-        } catch (AWTException e) {
+        } catch (final AWTException e) {
             System.out.println("TrayIcon could not be added.");
         }
 
-        this.addListeners();
+        addListeners();
     }
 
-    private void addListeners(){
+    private void addListeners() {
 
         // Doubleclick on the Icon
-        this.trayIcon.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent evt) {
+        trayIcon.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent evt) {
                 Platform.runLater(new Runnable() {
+                    @Override
                     public void run() {
-                        main.getPrimaryStage().show();
+                        Window.MAIN.show();
                     }
                 });
             }
         });
 
         // Click on Clients
-        this.clientsItem.addActionListener(new ActionListener() {
+        clientsItem.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 Platform.runLater(new Runnable() {
+                    @Override
                     public void run() {
-                        main.getPrimaryStage().show();
+                        Window.MAIN.show();
                     }
                 });
             }
         });
 
         // Click on Exit
-        this.exitItem.addActionListener(new ActionListener() {
+        exitItem.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 main.exitApplication();
             }
         });

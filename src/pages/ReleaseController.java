@@ -1,5 +1,6 @@
 package pages;
 
+import entities.windows.Window;
 import helpers.Tool;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -133,9 +134,9 @@ public class ReleaseController implements Initializable {
     }
 
     public void buttonOk(final ActionEvent event) {
-        MainController.releaseStage.getOnCloseRequest().handle(new WindowEvent(
-                MainController.releaseStage, WindowEvent.WINDOW_CLOSE_REQUEST
+        Window.RELEASES.getStage().getOnCloseRequest().handle(new WindowEvent(
+                Window.RELEASES.getStage(), WindowEvent.WINDOW_CLOSE_REQUEST
         ));
-        MainController.releaseStage.close();
+        Window.RELEASES.close();
     }
 }

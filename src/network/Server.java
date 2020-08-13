@@ -25,7 +25,7 @@ public class Server extends Thread {
     public Server(final MainController mainController, final int port) {
         this.mainController = mainController;
         this.port = port;
-        id = Info.getSettings().get("id");
+        id = Info.getProperties().get("id");
         ip = Info.getIp();
     }
 

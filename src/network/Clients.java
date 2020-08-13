@@ -31,8 +31,8 @@ public class Clients implements ClientsCallback {
         clientMap = FXCollections.observableHashMap();
         this.clientList = clientList;
         this.controller = controller;
-        id = Info.getSettings().get("id");
-        port = Integer.parseInt(Info.getSettings().get("port"));
+        id = Info.getProperties().get("id");
+        port = Integer.parseInt(Info.getProperties().get("port"));
         // this.clientList.getItems().sort(Comparator.naturalOrder()); TODO SORT!
     }
 
