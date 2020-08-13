@@ -83,7 +83,7 @@ public class Releases {
     public String getPathFromListItem(final String item) {
         if (item != null) {
             if (item.contains(" | ")) {
-                return item.split(" | ")[2];
+                return item.split(" \\| ")[1];
             } else {
                 return null;
             }

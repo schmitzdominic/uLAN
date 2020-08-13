@@ -196,14 +196,11 @@ public class Client {
 
     private void provideData(final ProvideData provideData) {
         if (reg.releaseExists(provideData.getPath())) {
-            final String release = reg.getReleaseNormal(provideData.getPath());
-            if (release != null) {
-                final File path = new File(release);
-                if (path.isDirectory()) {
-                    Tool.provideFolderToClient(socket, path);
-                } else {
-                    // TODO: ERROR, NO PATH FOUND!
-                }
+            final File path = new File(provideData.getPath());
+            if (path.isDirectory()) {
+                Tool.provideFolderToClient(socket, path);
+            } else {
+                // TODO: ERROR, NO PATH FOUND!
             }
         } else {
             // TODO: ERROR, NO RELEASE FOUND!
